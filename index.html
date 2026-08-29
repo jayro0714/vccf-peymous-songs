@@ -1,9 +1,475 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>VCCF Peymous Songs List</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+    }
+
+    header {
+      padding: 30px 20px;
+      text-align: center;
+      background: #0f172a;
+    }
+
+    h1 {
+      margin: 0 0 20px;
+      font-size: 30px;
+    }
+
+    #search {
+      width: 100%;
+      max-width: 500px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #songs {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .song {
+      background: #1f2937;
+      padding: 18px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .song:hover {
+      background: #374151;
+    }
+
+    .song-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    #noResults {
+      display: none;
+      text-align: center;
+      color: #9ca3af;
+      padding: 30px;
+    }
+
+    #viewer {
+      display: none;
+      max-width: 750px;
+      margin: auto;
+      padding: 25px 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 25px;
+      color: #60a5fa;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back:hover {
+      color: #93c5fd;
+    }
+
+    #songTitle {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    #chords {
+      background: #0f172a;
+      padding: 22px;
+      border-radius: 10px;
+
+      white-space: pre-wrap;
+      overflow-x: auto;
+
+      font-family: monospace;
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .no-chords {
+      color: #9ca3af;
+    }
+
+    @media (max-width: 600px) {
+
+      header {
+        padding: 25px 15px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      #songs {
+        padding: 15px;
+      }
+
+      .song {
+        padding: 16px;
+      }
+
+      #viewer {
+        padding: 20px 15px;
+      }
+
+      #songTitle {
+        font-size: 27px;
+      }
+
+      #chords {
+        font-size: 16px;
+        padding: 18px;
+      }
+
+    }
+
+  </style>
+
 </head>
+
+
 <body>
-  <h1>VCCF Peymous Songs List</h1>
+
+
+  <!-- SONG LIST -->
+
+  <header id="header">
+
+    <h1>🎵 VCCF Peymous Songs List</h1>
+
+    <input
+      id="search"
+      type="text"
+      placeholder="Search song..."
+      autocomplete="off"
+    >
+
+  </header>
+
+
+  <div id="songs"></div>
+
+
+  <div id="noResults">
+    No songs found.
+  </div>
+
+
+  <!-- SONG VIEWER -->
+
+  <div id="viewer">
+
+    <div
+      class="back"
+      onclick="goBack()"
+    >
+      ← Back to Songs
+    </div>
+
+    <h1 id="songTitle"></h1>
+
+    <div id="chords"></div>
+
+  </div>
+
+
+  <script>
+
+    // ==========================================
+    // APPS SCRIPT API
+    // ==========================================
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycby8BE2i_DU_WeabT9sW-ZdPTW8y4WuAmDR9jWVsqBnSe8Gi4klSrgy2Xe19kAcVfpbWVw/exec";
+
+
+    let songs = [];
+
+
+    // ==========================================
+    // LOAD SONGS
+    // ==========================================
+
+    function loadSongs() {
+
+      const script =
+        document.createElement("script");
+
+
+      script.src =
+        API_URL +
+        "?callback=receiveSongs";
+
+
+      document.body.appendChild(script);
+
+    }
+
+
+    // ==========================================
+    // RECEIVE SONGS
+    // ==========================================
+
+    function receiveSongs(data) {
+
+      songs = data || [];
+
+      displaySongs(songs);
+
+    }
+
+
+    // ==========================================
+    // DISPLAY SONGS
+    // ==========================================
+
+    function displaySongs(list) {
+
+      const container =
+        document.getElementById("songs");
+
+      const noResults =
+        document.getElementById("noResults");
+
+
+      container.innerHTML = "";
+
+
+      if (!list || list.length === 0) {
+
+        noResults.style.display =
+          "block";
+
+        return;
+
+      }
+
+
+      noResults.style.display =
+        "none";
+
+
+      list.forEach(function(song) {
+
+        const div =
+          document.createElement("div");
+
+
+        div.className =
+          "song";
+
+
+        const name =
+          document.createElement("div");
+
+
+        name.className =
+          "song-name";
+
+
+        name.textContent =
+          song.name;
+
+
+        div.appendChild(name);
+
+
+        div.onclick =
+          function() {
+
+            openSong(song);
+
+          };
+
+
+        container.appendChild(div);
+
+      });
+
+    }
+
+
+    // ==========================================
+    // SEARCH
+    // ==========================================
+
+    document
+      .getElementById("search")
+      .addEventListener(
+        "input",
+        function() {
+
+          const search =
+            this.value
+              .toLowerCase()
+              .trim();
+
+
+          if (search === "") {
+
+            displaySongs(songs);
+
+            return;
+
+          }
+
+
+          const filtered =
+            songs.filter(function(song) {
+
+              const songName =
+                song.name
+                  .toLowerCase()
+                  .trim();
+
+
+              return songName
+                .startsWith(search);
+
+            });
+
+
+          displaySongs(filtered);
+
+        }
+      );
+
+
+    // ==========================================
+    // OPEN SONG
+    // ==========================================
+
+    function openSong(song) {
+
+      document
+        .getElementById("header")
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById("songs")
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById("noResults")
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById("viewer")
+        .style.display =
+        "block";
+
+
+      document
+        .getElementById("songTitle")
+        .textContent =
+        song.name;
+
+
+      const chords =
+        document.getElementById("chords");
+
+
+      if (
+        song.chords &&
+        song.chords.trim() !== ""
+      ) {
+
+        chords.textContent =
+          song.chords;
+
+
+        chords.classList
+          .remove("no-chords");
+
+      } else {
+
+        chords.textContent =
+          "No chords added yet.";
+
+
+        chords.classList
+          .add("no-chords");
+
+      }
+
+
+      window.scrollTo(0, 0);
+
+    }
+
+
+    // ==========================================
+    // BACK TO SONGS
+    // ==========================================
+
+    function goBack() {
+
+      document
+        .getElementById("viewer")
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById("header")
+        .style.display =
+        "block";
+
+
+      document
+        .getElementById("songs")
+        .style.display =
+        "block";
+
+
+      window.scrollTo(0, 0);
+
+    }
+
+
+    // ==========================================
+    // START
+    // ==========================================
+
+    loadSongs();
+
+  </script>
+
+
 </body>
+
 </html>

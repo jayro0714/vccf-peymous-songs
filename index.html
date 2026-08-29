@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -12,13 +11,11 @@
 
   <title>VCCF Peymous Songs List</title>
 
-
   <style>
 
     * {
       box-sizing: border-box;
     }
-
 
     body {
       margin: 0;
@@ -28,10 +25,7 @@
       min-height: 100vh;
     }
 
-
-    /* ==============================
-       HEADER
-    ============================== */
+    /* HEADER */
 
     header {
       background: #0f172a;
@@ -39,30 +33,22 @@
       text-align: center;
     }
 
-
     h1 {
       margin: 0 0 20px;
       font-size: 30px;
     }
 
-
     #search {
       width: 100%;
       max-width: 500px;
       padding: 14px 16px;
-
       border-radius: 10px;
       border: none;
-
       font-size: 16px;
-
       outline: none;
     }
 
-
-    /* ==============================
-       SONG LIST
-    ============================== */
+    /* SONG LIST */
 
     #songs {
       max-width: 700px;
@@ -70,138 +56,89 @@
       padding: 20px;
     }
 
-
     .song {
       background: #1f2937;
-
       padding: 18px;
-
       margin-bottom: 10px;
-
       border-radius: 10px;
-
       cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.1s ease;
+      transition: 0.2s ease;
     }
-
 
     .song:hover {
       background: #374151;
     }
 
-
     .song:active {
       transform: scale(0.99);
     }
-
 
     .song-name {
       font-size: 18px;
       font-weight: bold;
     }
 
-
-    /* ==============================
-       NO RESULTS
-    ============================== */
-
-    #noResults {
-      display: none;
-
-      text-align: center;
-
-      color: #9ca3af;
-
-      padding: 40px 20px;
-    }
-
-
-    /* ==============================
-       LOADING
-    ============================== */
+    /* LOADING */
 
     #loading {
       text-align: center;
-
       color: #9ca3af;
-
       padding: 40px 20px;
     }
 
+    /* NO RESULTS */
 
-    /* ==============================
-       SONG VIEWER
-    ============================== */
+    #noResults {
+      display: none;
+      text-align: center;
+      color: #9ca3af;
+      padding: 40px 20px;
+    }
+
+    /* SONG VIEWER */
 
     #viewer {
       display: none;
-
       max-width: 750px;
-
       margin: 0 auto;
-
       padding: 25px 20px;
     }
 
-
     .back {
       display: inline-block;
-
       margin-bottom: 25px;
-
       color: #60a5fa;
-
       font-weight: bold;
-
       cursor: pointer;
     }
-
 
     .back:hover {
       color: #93c5fd;
     }
 
-
     #songTitle {
       font-size: 32px;
-
       margin-bottom: 20px;
     }
 
-
     #chords {
       background: #0f172a;
-
       padding: 22px;
-
       border-radius: 10px;
-
       white-space: pre-wrap;
-
       overflow-x: auto;
-
       font-family: monospace;
-
       font-size: 17px;
-
       line-height: 1.8;
-
       min-height: 70px;
     }
-
 
     .no-chords {
       color: #9ca3af;
       font-family: Arial, sans-serif;
     }
 
-
-    /* ==============================
-       MOBILE
-    ============================== */
+    /* MOBILE */
 
     @media (max-width: 600px) {
 
@@ -209,42 +146,33 @@
         padding: 25px 15px;
       }
 
-
       h1 {
         font-size: 25px;
       }
-
 
       #songs {
         padding: 15px;
       }
 
-
       .song {
         padding: 16px;
       }
-
 
       .song-name {
         font-size: 17px;
       }
 
-
       #viewer {
         padding: 20px 15px;
       }
-
 
       #songTitle {
         font-size: 27px;
       }
 
-
       #chords {
         font-size: 16px;
-
         padding: 18px;
-
         line-height: 1.7;
       }
 
@@ -258,16 +186,13 @@
 <body>
 
 
-  <!-- =================================
-       SONG LIST
-  ================================== -->
+  <!-- SONG LIST -->
 
   <header id="header">
 
     <h1>
       🎵 VCCF Peymous Songs List
     </h1>
-
 
     <input
       id="search"
@@ -292,9 +217,7 @@
   </div>
 
 
-  <!-- =================================
-       SONG VIEWER
-  ================================== -->
+  <!-- SONG VIEWER -->
 
   <div id="viewer">
 
@@ -305,9 +228,7 @@
       ← Back to Songs
     </div>
 
-
     <h1 id="songTitle"></h1>
-
 
     <div id="chords"></div>
 
@@ -317,20 +238,20 @@
   <script>
 
 
-    // ==================================
-    // YOUR APPS SCRIPT API
-    // ==================================
+    // ==========================================
+    // YOUR NEW APPS SCRIPT URL
+    // ==========================================
 
     const API_URL =
-      "https://script.google.com/macros/s/AKfycby8BE2i_DU_WeabT9sW-ZdPTW8y4WuAmDR9jWVsqBnSe8Gi4klSrgy2Xe19kAcVfpbWVw/exec";
+      "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
 
 
     let songs = [];
 
 
-    // ==================================
+    // ==========================================
     // LOAD SONGS
-    // ==================================
+    // ==========================================
 
     function loadSongs() {
 
@@ -343,12 +264,20 @@
         "?callback=receiveSongs";
 
 
-      script.onerror =
-        function() {
+      script.onload = function() {
 
-          showError();
+        console.log(
+          "Apps Script loaded successfully."
+        );
 
-        };
+      };
+
+
+      script.onerror = function() {
+
+        showError();
+
+      };
 
 
       document.body.appendChild(script);
@@ -356,13 +285,16 @@
     }
 
 
-    // ==================================
-    // RECEIVE DATA FROM APPS SCRIPT
-    // ==================================
+    // ==========================================
+    // RECEIVE SONGS
+    // ==========================================
 
     function receiveSongs(data) {
 
-      console.log("Songs received:", data);
+      console.log(
+        "Songs received:",
+        data
+      );
 
 
       document
@@ -387,27 +319,29 @@
     }
 
 
-    // ==================================
+    // ==========================================
     // ERROR
-    // ==================================
+    // ==========================================
 
     function showError() {
 
-      document
-        .getElementById("loading")
-        .textContent =
-        "Unable to load songs. Please try again.";
+      const loading =
+        document.getElementById("loading");
 
-      console.error(
-        "Unable to load songs from Apps Script."
-      );
+
+      loading.style.display =
+        "block";
+
+
+      loading.textContent =
+        "Unable to load songs. Please try again.";
 
     }
 
 
-    // ==================================
+    // ==========================================
     // DISPLAY SONGS
-    // ==================================
+    // ==========================================
 
     function displaySongs(list) {
 
@@ -464,17 +398,14 @@
         div.appendChild(name);
 
 
-        // IMPORTANT:
-        // Pass the actual song object.
-        // This prevents search results
-        // from opening the wrong song.
-
-        div.onclick =
+        div.addEventListener(
+          "click",
           function() {
 
             openSong(song);
 
-          };
+          }
+        );
 
 
         container.appendChild(div);
@@ -484,9 +415,9 @@
     }
 
 
-    // ==================================
+    // ==========================================
     // SEARCH
-    // ==================================
+    // ==========================================
 
     document
       .getElementById("search")
@@ -499,9 +430,6 @@
               .toLowerCase()
               .trim();
 
-
-          // Empty search
-          // = show everything
 
           if (search === "") {
 
@@ -517,16 +445,27 @@
               function(song) {
 
                 const songName =
-                  song.name
+                  String(song.name)
                     .toLowerCase()
                     .trim();
 
 
-                // Search must start
-                // from beginning of title
+                /*
+                  Search anywhere in the
+                  song title.
 
-                return songName
-                  .startsWith(search);
+                  Example:
+
+                  "araw"
+                  → Araw araw
+
+                  "amazing"
+                  → Amazing Love
+                */
+
+                return songName.includes(
+                  search
+                );
 
               }
             );
@@ -538,9 +477,9 @@
       );
 
 
-    // ==================================
+    // ==========================================
     // OPEN SONG
-    // ==================================
+    // ==========================================
 
     function openSong(song) {
 
@@ -584,11 +523,14 @@
         document.getElementById("chords");
 
 
-      // Show Notes/chords
+      /*
+        The chords come from the
+        Google Sheet cell NOTE.
+      */
 
       if (
         song.chords &&
-        song.chords.trim() !== ""
+        String(song.chords).trim() !== ""
       ) {
 
         chords.textContent =
@@ -612,14 +554,17 @@
       }
 
 
-      window.scrollTo(0, 0);
+      window.scrollTo(
+        0,
+        0
+      );
 
     }
 
 
-    // ==================================
-    // BACK
-    // ==================================
+    // ==========================================
+    // BACK TO SONGS
+    // ==========================================
 
     function goBack() {
 
@@ -641,14 +586,43 @@
         "block";
 
 
-      window.scrollTo(0, 0);
+      const search =
+        document.getElementById("search");
+
+
+      /*
+        Keep the search text and
+        return to its results.
+      */
+
+      if (
+        search.value.trim() !== ""
+      ) {
+
+        search.dispatchEvent(
+          new Event("input")
+        );
+
+      }
+
+      else {
+
+        displaySongs(songs);
+
+      }
+
+
+      window.scrollTo(
+        0,
+        0
+      );
 
     }
 
 
-    // ==================================
+    // ==========================================
     // START
-    // ==================================
+    // ==========================================
 
     loadSongs();
 

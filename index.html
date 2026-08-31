@@ -1790,38 +1790,53 @@
     ===================================================== */
 
     async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const loginBtn = document.getElementById("loginBtn");
+  const loginMessage = document.getElementById("loginMessage");
 
-      if (
-        loginInProgress
-      ) {
+  if (!email || !password) {
+    loginMessage.textContent = "Please enter your email and password.";
+    return;
+  }
 
-        return;
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Signing in...";
+  loginMessage.textContent = "";
 
-      }
+  try {
+    const userCredential =
+      await auth.signInWithEmailAndPassword(email, password);
 
+    console.log("LOGIN SUCCESS:", userCredential.user.email);
 
-      const email =
-        loginEmail.value
-          .trim();
+    loginMessage.textContent = "Login successful.";
 
-      const password =
-        loginPassword.value;
+    /*
+     * IMPORTANT:
+     * Switch to the songs page immediately.
+     */
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("homePage").style.display = "block";
 
+    /*
+     * Load songs after login.
+     */
+    await loadSongs();
 
-      /*
-        Validate email
-      */
+  } catch (error) {
 
-      if (!email) {
+    console.error("LOGIN ERROR:", error);
 
-        loginMessage.textContent =
-          "Please enter your email.";
+    loginMessage.textContent =
+      "Login failed: " + getFirebaseErrorMessage(error);
 
-        loginEmail.focus();
+  } finally {
 
-        return;
-
-      }
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Login";
+  }
+}
 
 
       /*

@@ -101,7 +101,6 @@
       max-width: 800px;
       margin: 30px auto 0;
       min-height: calc(100vh - 30px);
-      position: relative;
     }
 
     .back {
@@ -131,8 +130,10 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
+
       padding: 15px;
       margin-bottom: 20px;
+
       background: #1e293b;
       border-radius: 10px;
     }
@@ -144,12 +145,16 @@
     .transpose button {
       width: 45px;
       height: 40px;
+
       border: none;
       border-radius: 8px;
+
       background: #334155;
       color: white;
+
       font-size: 22px;
       font-weight: bold;
+
       cursor: pointer;
     }
 
@@ -170,7 +175,9 @@
 
     #chords {
       background: #111827;
+
       padding: 25px;
+
       border-radius: 10px;
 
       white-space: pre-wrap;
@@ -191,6 +198,7 @@
 
     .site-footer {
       margin-top: 50px;
+
       padding: 30px 20px;
 
       text-align: center;
@@ -202,6 +210,7 @@
 
     .footer-brand {
       font-size: 18px;
+
       font-weight: bold;
 
       color: #ffffff;
@@ -308,6 +317,7 @@
 
   <div id="songPage">
 
+
     <div
       class="back"
       onclick="showHome()"
@@ -320,7 +330,7 @@
 
 
     <!-- =====================================
-         TRANSPOSE
+         TRANSPOSE CONTROLS
     ====================================== -->
 
     <div class="transpose">
@@ -376,6 +386,7 @@
 
     </footer>
 
+
   </div>
 
 
@@ -400,370 +411,6 @@
   let currentSong = null;
 
   let transposeAmount = 0;
-
-
-
-  // =====================================================
-  // LOAD SONGS
-  // =====================================================
-
-  function loadSongs() {
-
-    const callbackName =
-      "receiveSongs_" +
-      Date.now();
-
-
-    window[callbackName] =
-      function(data) {
-
-        songs =
-          Array.isArray(data)
-            ? data
-            : [];
-
-
-        // Sort songs alphabetically A-Z
-        songs.sort(function(a, b) {
-
-          return String(
-            a.name || ""
-          ).localeCompare(
-            String(
-              b.name || ""
-            ),
-            undefined,
-            {
-              sensitivity: "base"
-            }
-          );
-
-        });
-
-
-        delete window[
-          callbackName
-        ];
-
-
-        const oldScript =
-          document.getElementById(
-            "songsApiScript"
-          );
-
-
-        if (oldScript) {
-          oldScript.remove();
-        }
-
-
-        displaySongs(songs);
-
-      };
-
-
-    const script =
-      document.createElement(
-        "script"
-      );
-
-
-    script.id =
-      "songsApiScript";
-
-
-    script.src =
-      API_URL +
-      "?callback=" +
-      encodeURIComponent(
-        callbackName
-      );
-
-
-    script.onerror =
-      function() {
-
-        document
-          .getElementById(
-            "message"
-          )
-          .textContent =
-          "Unable to load songs. Please try again.";
-
-
-        delete window[
-          callbackName
-        ];
-
-
-        script.remove();
-
-      };
-
-
-    document
-      .body
-      .appendChild(
-        script
-      );
-
-  }
-
-
-
-  // =====================================================
-  // DISPLAY SONGS
-  // =====================================================
-
-  function displaySongs(list) {
-
-    const container =
-      document.getElementById(
-        "songs"
-      );
-
-
-    const message =
-      document.getElementById(
-        "message"
-      );
-
-
-    container.innerHTML =
-      "";
-
-
-    if (
-      !list ||
-      list.length === 0
-    ) {
-
-      message.textContent =
-        "No songs found.";
-
-      return;
-
-    }
-
-
-    message.textContent =
-      "";
-
-
-    list.forEach(function(song) {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "song";
-
-
-      div.textContent =
-        song.name;
-
-
-      div.onclick =
-        function() {
-
-          openSong(song);
-
-        };
-
-
-      container.appendChild(
-        div
-      );
-
-    });
-
-  }
-
-
-
-  // =====================================================
-  // SEARCH
-  // =====================================================
-
-  document
-    .getElementById(
-      "search"
-    )
-    .addEventListener(
-      "input",
-      function() {
-
-        const searchText =
-          this.value
-            .trim()
-            .toLowerCase();
-
-
-        if (!searchText) {
-
-          displaySongs(
-            songs
-          );
-
-          return;
-
-        }
-
-
-        const filtered =
-          songs.filter(
-            function(song) {
-
-              return String(
-                song.name || ""
-              )
-              .toLowerCase()
-              .includes(
-                searchText
-              );
-
-            }
-          );
-
-
-        displaySongs(
-          filtered
-        );
-
-      }
-    );
-
-
-
-  // =====================================================
-  // OPEN SONG
-  // =====================================================
-
-  function openSong(song) {
-
-    currentSong =
-      song;
-
-
-    transposeAmount =
-      0;
-
-
-    document
-      .getElementById(
-        "homePage"
-      )
-      .style.display =
-      "none";
-
-
-    document
-      .getElementById(
-        "songPage"
-      )
-      .style.display =
-      "block";
-
-
-    document
-      .getElementById(
-        "songTitle"
-      )
-      .textContent =
-      song.name;
-
-
-    updateSong();
-
-
-    window.scrollTo(
-      0,
-      0
-    );
-
-  }
-
-
-
-  // =====================================================
-  // BACK TO HOME
-  // =====================================================
-
-  function showHome() {
-
-    currentSong =
-      null;
-
-
-    transposeAmount =
-      0;
-
-
-    document
-      .getElementById(
-        "songPage"
-      )
-      .style.display =
-      "none";
-
-
-    document
-      .getElementById(
-        "homePage"
-      )
-      .style.display =
-      "flex";
-
-
-    window.scrollTo(
-      0,
-      0
-    );
-
-  }
-
-
-
-  // =====================================================
-  // TRANSPOSE UP
-  // =====================================================
-
-  function transposeUp() {
-
-    if (!currentSong) {
-      return;
-    }
-
-
-    transposeAmount++;
-
-
-    updateSong();
-
-  }
-
-
-
-  // =====================================================
-  // TRANSPOSE DOWN
-  // =====================================================
-
-  function transposeDown() {
-
-    if (!currentSong) {
-      return;
-    }
-
-
-    transposeAmount--;
-
-
-    updateSong();
-
-  }
 
 
 
@@ -833,7 +480,6 @@
 
     };
 
-
     return map[note];
 
   }
@@ -841,7 +487,69 @@
 
 
   // =====================================================
+  // TRANSPOSE NOTE
+  // =====================================================
+
+  function transposeNote(
+    note,
+    amount
+  ) {
+
+    const number =
+      noteToNumber(note);
+
+
+    if (
+      number === undefined
+    ) {
+
+      return note;
+
+    }
+
+
+    let newNumber =
+      (
+        number +
+        amount
+      ) % 12;
+
+
+    if (
+      newNumber < 0
+    ) {
+
+      newNumber += 12;
+
+    }
+
+
+    return chromaticNotes[
+      newNumber
+    ];
+
+  }
+
+
+
+  // =====================================================
   // TRANSPOSE CHORDS
+  //
+  // IMPORTANT:
+  //
+  // This handles:
+  //
+  // D
+  // Dm
+  // D7
+  // Dsus4
+  // D/F#
+  // Eb/F#
+  // Cm/Bb
+  // (D-Em)
+  // (Eb/F# - Ab)
+  //
+  // Both the ROOT and BASS note are transposed.
   // =====================================================
 
   function transposeChords(
@@ -859,58 +567,111 @@
     }
 
 
-    const chordRegex =
-      /(^|[\s(\[\]|,;:-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|7|9|11|13|M|°|\+|-|\/|\s|[)\],;:.]|$))/g;
+    let result = text;
 
 
-    return text.replace(
-      chordRegex,
-      function(
-        full,
-        separator,
-        root
-      ) {
 
-        const rootNumber =
-          noteToNumber(
-            root
+    // =================================================
+    // STEP 1
+    // TRANSPOSE THE MAIN CHORD ROOT
+    // =================================================
+
+    /*
+      A chord root is recognized when:
+
+      - It starts the string
+      - OR follows whitespace
+      - OR follows (
+      - OR follows [
+      - OR follows {
+      - OR follows -
+      - OR follows comma/colon/semicolon
+
+      This allows:
+
+      (Eb
+      D-Em
+      Eb/F#
+      Cm/Bb
+    */
+
+    const rootRegex =
+      /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
+
+
+    result =
+      result.replace(
+        rootRegex,
+        function(
+          fullMatch,
+          separator,
+          root
+        ) {
+
+          return (
+            separator +
+            transposeNote(
+              root,
+              amount
+            )
           );
 
+        }
+      );
 
-        if (
-          rootNumber === undefined
+
+
+    // =================================================
+    // STEP 2
+    // TRANSPOSE SLASH-CHORD BASS NOTES
+    // =================================================
+
+    /*
+      This specifically handles:
+
+      /F#
+      /Bb
+      /C
+      /Ab
+
+      So:
+
+      Eb/F#
+          ↓
+      E/G
+
+      Cm/Bb
+          ↓
+      C#m/B
+
+      The slash itself is preserved.
+    */
+
+    const bassRegex =
+      /\/([A-G](?:#|b)?)(?=[\s)\]\},;:.+\-]|$)/g;
+
+
+    result =
+      result.replace(
+        bassRegex,
+        function(
+          fullMatch,
+          bassNote
         ) {
 
-          return full;
+          return (
+            "/" +
+            transposeNote(
+              bassNote,
+              amount
+            )
+          );
 
         }
+      );
 
 
-        let newNumber =
-          (
-            rootNumber +
-            amount
-          ) % 12;
-
-
-        if (
-          newNumber < 0
-        ) {
-
-          newNumber += 12;
-
-        }
-
-
-        return (
-          separator +
-          chromaticNotes[
-            newNumber
-          ]
-        );
-
-      }
-    );
+    return result;
 
   }
 
@@ -927,20 +688,50 @@
     }
 
 
-    const match =
+    /*
+      First look for a key written at the
+      beginning of the song.
+
+      Example:
+
+      (Eb)
+
+      (Ab)
+
+      (F#)
+    */
+
+    const keyAtStart =
       text.match(
-
-        /(?:^|[\s(\[])([A-G](?:#|b)?)(?=m|maj|min|dim|aug|sus|add|7|9|11|13|\/|\s|$|[\])}:,;-])/m
-
+        /^\s*\(?([A-G](?:#|b)?)\)?/
       );
 
 
-    if (!match) {
-      return "-";
+    if (keyAtStart) {
+
+      return keyAtStart[1];
+
     }
 
 
-    return match[1];
+    /*
+      Otherwise find the first chord.
+    */
+
+    const firstChord =
+      text.match(
+        /(?:^|[\s(\[])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|[0-9]|\/|[\s)\],;:.]|$))/
+      );
+
+
+    if (!firstChord) {
+
+      return "-";
+
+    }
+
+
+    return firstChord[1];
 
   }
 
@@ -956,9 +747,7 @@
   ) {
 
     const originalKey =
-      getOriginalKey(
-        text
-      );
+      getOriginalKey(text);
 
 
     const number =
@@ -1001,13 +790,400 @@
 
 
   // =====================================================
+  // LOAD SONGS
+  // =====================================================
+
+  function loadSongs() {
+
+    const callbackName =
+      "receiveSongs_" +
+      Date.now();
+
+
+    window[callbackName] =
+      function(data) {
+
+        songs =
+          Array.isArray(data)
+            ? data
+            : [];
+
+
+        // ==============================================
+        // SORT ALPHABETICALLY
+        // ==============================================
+
+        songs.sort(
+          function(a, b) {
+
+            return String(
+              a.name || ""
+            ).localeCompare(
+              String(
+                b.name || ""
+              ),
+              undefined,
+              {
+                sensitivity: "base"
+              }
+            );
+
+          }
+        );
+
+
+        delete window[
+          callbackName
+        ];
+
+
+        const oldScript =
+          document.getElementById(
+            "songsApiScript"
+          );
+
+
+        if (oldScript) {
+
+          oldScript.remove();
+
+        }
+
+
+        displaySongs(
+          songs
+        );
+
+      };
+
+
+    const script =
+      document.createElement(
+        "script"
+      );
+
+
+    script.id =
+      "songsApiScript";
+
+
+    script.src =
+      API_URL +
+      "?callback=" +
+      encodeURIComponent(
+        callbackName
+      );
+
+
+    script.onerror =
+      function() {
+
+        document
+          .getElementById(
+            "message"
+          )
+          .textContent =
+          "Unable to load songs. Please try again.";
+
+
+        delete window[
+          callbackName
+        ];
+
+
+        script.remove();
+
+      };
+
+
+    document
+      .body
+      .appendChild(
+        script
+      );
+
+  }
+
+
+
+  // =====================================================
+  // DISPLAY SONGS
+  // =====================================================
+
+  function displaySongs(
+    list
+  ) {
+
+    const container =
+      document.getElementById(
+        "songs"
+      );
+
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+
+    container.innerHTML =
+      "";
+
+
+    if (
+      !list ||
+      list.length === 0
+    ) {
+
+      message.textContent =
+        "No songs found.";
+
+      return;
+
+    }
+
+
+    message.textContent =
+      "";
+
+
+    list.forEach(
+      function(song) {
+
+        const div =
+          document.createElement(
+            "div"
+          );
+
+
+        div.className =
+          "song";
+
+
+        div.textContent =
+          song.name;
+
+
+        div.onclick =
+          function() {
+
+            openSong(
+              song
+            );
+
+          };
+
+
+        container.appendChild(
+          div
+        );
+
+      }
+    );
+
+  }
+
+
+
+  // =====================================================
+  // SEARCH
+  // =====================================================
+
+  document
+    .getElementById(
+      "search"
+    )
+    .addEventListener(
+      "input",
+      function() {
+
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
+
+
+        if (!searchText) {
+
+          displaySongs(
+            songs
+          );
+
+          return;
+
+        }
+
+
+        const filtered =
+          songs.filter(
+            function(song) {
+
+              return String(
+                song.name || ""
+              )
+              .toLowerCase()
+              .includes(
+                searchText
+              );
+
+            }
+          );
+
+
+        displaySongs(
+          filtered
+        );
+
+      }
+    );
+
+
+
+  // =====================================================
+  // OPEN SONG
+  // =====================================================
+
+  function openSong(
+    song
+  ) {
+
+    currentSong =
+      song;
+
+
+    transposeAmount =
+      0;
+
+
+    document
+      .getElementById(
+        "homePage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "songPage"
+      )
+      .style.display =
+      "block";
+
+
+    document
+      .getElementById(
+        "songTitle"
+      )
+      .textContent =
+      song.name;
+
+
+    updateSong();
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  }
+
+
+
+  // =====================================================
+  // SHOW HOME
+  // =====================================================
+
+  function showHome() {
+
+    currentSong =
+      null;
+
+
+    transposeAmount =
+      0;
+
+
+    document
+      .getElementById(
+        "songPage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "homePage"
+      )
+      .style.display =
+      "flex";
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  }
+
+
+
+  // =====================================================
+  // TRANSPOSE UP
+  // =====================================================
+
+  function transposeUp() {
+
+    if (!currentSong) {
+
+      return;
+
+    }
+
+
+    transposeAmount++;
+
+
+    updateSong();
+
+  }
+
+
+
+  // =====================================================
+  // TRANSPOSE DOWN
+  // =====================================================
+
+  function transposeDown() {
+
+    if (!currentSong) {
+
+      return;
+
+    }
+
+
+    transposeAmount--;
+
+
+    updateSong();
+
+  }
+
+
+
+  // =====================================================
   // UPDATE SONG
   // =====================================================
 
   function updateSong() {
 
     if (!currentSong) {
+
       return;
+
     }
 
 
@@ -1048,10 +1224,11 @@
 
 
   // =====================================================
-  // START APP
+  // START APPLICATION
   // =====================================================
 
   loadSongs();
+
 
 </script>
 

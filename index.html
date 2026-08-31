@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <title>VCCF Peymous Songs List</title>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -69,30 +71,35 @@
       color: #94a3b8;
     }
 
+    /* SONG PAGE */
+
     #songPage {
       display: none;
       width: 90%;
       max-width: 800px;
       margin: 30px auto;
-      padding-bottom: 50px;
+      padding-bottom: 60px;
     }
 
     .back {
       display: inline-block;
       margin-bottom: 20px;
       cursor: pointer;
-      color: #cbd5e1;
+      color: #60a5fa;
       font-size: 16px;
+      font-weight: bold;
     }
 
     .back:hover {
-      color: white;
+      color: #93c5fd;
     }
 
     #songTitle {
       font-size: 34px;
       margin-bottom: 20px;
     }
+
+    /* TRANSPOSE */
 
     .transpose {
       display: flex;
@@ -103,6 +110,10 @@
       padding: 15px;
       background: #1e293b;
       border-radius: 10px;
+    }
+
+    .transpose-label {
+      font-weight: bold;
     }
 
     .transpose button {
@@ -122,10 +133,12 @@
     }
 
     #keyDisplay {
-      min-width: 100px;
+      min-width: 80px;
       text-align: center;
       font-weight: bold;
     }
+
+    /* CHORDS */
 
     #chords {
       background: #111827;
@@ -138,7 +151,83 @@
       overflow-x: auto;
     }
 
+    /* FEEDBACK */
+
+    .feedback-section {
+      margin-top: 35px;
+      padding: 22px;
+      background: #1e293b;
+      border-radius: 12px;
+    }
+
+    .feedback-section h2 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .feedback-description {
+      margin: 0 0 18px;
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .feedback-input,
+    .feedback-textarea {
+      width: 100%;
+      border: none;
+      outline: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .feedback-input::placeholder,
+    .feedback-textarea::placeholder {
+      color: #64748b;
+    }
+
+    .feedback-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .feedback-button {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      background: #3b82f6;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .feedback-button:hover {
+      background: #2563eb;
+    }
+
+    .feedback-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #feedbackStatus {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 14px;
+      color: #94a3b8;
+    }
+
+    /* MOBILE */
+
     @media (max-width: 600px) {
+
       h1 {
         font-size: 25px;
       }
@@ -151,17 +240,36 @@
         font-size: 16px;
         padding: 18px;
       }
+
+      .transpose {
+        gap: 10px;
+      }
+
+      .feedback-section {
+        padding: 18px;
+      }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <!-- SONG LIST -->
+
+  <!-- ==========================
+       HOME / SONG LIST
+  =========================== -->
+
   <div id="homePage">
 
     <header>
-      <h1>🎵 VCCF Peymous Songs List</h1>
+
+      <h1>
+        🎵 VCCF Peymous Songs List
+      </h1>
 
       <input
         type="text"
@@ -169,9 +277,12 @@
         placeholder="Search song..."
         autocomplete="off"
       >
+
     </header>
 
+
     <div id="songs"></div>
+
 
     <div id="message">
       Loading songs...
@@ -180,38 +291,122 @@
   </div>
 
 
-  <!-- SONG PAGE -->
+
+  <!-- ==========================
+       SONG PAGE
+  =========================== -->
+
   <div id="songPage">
 
-    <div class="back" onclick="showHome()">
+
+    <div
+      class="back"
+      onclick="showHome()"
+    >
       ← Back to Songs
     </div>
 
+
     <h1 id="songTitle"></h1>
 
+
     <!-- TRANSPOSE -->
+
     <div class="transpose">
 
-      <button onclick="transposeDown()">−</button>
+      <span class="transpose-label">
+        Transpose
+      </span>
+
+
+      <button
+        onclick="transposeDown()"
+        aria-label="Transpose down"
+      >
+        −
+      </button>
+
 
       <div id="keyDisplay">
         Key: -
       </div>
 
-      <button onclick="transposeUp()">+</button>
+
+      <button
+        onclick="transposeUp()"
+        aria-label="Transpose up"
+      >
+        +
+      </button>
 
     </div>
 
+
+    <!-- CHORDS -->
+
     <div id="chords"></div>
+
+
+
+    <!-- ==========================
+         CHORD FEEDBACK
+    =========================== -->
+
+    <div class="feedback-section">
+
+      <h2>
+        🎸 Chord Feedback
+      </h2>
+
+
+      <p class="feedback-description">
+        Found an incorrect chord or have a suggestion?
+        Let me know.
+      </p>
+
+
+      <input
+        type="text"
+        id="feedbackName"
+        class="feedback-input"
+        placeholder="Your name (optional)"
+        maxlength="100"
+      >
+
+
+      <textarea
+        id="feedbackText"
+        class="feedback-textarea"
+        placeholder="Write your feedback, correction, or question..."
+        maxlength="2000"
+      ></textarea>
+
+
+      <button
+        id="feedbackButton"
+        class="feedback-button"
+        onclick="submitFeedback()"
+      >
+        Send Feedback
+      </button>
+
+
+      <div id="feedbackStatus"></div>
+
+    </div>
+
 
   </div>
 
 
+
 <script>
 
-  /*
-   * YOUR GOOGLE APPS SCRIPT URL
-   */
+
+  // ==========================================
+  // GOOGLE APPS SCRIPT URL
+  // ==========================================
+
   const API_URL =
     "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
 
@@ -223,226 +418,365 @@
   let transposeAmount = 0;
 
 
-  /*
-   * LOAD SONGS
-   *
-   * JSONP is used because the Google Apps Script
-   * is hosted on a different domain than Vercel.
-   */
+
+  // ==========================================
+  // LOAD SONGS
+  // ==========================================
+
   function loadSongs() {
 
     const callbackName =
       "receiveSongs_" + Date.now();
 
-    window[callbackName] = function(data) {
 
-      songs = Array.isArray(data) ? data : [];
+    window[callbackName] =
+      function(data) {
 
-      delete window[callbackName];
+        songs =
+          Array.isArray(data)
+            ? data
+            : [];
 
-      const oldScript =
-        document.getElementById("apiScript");
 
-      if (oldScript) {
-        oldScript.remove();
-      }
+        delete window[callbackName];
 
-      displaySongs(songs);
-    };
+
+        const oldScript =
+          document.getElementById(
+            "apiScript"
+          );
+
+
+        if (oldScript) {
+          oldScript.remove();
+        }
+
+
+        displaySongs(songs);
+
+      };
 
 
     const script =
       document.createElement("script");
 
-    script.id = "apiScript";
+
+    script.id =
+      "apiScript";
+
 
     script.src =
       API_URL +
       "?callback=" +
       callbackName;
 
-    script.onerror = function() {
 
-      document.getElementById("message").textContent =
-        "Unable to load songs. Please try again.";
+    script.onerror =
+      function() {
 
-      delete window[callbackName];
+        document
+          .getElementById("message")
+          .textContent =
+          "Unable to load songs. Please try again.";
 
-      script.remove();
-    };
 
-    document.body.appendChild(script);
+        delete window[callbackName];
+
+        script.remove();
+
+      };
+
+
+    document
+      .body
+      .appendChild(script);
+
   }
 
 
-  /*
-   * DISPLAY SONG LIST
-   */
+
+  // ==========================================
+  // DISPLAY SONGS
+  // ==========================================
+
   function displaySongs(list) {
 
     const container =
-      document.getElementById("songs");
+      document.getElementById(
+        "songs"
+      );
+
 
     const message =
-      document.getElementById("message");
+      document.getElementById(
+        "message"
+      );
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+      "";
 
 
-    if (!list || list.length === 0) {
+    if (
+      !list ||
+      list.length === 0
+    ) {
 
       message.textContent =
         "No songs found.";
 
       return;
+
     }
 
 
-    message.textContent = "";
+    message.textContent =
+      "";
 
 
-    list.forEach(function(song) {
+    list.forEach(
+      function(song) {
 
-      const div =
-        document.createElement("div");
+        const div =
+          document.createElement(
+            "div"
+          );
 
-      div.className = "song";
 
-      div.textContent = song.name;
+        div.className =
+          "song";
 
-      div.onclick = function() {
-        openSong(song);
-      };
 
-      container.appendChild(div);
+        div.textContent =
+          song.name;
 
-    });
+
+        div.onclick =
+          function() {
+
+            openSong(song);
+
+          };
+
+
+        container.appendChild(
+          div
+        );
+
+      }
+    );
+
   }
 
 
-  /*
-   * SEARCH
-   */
+
+  // ==========================================
+  // SEARCH
+  // ==========================================
+
   document
     .getElementById("search")
-    .addEventListener("input", function() {
+    .addEventListener(
+      "input",
+      function() {
 
-      const searchText =
-        this.value
-          .trim()
-          .toLowerCase();
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
 
 
-      if (!searchText) {
+        if (!searchText) {
 
-        displaySongs(songs);
+          displaySongs(songs);
 
-        return;
+          return;
+
+        }
+
+
+        const filtered =
+          songs.filter(
+            function(song) {
+
+              return String(
+                song.name || ""
+              )
+                .toLowerCase()
+                .includes(
+                  searchText
+                );
+
+            }
+          );
+
+
+        displaySongs(
+          filtered
+        );
+
       }
+    );
 
 
-      const filtered =
-        songs.filter(function(song) {
 
-          return String(song.name || "")
-            .toLowerCase()
-            .includes(searchText);
+  // ==========================================
+  // OPEN SONG
+  // ==========================================
 
-        });
-
-
-      displaySongs(filtered);
-
-    });
-
-
-  /*
-   * OPEN SONG
-   */
   function openSong(song) {
 
-    currentSong = song;
-
-    transposeAmount = 0;
-
-
-    document.getElementById("homePage")
-      .style.display = "none";
+    currentSong =
+      song;
 
 
-    document.getElementById("songPage")
-      .style.display = "block";
+    transposeAmount =
+      0;
 
 
-    document.getElementById("songTitle")
-      .textContent = song.name;
+    document
+      .getElementById(
+        "homePage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "songPage"
+      )
+      .style.display =
+      "block";
+
+
+    document
+      .getElementById(
+        "songTitle"
+      )
+      .textContent =
+      song.name;
+
+
+    document
+      .getElementById(
+        "feedbackName"
+      )
+      .value =
+      "";
+
+
+    document
+      .getElementById(
+        "feedbackText"
+      )
+      .value =
+      "";
+
+
+    document
+      .getElementById(
+        "feedbackStatus"
+      )
+      .textContent =
+      "";
 
 
     updateSong();
 
 
-    window.scrollTo(0, 0);
+    window.scrollTo(
+      0,
+      0
+    );
+
   }
 
 
-  /*
-   * RETURN TO SONG LIST
-   */
+
+  // ==========================================
+  // BACK TO HOME
+  // ==========================================
+
   function showHome() {
 
-    currentSong = null;
-
-    transposeAmount = 0;
-
-
-    document.getElementById("songPage")
-      .style.display = "none";
+    currentSong =
+      null;
 
 
-    document.getElementById("homePage")
-      .style.display = "block";
+    transposeAmount =
+      0;
 
 
-    window.scrollTo(0, 0);
+    document
+      .getElementById(
+        "songPage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "homePage"
+      )
+      .style.display =
+      "block";
+
+
+    window.scrollTo(
+      0,
+      0
+    );
 
   }
 
 
-  /*
-   * TRANSPOSE UP
-   */
+
+  // ==========================================
+  // TRANSPOSE UP
+  // ==========================================
+
   function transposeUp() {
 
     if (!currentSong) {
       return;
     }
 
+
     transposeAmount++;
+
 
     updateSong();
 
   }
 
 
-  /*
-   * TRANSPOSE DOWN
-   */
+
+  // ==========================================
+  // TRANSPOSE DOWN
+  // ==========================================
+
   function transposeDown() {
 
     if (!currentSong) {
       return;
     }
 
+
     transposeAmount--;
+
 
     updateSong();
 
   }
 
 
-  /*
-   * UPDATE DISPLAYED SONG
-   */
+
+  // ==========================================
+  // UPDATE SONG
+  // ==========================================
+
   function updateSong() {
 
     if (!currentSong) {
@@ -451,7 +785,9 @@
 
 
     const original =
-      String(currentSong.chords || "");
+      String(
+        currentSong.chords || ""
+      );
 
 
     const transposed =
@@ -461,8 +797,12 @@
       );
 
 
-    document.getElementById("chords")
-      .textContent = transposed;
+    document
+      .getElementById(
+        "chords"
+      )
+      .textContent =
+      transposed;
 
 
     const key =
@@ -472,19 +812,23 @@
       );
 
 
-    document.getElementById("keyDisplay")
+    document
+      .getElementById(
+        "keyDisplay"
+      )
       .textContent =
-        "Key: " + key;
+      "Key: " + key;
 
   }
 
 
-  /*
-   * CHROMATIC NOTES
-   *
-   * Flats are used for display when appropriate.
-   */
+
+  // ==========================================
+  // NOTE MAP
+  // ==========================================
+
   const chromaticNotes = [
+
     "C",
     "C#",
     "D",
@@ -497,15 +841,15 @@
     "A",
     "Bb",
     "B"
+
   ];
 
 
-  /*
-   * CONVERT NOTE TO NUMBER
-   */
+
   function noteToNumber(note) {
 
     const map = {
+
       "C": 0,
       "B#": 0,
 
@@ -538,24 +882,24 @@
 
       "B": 11,
       "Cb": 11
+
     };
 
 
     return map[note];
+
   }
 
 
-  /*
-   * TRANSPOSE A SINGLE CHORD
-   *
-   * Examples:
-   *
-   * D       → Eb
-   * D/F#    → Eb/G
-   * Bm      → Cm
-   * A/C#    → Bb/D
-   */
-  function transposeChord(chord, amount) {
+
+  // ==========================================
+  // TRANSPOSE CHORD
+  // ==========================================
+
+  function transposeChord(
+    chord,
+    amount
+  ) {
 
     const match =
       chord.match(
@@ -571,117 +915,111 @@
     const root =
       match[1];
 
+
     const suffix =
       match[2];
 
 
     const rootNumber =
-      noteToNumber(root);
+      noteToNumber(
+        root
+      );
 
 
-    if (rootNumber === undefined) {
+    if (
+      rootNumber === undefined
+    ) {
+
       return chord;
+
     }
 
 
     let newRootNumber =
-      (rootNumber + amount) % 12;
+      (
+        rootNumber +
+        amount
+      ) % 12;
 
 
-    if (newRootNumber < 0) {
-      newRootNumber += 12;
+    if (
+      newRootNumber < 0
+    ) {
+
+      newRootNumber +=
+        12;
+
     }
 
 
-    let newChord =
-      chromaticNotes[newRootNumber] +
-      suffix;
+    return (
+      chromaticNotes[
+        newRootNumber
+      ] +
+      suffix
+    );
+
+  }
+
+
+
+  // ==========================================
+  // TRANSPOSE ALL CHORDS
+  // ==========================================
+
+  function transposeChords(
+    text,
+    amount
+  ) {
+
+    if (
+      !text ||
+      amount === 0
+    ) {
+
+      return text;
+
+    }
 
 
     /*
-     * Handle slash chords.
+     * Match chord symbols while
+     * avoiding normal words.
      */
-    const slashMatch =
-      suffix.match(
-        /^([^/]*)\/([A-G](?:#|b)?)(.*)$/
-      );
-
-
-    if (slashMatch) {
-
-      const beforeSlash =
-        slashMatch[1];
-
-      const bass =
-        slashMatch[2];
-
-      const afterBass =
-        slashMatch[3];
-
-
-      const bassNumber =
-        noteToNumber(bass);
-
-
-      if (bassNumber !== undefined) {
-
-        let newBassNumber =
-          (bassNumber + amount) % 12;
-
-
-        if (newBassNumber < 0) {
-          newBassNumber += 12;
-        }
-
-
-        newChord =
-          chromaticNotes[newRootNumber] +
-          beforeSlash +
-          "/" +
-          chromaticNotes[newBassNumber] +
-          afterBass;
-      }
-    }
-
-
-    return newChord;
-  }
-
-
-  /*
-   * TRANSPOSE ALL CHORDS
-   *
-   * We only transpose chord-looking text.
-   * Normal lyrics/text are left alone.
-   */
-  function transposeChords(text, amount) {
-
-    if (!text || amount === 0) {
-      return text;
-    }
-
 
     return text.replace(
-      /(^|[\s|(\[])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|7|9|11|13|M|°|\+|-)*(?:\/[A-G](?:#|b)?)?)(?=$|[\s|)\],:;])/gm,
-      function(full, prefix, chord) {
 
-        return prefix +
+      /(^|[\s|(\[])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|7|9|11|13|M|°|\+|-)*(?:\/[A-G](?:#|b)?)?)(?=$|[\s|)\],:;])/gm,
+
+      function(
+        full,
+        prefix,
+        chord
+      ) {
+
+        return (
+          prefix +
           transposeChord(
             chord,
             amount
-          );
+          )
+        );
 
       }
+
     );
+
   }
 
 
-  /*
-   * FIND THE ORIGINAL KEY
-   *
-   * Looks for the first chord in the song.
-   */
-  function getOriginalKey(text) {
+
+  // ==========================================
+  // GET ORIGINAL KEY
+  // ==========================================
+
+  function getOriginalKey(
+    text
+  ) {
 
     if (!text) {
       return "-";
@@ -690,7 +1028,9 @@
 
     const match =
       text.match(
+
         /(?:^|[\s|(\[])([A-G](?:#|b)?)(?=m|maj|min|dim|aug|sus|add|7|9|11|13|\/|\s|$|[\]|):,;])/m
+
       );
 
 
@@ -704,44 +1044,323 @@
   }
 
 
-  /*
-   * GET DISPLAYED KEY
-   */
-  function getDisplayedKey(text, amount) {
+
+  // ==========================================
+  // GET DISPLAYED KEY
+  // ==========================================
+
+  function getDisplayedKey(
+    text,
+    amount
+  ) {
 
     const originalKey =
-      getOriginalKey(text);
+      getOriginalKey(
+        text
+      );
 
 
     const number =
-      noteToNumber(originalKey);
+      noteToNumber(
+        originalKey
+      );
 
 
-    if (number === undefined) {
+    if (
+      number === undefined
+    ) {
+
       return "-";
+
     }
 
 
     let newNumber =
-      (number + amount) % 12;
+      (
+        number +
+        amount
+      ) % 12;
 
 
-    if (newNumber < 0) {
-      newNumber += 12;
+    if (
+      newNumber < 0
+    ) {
+
+      newNumber +=
+        12;
+
     }
 
 
-    return chromaticNotes[newNumber];
+    return chromaticNotes[
+      newNumber
+    ];
 
   }
 
 
-  /*
-   * START
-   */
+
+  // ==========================================
+  // SUBMIT CHORD FEEDBACK
+  // ==========================================
+
+  function submitFeedback() {
+
+    if (!currentSong) {
+      return;
+    }
+
+
+    const name =
+      document
+        .getElementById(
+          "feedbackName"
+        )
+        .value
+        .trim();
+
+
+    const feedback =
+      document
+        .getElementById(
+          "feedbackText"
+        )
+        .value
+        .trim();
+
+
+    const button =
+      document
+        .getElementById(
+          "feedbackButton"
+        );
+
+
+    const status =
+      document
+        .getElementById(
+          "feedbackStatus"
+        );
+
+
+    if (!feedback) {
+
+      status.textContent =
+        "Please write some feedback first.";
+
+      return;
+
+    }
+
+
+    button.disabled =
+      true;
+
+
+    button.textContent =
+      "Sending...";
+
+
+    status.textContent =
+      "";
+
+
+    /*
+     * Use a hidden form submission.
+     *
+     * This allows the Vercel website
+     * to send data to Google Apps Script
+     * without CORS problems.
+     */
+
+    const form =
+      document.createElement(
+        "form"
+      );
+
+
+    form.method =
+      "GET";
+
+
+    form.action =
+      API_URL;
+
+
+    form.target =
+      "feedbackFrame";
+
+
+    const actionInput =
+      document.createElement(
+        "input"
+      );
+
+
+    actionInput.type =
+      "hidden";
+
+
+    actionInput.name =
+      "action";
+
+
+    actionInput.value =
+      "feedback";
+
+
+    form.appendChild(
+      actionInput
+    );
+
+
+    const songInput =
+      document.createElement(
+        "input"
+      );
+
+
+    songInput.type =
+      "hidden";
+
+
+    songInput.name =
+      "song";
+
+
+    songInput.value =
+      currentSong.name;
+
+
+    form.appendChild(
+      songInput
+    );
+
+
+    const nameInput =
+      document.createElement(
+        "input"
+      );
+
+
+    nameInput.type =
+      "hidden";
+
+
+    nameInput.name =
+      "name";
+
+
+    nameInput.value =
+      name || "Anonymous";
+
+
+    form.appendChild(
+      nameInput
+    );
+
+
+    const feedbackInput =
+      document.createElement(
+        "input"
+      );
+
+
+    feedbackInput.type =
+      "hidden";
+
+
+    feedbackInput.name =
+      "feedback";
+
+
+    feedbackInput.value =
+      feedback;
+
+
+    form.appendChild(
+      feedbackInput
+    );
+
+
+    document.body.appendChild(
+      form
+    );
+
+
+    form.submit();
+
+
+    form.remove();
+
+
+    /*
+     * Show success message.
+     */
+
+    setTimeout(
+      function() {
+
+        button.disabled =
+          false;
+
+
+        button.textContent =
+          "Send Feedback";
+
+
+        status.textContent =
+          "✅ Thanks! Your feedback has been sent.";
+
+
+        document
+          .getElementById(
+            "feedbackText"
+          )
+          .value =
+          "";
+
+      },
+      800
+    );
+
+  }
+
+
+
+  // ==========================================
+  // HIDDEN FRAME FOR FEEDBACK
+  // ==========================================
+
+  const feedbackFrame =
+    document.createElement(
+      "iframe"
+    );
+
+
+  feedbackFrame.name =
+    "feedbackFrame";
+
+
+  feedbackFrame.style.display =
+    "none";
+
+
+  document.body.appendChild(
+    feedbackFrame
+  );
+
+
+
+  // ==========================================
+  // START
+  // ==========================================
+
   loadSongs();
 
+
 </script>
+
 
 </body>
 </html>

@@ -30,7 +30,6 @@
       font-family: Arial, sans-serif;
     }
 
-
     /* =========================================
        HOME PAGE
     ========================================= */
@@ -89,7 +88,6 @@
       margin: 30px;
     }
 
-
     /* =========================================
        SONG PAGE
     ========================================= */
@@ -118,7 +116,6 @@
       font-size: 34px;
       margin: 0 0 20px;
     }
-
 
     /* =========================================
        TRANSPOSE
@@ -161,7 +158,6 @@
       font-weight: bold;
     }
 
-
     /* =========================================
        CHORDS
     ========================================= */
@@ -181,7 +177,6 @@
 
       overflow-x: auto;
     }
-
 
     /* =========================================
        FOOTER
@@ -205,15 +200,12 @@
       color: #ffffff;
 
       margin-bottom: 8px;
-
-      letter-spacing: 0.3px;
     }
 
     .footer-copyright {
       font-size: 13px;
       color: #64748b;
     }
-
 
     /* =========================================
        MOBILE
@@ -317,9 +309,7 @@
     <h1 id="songTitle"></h1>
 
 
-    <!-- =====================================
-         TRANSPOSE
-    ====================================== -->
+    <!-- TRANSPOSE -->
 
     <div class="transpose">
 
@@ -351,16 +341,12 @@
     </div>
 
 
-    <!-- =====================================
-         CHORDS
-    ====================================== -->
+    <!-- CHORDS -->
 
     <div id="chords"></div>
 
 
-    <!-- =====================================
-         FOOTER
-    ====================================== -->
+    <!-- FOOTER -->
 
     <footer class="site-footer">
 
@@ -383,7 +369,7 @@
 
 
   // =====================================================
-  // GOOGLE APPS SCRIPT URL
+  // GOOGLE APPS SCRIPT
   // =====================================================
 
   const API_URL =
@@ -404,15 +390,10 @@
   // =====================================================
   // CHROMATIC NOTES
   //
-  // PREFERRED DISPLAY:
+  // Preferred spelling:
   //
   // Ab -> G#
   // A# -> Bb
-  //
-  // This means transposed chords will use:
-  //
-  // G# instead of Ab
-  // Bb instead of A#
   // =====================================================
 
   const chromaticNotes = [
@@ -529,18 +510,18 @@
   // =====================================================
   // TRANSPOSE CHORDS
   //
-  // Handles:
+  // FIXED:
   //
-  // C
-  // Cm
-  // C7
-  // Cmaj7
-  // Csus4
-  // C/F
+  // Slash chords now support:
+  //
+  // C#/F#m
   // Eb/F#
+  // D/F#
   // Cm/Bb
-  // (Eb - Ab)
-  // (Eb/F# - Ab)
+  // G#/B
+  // F#m/C#
+  //
+  // The suffix after the bass note is preserved.
   // =====================================================
 
   function transposeChords(
@@ -563,7 +544,7 @@
 
     // =================================================
     // STEP 1
-    // TRANSPOSE CHORD ROOTS
+    // TRANSPOSE NORMAL CHORD ROOTS
     // =================================================
 
     const rootRegex =
@@ -593,11 +574,26 @@
 
     // =================================================
     // STEP 2
-    // TRANSPOSE SLASH-CHORD BASS NOTES
+    // TRANSPOSE SLASH BASS NOTES
+    //
+    // THIS IS THE IMPORTANT FIX
     // =================================================
 
+    /*
+      Previously this only worked when the bass note
+      was followed by a space or punctuation.
+
+      That failed on:
+
+        C#/F#m
+
+      because F# is followed by "m".
+
+      Now we allow chord suffixes after the bass note.
+    */
+
     const bassRegex =
-      /\/([A-G](?:#|b)?)(?=[\s)\]\},;:.+\-]|$)/g;
+      /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
 
 
     result =
@@ -632,17 +628,13 @@
   function getOriginalKey(text) {
 
     if (!text) {
+
       return "-";
+
     }
 
 
-    // Look for key at beginning.
-    //
-    // Example:
-    //
-    // (Eb)
-    // (Ab)
-    // (F#)
+    // Check key at beginning.
 
     const keyAtStart =
       text.match(
@@ -748,7 +740,7 @@
             : [];
 
 
-        // Sort alphabetically A-Z
+        // Alphabetical A-Z
 
         songs.sort(
           function(a, b) {

@@ -1498,95 +1498,89 @@
     /* =====================================================
        LOGIN
     ===================================================== */
-    async function login() {
-  const emailInput = document.getElementById("loginEmail");
-  const passwordInput = document.getElementById("loginPassword");
-  const button = document.getElementById("loginButton");
-  const message = document.getElementById("loginMessage");
+    function login() {
+      const emailInput = document.getElementById("loginEmail");
+      const passwordInput = document.getElementById("loginPassword");
+      const button = document.getElementById("loginButton");
+      const message = document.getElementById("loginMessage");
 
-  const email = emailInput.value.trim().toLowerCase();
-  const password = passwordInput.value;
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
 
-  if (!email) {
-    message.textContent = "Please enter your email.";
-    return;
-  }
+      if (!email) {
+        message.textContent = "Please enter your email.";
+        return;
+      }
 
-  if (!password) {
-    message.textContent = "Please enter your password.";
-    return;
-  }
+      if (!password) {
+        message.textContent = "Please enter your password.";
+        return;
+      }
 
-  if (loginInProgress) {
-    return;
-  }
+      if (loginInProgress) return;
 
-  loginInProgress = true;
+      loginInProgress = true;
+      button.disabled = true;
+      button.textContent = "Signing in...";
+      message.textContent = "Signing in...";
 
-  button.disabled = true;
-  button.textContent = "Signing in...";
-  message.textContent = "Signing in...";
+      const callbackName = "loginResponse_" + Date.now();
+      const script = document.createElement("script");
+      let finished = false;
 
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify({
-        action: "login",
-        email: email,
-        password: password
-      })
-    });
+      function cleanup() {
+        if (finished) return;
+        finished = true;
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+        loginInProgress = false;
+        button.disabled = false;
+        button.textContent = "Login";
+      }
 
-    const result = await response.json();
+      window[callbackName] = function(result) {
+        try {
+          console.log("Login response:", result);
 
-    console.log("Login response:", result);
+          if (!result || result.success !== true) {
+            message.textContent =
+              (result && result.message) || "Unable to log in.";
+            return;
+          }
 
-    if (!result.success) {
-      message.textContent =
-        result.message || "Unable to log in.";
+          // IMPORTANT: use localStorage because loadSongs(), logout(),
+          // and session restore all use the same storage.
+          localStorage.setItem("jayro_token", result.token);
+          localStorage.setItem("jayro_email", result.email || email);
+          localStorage.setItem("jayro_name", result.name || "");
+          localStorage.setItem("jayro_role", result.role || "User");
 
-      return;
+          message.textContent = "";
+          showHome();
+          loadSongs();
+        } finally {
+          cleanup();
+        }
+      };
+
+      script.onerror = function() {
+        console.error("Login request failed.");
+        message.textContent = "Unable to connect to the server.";
+        cleanup();
+      };
+
+      // Apps Script does not provide the CORS headers needed for a
+      // cross-origin fetch() from GitHub Pages. JSONP through doGet()
+      // avoids that browser CORS problem.
+      script.src =
+        API_URL +
+        "?action=login" +
+        "&email=" + encodeURIComponent(email) +
+        "&password=" + encodeURIComponent(password) +
+        "&callback=" + encodeURIComponent(callbackName);
+
+      document.body.appendChild(script);
     }
-
-    // Save Apps Script session
-    sessionStorage.setItem(
-      "jayroSessionToken",
-      result.token
-    );
-
-    sessionStorage.setItem(
-      "jayroUser",
-      JSON.stringify({
-        email: result.email,
-        name: result.name,
-        role: result.role
-      })
-    );
-
-    // Login successful
-    message.textContent = "";
-
-    showHome();
-
-    // Load songs using the new session
-    await loadSongs();
-
-  } catch (error) {
-    console.error("Login error:", error);
-
-    message.textContent =
-      "Unable to connect to the server.";
-
-  } finally {
-    loginInProgress = false;
-
-    button.disabled = false;
-    button.textContent = "Login";
-  }
-}
 
 
     /* =====================================================

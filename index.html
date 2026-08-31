@@ -2351,57 +2351,101 @@
     );
 
 
-    /* =====================================================
-       FIREBASE AUTH STATE
-    ===================================================== */
+   /* =====================================================
+   FIREBASE AUTH STATE
+===================================================== */
 
-    auth.onAuthStateChanged(
-      function(user) {
+let authInitialized = false;
+
+auth.onAuthStateChanged(
+  function(user) {
+
+    console.log(
+      "AUTH STATE:",
+      user ? user.email : "Not logged in"
+    );
+
+    /*
+      Firebase fires this when it first checks
+      the existing authentication state.
+
+      Do not force the login screen while a
+      login request is currently happening.
+    */
+
+    if (!authInitialized) {
+
+      authInitialized = true;
+
+      if (user) {
 
         console.log(
-          "AUTH STATE:",
-          user
-            ? user.email
-            : "Not logged in"
+          "Existing session found:",
+          user.email
         );
 
+        showHome();
 
-        if (user) {
+        loadSongs();
 
-          /*
-            User is already authenticated.
-          */
-
-          showHome();
-
-          loadSongs();
-
-        }
-
-        else {
-
-          showLoginPage();
-
-        }
-
-      },
-
-      function(error) {
-
-        console.error(
-          "Auth state error:",
-          error
-        );
+      }
+      else {
 
         showLoginPage();
 
-        loginMessage.textContent =
-          "Firebase authentication error.";
+      }
+
+      return;
+    }
+
+
+    /*
+      After initialization, normal auth changes.
+    */
+
+    if (user) {
+
+      console.log(
+        "User authenticated:",
+        user.email
+      );
+
+      showHome();
+
+      loadSongs();
+
+    }
+    else {
+
+      /*
+        Only return to login when the user
+        is actually signed out.
+      */
+
+      if (!loginInProgress) {
+
+        showLoginPage();
 
       }
 
+    }
+
+  },
+
+  function(error) {
+
+    console.error(
+      "Auth state error:",
+      error
     );
 
+    showLoginPage();
+
+    loginMessage.textContent =
+      "Firebase authentication error.";
+
+  }
+);
 
     /* =====================================================
        LOAD SONGS

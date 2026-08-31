@@ -1,564 +1,203 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>VCCF Peymous Songs List</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    /* =========================================
+       HOME PAGE
+    ========================================= */
+
+    #homePage {
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 15px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 20px;
+      font-size: 32px;
+    }
+
+    #search {
+      width: 90%;
+      max-width: 500px;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    #songs {
+      width: 90%;
+      max-width: 700px;
+      margin: 10px auto 40px;
+    }
+
+    .song {
+      background: #1e293b;
+      padding: 17px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .song:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+
+    #message {
+      text-align: center;
+      color: #94a3b8;
+      margin: 30px;
+    }
+
+
+    /* =========================================
+       SONG PAGE
+    ========================================= */
+
+    #songPage {
+      display: none;
+      width: 90%;
+      max-width: 800px;
+      margin: 30px auto 60px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #60a5fa;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back:hover {
+      color: #93c5fd;
+    }
+
+    #songTitle {
+      font-size: 34px;
+      margin: 0 0 20px;
+    }
 
-<meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+    /* =========================================
+       TRANSPOSE
+    ========================================= */
 
-<title>
-  VCCF Peymous Songs List
-</title>
+    .transpose {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #1e293b;
+      border-radius: 10px;
+    }
 
+    .transpose span {
+      font-weight: bold;
+    }
 
-<style>
+    .transpose button {
+      width: 45px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      background: #334155;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-/* =====================================================
-   GLOBAL
-===================================================== */
+    .transpose button:hover {
+      background: #475569;
+    }
 
-* {
+    #keyDisplay {
+      min-width: 80px;
+      text-align: center;
+      font-weight: bold;
+    }
 
-  box-sizing:
-    border-box;
 
-}
+    /* =========================================
+       CHORDS
+    ========================================= */
 
+    #chords {
+      background: #111827;
+      padding: 25px;
+      border-radius: 10px;
 
-body {
+      white-space: pre-wrap;
 
-  margin:
-    0;
+      font-family: "Courier New", monospace;
 
-  padding:
-    0;
+      font-size: 18px;
 
-  background:
-    #0f172a;
+      line-height: 1.7;
 
-  color:
-    white;
+      overflow-x: auto;
+    }
 
-  font-family:
-    Arial,
-    sans-serif;
 
-}
+    /* =========================================
+       MOBILE
+    ========================================= */
 
+    @media (max-width: 600px) {
 
+      header h1 {
+        font-size: 25px;
+      }
 
-/* =====================================================
-   HOME PAGE
-===================================================== */
+      #songTitle {
+        font-size: 28px;
+      }
 
-#homePage {
+      #chords {
+        font-size: 16px;
+        padding: 18px;
+      }
 
-  min-height:
-    100vh;
+      .transpose {
+        gap: 10px;
+      }
 
-}
+    }
 
-
-header {
-
-  text-align:
-    center;
-
-  padding:
-    30px 15px 20px;
-
-}
-
-
-header h1 {
-
-  margin:
-    0 0 20px;
-
-  font-size:
-    32px;
-
-}
-
-
-#search {
-
-  width:
-    90%;
-
-  max-width:
-    500px;
-
-  padding:
-    14px 16px;
-
-  border:
-    none;
-
-  border-radius:
-    10px;
-
-  outline:
-    none;
-
-  font-size:
-    16px;
-
-}
-
-
-
-#songs {
-
-  width:
-    90%;
-
-  max-width:
-    700px;
-
-  margin:
-    10px auto 40px;
-
-}
-
-
-.song {
-
-  background:
-    #1e293b;
-
-  padding:
-    17px;
-
-  margin-bottom:
-    10px;
-
-  border-radius:
-    10px;
-
-  cursor:
-    pointer;
-
-  font-weight:
-    bold;
-
-  transition:
-    0.2s;
-
-}
-
-
-.song:hover {
-
-  background:
-    #334155;
-
-  transform:
-    translateY(-1px);
-
-}
-
-
-#message {
-
-  text-align:
-    center;
-
-  color:
-    #94a3b8;
-
-  margin:
-    30px;
-
-}
-
-
-
-/* =====================================================
-   SONG PAGE
-===================================================== */
-
-#songPage {
-
-  display:
-    none;
-
-  width:
-    90%;
-
-  max-width:
-    800px;
-
-  margin:
-    30px auto 60px;
-
-}
-
-
-.back {
-
-  display:
-    inline-block;
-
-  margin-bottom:
-    20px;
-
-  color:
-    #60a5fa;
-
-  font-weight:
-    bold;
-
-  cursor:
-    pointer;
-
-}
-
-
-.back:hover {
-
-  color:
-    #93c5fd;
-
-}
-
-
-#songTitle {
-
-  font-size:
-    34px;
-
-  margin:
-    0 0 20px;
-
-}
-
-
-
-/* =====================================================
-   TRANSPOSE
-===================================================== */
-
-.transpose {
-
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  gap:
-    15px;
-
-  padding:
-    15px;
-
-  margin-bottom:
-    20px;
-
-  background:
-    #1e293b;
-
-  border-radius:
-    10px;
-
-}
-
-
-.transpose button {
-
-  width:
-    45px;
-
-  height:
-    40px;
-
-  border:
-    none;
-
-  border-radius:
-    8px;
-
-  background:
-    #334155;
-
-  color:
-    white;
-
-  font-size:
-    22px;
-
-  font-weight:
-    bold;
-
-  cursor:
-    pointer;
-
-}
-
-
-.transpose button:hover {
-
-  background:
-    #475569;
-
-}
-
-
-#keyDisplay {
-
-  min-width:
-    80px;
-
-  text-align:
-    center;
-
-  font-weight:
-    bold;
-
-}
-
-
-
-/* =====================================================
-   CHORDS
-===================================================== */
-
-#chords {
-
-  background:
-    #111827;
-
-  padding:
-    25px;
-
-  border-radius:
-    10px;
-
-  white-space:
-    pre-wrap;
-
-  font-family:
-    "Courier New",
-    monospace;
-
-  font-size:
-    18px;
-
-  line-height:
-    1.7;
-
-  overflow-x:
-    auto;
-
-}
-
-
-
-/* =====================================================
-   COMMENTS
-===================================================== */
-
-.comments {
-
-  margin-top:
-    35px;
-
-  padding:
-    22px;
-
-  background:
-    #1e293b;
-
-  border-radius:
-    12px;
-
-}
-
-
-.comments h2 {
-
-  margin:
-    0 0 18px;
-
-  font-size:
-    22px;
-
-}
-
-
-#commentText {
-
-  width:
-    100%;
-
-  min-height:
-    120px;
-
-  padding:
-    14px;
-
-  background:
-    #0f172a;
-
-  color:
-    white;
-
-  border:
-    none;
-
-  border-radius:
-    8px;
-
-  outline:
-    none;
-
-  resize:
-    vertical;
-
-  font-size:
-    15px;
-
-  font-family:
-    Arial,
-    sans-serif;
-
-}
-
-
-#commentText::placeholder {
-
-  color:
-    #64748b;
-
-}
-
-
-#sendComment {
-
-  width:
-    100%;
-
-  margin-top:
-    12px;
-
-  padding:
-    14px;
-
-  border:
-    none;
-
-  border-radius:
-    8px;
-
-  background:
-    #3b82f6;
-
-  color:
-    white;
-
-  font-size:
-    15px;
-
-  font-weight:
-    bold;
-
-  cursor:
-    pointer;
-
-}
-
-
-#sendComment:hover {
-
-  background:
-    #2563eb;
-
-}
-
-
-#sendComment:disabled {
-
-  opacity:
-    0.6;
-
-  cursor:
-    not-allowed;
-
-}
-
-
-#commentStatus {
-
-  text-align:
-    center;
-
-  margin-top:
-    12px;
-
-  font-size:
-    14px;
-
-  color:
-    #94a3b8;
-
-}
-
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (
-  max-width: 600px
-) {
-
-  header h1 {
-
-    font-size:
-      25px;
-
-  }
-
-
-  #songTitle {
-
-    font-size:
-      28px;
-
-  }
-
-
-  #chords {
-
-    font-size:
-      16px;
-
-    padding:
-      18px;
-
-  }
-
-
-  .comments {
-
-    padding:
-      18px;
-
-  }
-
-}
-
-</style>
+  </style>
 
 </head>
 
@@ -566,303 +205,242 @@ header h1 {
 <body>
 
 
+  <!-- =======================================
+       HOME PAGE
+  ======================================= -->
 
-<!-- ===================================================
-     HOME PAGE
-=================================================== -->
+  <div id="homePage">
 
-<div id="homePage">
+    <header>
 
+      <h1>
+        🎵 VCCF Peymous Songs List
+      </h1>
 
-  <header>
+      <input
+        id="search"
+        type="text"
+        placeholder="Search song..."
+        autocomplete="off"
+      >
 
-    <h1>
-      🎵 VCCF Peymous Songs List
-    </h1>
-
-
-    <input
-      id="search"
-      type="text"
-      placeholder="Search song..."
-      autocomplete="off"
-    >
-
-  </header>
+    </header>
 
 
-
-  <div id="songs"></div>
-
-
-  <div id="message">
-    Loading songs...
-  </div>
+    <div id="songs"></div>
 
 
-</div>
+    <div id="message">
+      Loading songs...
+    </div>
 
-
-
-<!-- ===================================================
-     SONG PAGE
-=================================================== -->
-
-<div id="songPage">
-
-
-  <div
-    class="back"
-    onclick="showHome()"
-  >
-    ← Back to Songs
   </div>
 
 
 
-  <h1 id="songTitle"></h1>
+  <!-- =======================================
+       SONG PAGE
+  ======================================= -->
 
+  <div id="songPage">
 
-
-  <!-- ================================================
-       TRANSPOSE
-  ================================================= -->
-
-  <div class="transpose">
-
-    <span>
-      Transpose
-    </span>
-
-
-    <button
-      onclick="transposeDown()"
+    <div
+      class="back"
+      onclick="showHome()"
     >
-      −
-    </button>
-
-
-    <div id="keyDisplay">
-      Key: -
+      ← Back to Songs
     </div>
 
 
-    <button
-      onclick="transposeUp()"
-    >
-      +
-    </button>
+    <h1 id="songTitle"></h1>
+
+
+
+    <!-- =====================================
+         TRANSPOSE
+    ====================================== -->
+
+    <div class="transpose">
+
+      <span>
+        Transpose
+      </span>
+
+
+      <button
+        onclick="transposeDown()"
+        title="Transpose down"
+      >
+        −
+      </button>
+
+
+      <div id="keyDisplay">
+        Key: -
+      </div>
+
+
+      <button
+        onclick="transposeUp()"
+        title="Transpose up"
+      >
+        +
+      </button>
+
+    </div>
+
+
+
+    <!-- =====================================
+         CHORDS
+    ====================================== -->
+
+    <div id="chords"></div>
 
   </div>
-
-
-
-  <!-- ================================================
-       CHORDS
-  ================================================= -->
-
-  <div id="chords"></div>
-
-
-
-  <!-- ================================================
-       COMMENTS
-  ================================================= -->
-
-  <div class="comments">
-
-
-    <h2>
-      💬 Comments
-    </h2>
-
-
-    <textarea
-      id="commentText"
-      placeholder="Write your comment"
-      maxlength="2000"
-    ></textarea>
-
-
-    <button
-      id="sendComment"
-      onclick="submitComment()"
-    >
-      Write Comment
-    </button>
-
-
-    <div
-      id="commentStatus"
-    ></div>
-
-
-  </div>
-
-
-</div>
 
 
 
 <script>
 
 
-// =====================================================
-// GOOGLE APPS SCRIPT URL
-// =====================================================
+  // =====================================================
+  // GOOGLE APPS SCRIPT URL
+  // =====================================================
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
-
-
-
-let songs = [];
-
-let currentSong = null;
-
-let transposeAmount = 0;
+  const API_URL =
+    "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
 
 
 
-// =====================================================
-// LOAD SONGS
-// =====================================================
+  // =====================================================
+  // VARIABLES
+  // =====================================================
 
-function loadSongs() {
+  let songs = [];
 
-  const callbackName =
-    "receiveSongs_" +
-    Date.now();
+  let currentSong = null;
 
-
-  window[callbackName] =
-    function(data) {
+  let transposeAmount = 0;
 
 
-      songs =
-        Array.isArray(data)
-          ? data
-          : [];
+
+  // =====================================================
+  // LOAD SONGS
+  // =====================================================
+
+  function loadSongs() {
+
+    const callbackName =
+      "receiveSongs_" +
+      Date.now();
 
 
-      delete window[callbackName];
+    window[callbackName] =
+      function(data) {
+
+        songs =
+          Array.isArray(data)
+            ? data
+            : [];
 
 
-      const script =
-        document.getElementById(
-          "songsApiScript"
-        );
+        delete window[callbackName];
 
 
-      if (script) {
+        const oldScript =
+          document.getElementById(
+            "songsApiScript"
+          );
+
+
+        if (oldScript) {
+          oldScript.remove();
+        }
+
+
+        displaySongs(songs);
+
+      };
+
+
+    const script =
+      document.createElement("script");
+
+
+    script.id =
+      "songsApiScript";
+
+
+    script.src =
+      API_URL +
+      "?callback=" +
+      encodeURIComponent(
+        callbackName
+      );
+
+
+    script.onerror =
+      function() {
+
+        document
+          .getElementById("message")
+          .textContent =
+          "Unable to load songs. Please try again.";
+
+
+        delete window[callbackName];
+
 
         script.remove();
 
-      }
+      };
 
 
-      displaySongs(
-        songs
-      );
-
-    };
-
-
-
-  const script =
-    document.createElement(
-      "script"
-    );
-
-
-  script.id =
-    "songsApiScript";
-
-
-  script.src =
-    API_URL +
-    "?callback=" +
-    encodeURIComponent(
-      callbackName
-    );
-
-
-  script.onerror =
-    function() {
-
-      document
-        .getElementById(
-          "message"
-        )
-        .textContent =
-        "Unable to load songs. Please try again.";
-
-
-      delete window[callbackName];
-
-
-      script.remove();
-
-    };
-
-
-  document.body.appendChild(
-    script
-  );
-
-}
-
-
-
-// =====================================================
-// DISPLAY SONGS
-// =====================================================
-
-function displaySongs(
-  list
-) {
-
-  const container =
-    document.getElementById(
-      "songs"
-    );
-
-
-  const message =
-    document.getElementById(
-      "message"
-    );
-
-
-  container.innerHTML =
-    "";
-
-
-  if (
-    !list ||
-    list.length === 0
-  ) {
-
-    message.textContent =
-      "No songs found.";
-
-    return;
+    document.body.appendChild(script);
 
   }
 
 
-  message.textContent =
-    "";
+
+  // =====================================================
+  // DISPLAY SONGS
+  // =====================================================
+
+  function displaySongs(list) {
+
+    const container =
+      document.getElementById("songs");
 
 
-  list.forEach(
-    function(song) {
+    const message =
+      document.getElementById("message");
 
+
+    container.innerHTML = "";
+
+
+    if (
+      !list ||
+      list.length === 0
+    ) {
+
+      message.textContent =
+        "No songs found.";
+
+      return;
+
+    }
+
+
+    message.textContent =
+      "";
+
+
+    list.forEach(function(song) {
 
       const div =
-        document.createElement(
-          "div"
-        );
+        document.createElement("div");
 
 
       div.className =
@@ -876,829 +454,494 @@ function displaySongs(
       div.onclick =
         function() {
 
-          openSong(
-            song
-          );
+          openSong(song);
 
         };
 
 
-      container.appendChild(
-        div
-      );
+      container.appendChild(div);
 
+    });
 
-    }
-  );
-
-}
+  }
 
 
 
-// =====================================================
-// SEARCH
-// =====================================================
-
-document
-  .getElementById(
-    "search"
-  )
-  .addEventListener(
-    "input",
-    function() {
-
-
-      const search =
-        this.value
-          .trim()
-          .toLowerCase();
-
-
-      if (!search) {
-
-        displaySongs(
-          songs
-        );
-
-        return;
-
-      }
-
-
-      const filtered =
-        songs.filter(
-          function(song) {
-
-            return String(
-              song.name || ""
-            )
-            .toLowerCase()
-            .includes(
-              search
-            );
-
-          }
-        );
-
-
-      displaySongs(
-        filtered
-      );
-
-
-    }
-  );
-
-
-
-// =====================================================
-// OPEN SONG
-// =====================================================
-
-function openSong(
-  song
-) {
-
-  currentSong =
-    song;
-
-
-  transposeAmount =
-    0;
-
+  // =====================================================
+  // SEARCH
+  // =====================================================
 
   document
-    .getElementById(
-      "homePage"
-    )
-    .style.display =
-    "none";
+    .getElementById("search")
+    .addEventListener(
+      "input",
+      function() {
 
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
 
-  document
-    .getElementById(
-      "songPage"
-    )
-    .style.display =
-    "block";
 
+        if (!searchText) {
 
-  document
-    .getElementById(
-      "songTitle"
-    )
-    .textContent =
-    song.name;
+          displaySongs(songs);
 
+          return;
 
-  document
-    .getElementById(
-      "commentText"
-    )
-    .value =
-    "";
+        }
 
 
-  document
-    .getElementById(
-      "commentStatus"
-    )
-    .textContent =
-    "";
+        const filtered =
+          songs.filter(
+            function(song) {
 
+              return String(
+                song.name || ""
+              )
+              .toLowerCase()
+              .includes(searchText);
 
-  updateSong();
-
-
-  window.scrollTo(
-    0,
-    0
-  );
-
-}
-
-
-
-// =====================================================
-// SHOW HOME
-// =====================================================
-
-function showHome() {
-
-  currentSong =
-    null;
-
-
-  transposeAmount =
-    0;
-
-
-  document
-    .getElementById(
-      "songPage"
-    )
-    .style.display =
-    "none";
-
-
-  document
-    .getElementById(
-      "homePage"
-    )
-    .style.display =
-    "block";
-
-
-  window.scrollTo(
-    0,
-    0
-  );
-
-}
-
-
-
-// =====================================================
-// TRANSPOSE UP
-// =====================================================
-
-function transposeUp() {
-
-  if (!currentSong) {
-
-    return;
-
-  }
-
-
-  transposeAmount++;
-
-
-  updateSong();
-
-}
-
-
-
-// =====================================================
-// TRANSPOSE DOWN
-// =====================================================
-
-function transposeDown() {
-
-  if (!currentSong) {
-
-    return;
-
-  }
-
-
-  transposeAmount--;
-
-
-  updateSong();
-
-}
-
-
-
-// =====================================================
-// CHROMATIC NOTES
-// =====================================================
-
-const chromaticNotes = [
-
-  "C",
-  "C#",
-  "D",
-  "Eb",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "Ab",
-  "A",
-  "Bb",
-  "B"
-
-];
-
-
-
-// =====================================================
-// NOTE TO NUMBER
-// =====================================================
-
-function noteToNumber(
-  note
-) {
-
-  const map = {
-
-    "C": 0,
-    "B#": 0,
-
-    "C#": 1,
-    "Db": 1,
-
-    "D": 2,
-
-    "D#": 3,
-    "Eb": 3,
-
-    "E": 4,
-    "Fb": 4,
-
-    "F": 5,
-    "E#": 5,
-
-    "F#": 6,
-    "Gb": 6,
-
-    "G": 7,
-
-    "G#": 8,
-    "Ab": 8,
-
-    "A": 9,
-
-    "A#": 10,
-    "Bb": 10,
-
-    "B": 11,
-    "Cb": 11
-
-  };
-
-
-  return map[note];
-
-}
-
-
-
-// =====================================================
-// TRANSPOSE ONE CHORD
-// =====================================================
-
-function transposeChord(
-  chord,
-  amount
-) {
-
-  const match =
-    chord.match(
-      /^([A-G](?:#|b)?)(.*)$/
-    );
-
-
-  if (!match) {
-
-    return chord;
-
-  }
-
-
-  const root =
-    match[1];
-
-
-  const suffix =
-    match[2];
-
-
-  const number =
-    noteToNumber(
-      root
-    );
-
-
-  if (
-    number === undefined
-  ) {
-
-    return chord;
-
-  }
-
-
-  let newNumber =
-    (
-      number +
-      amount
-    ) % 12;
-
-
-  if (
-    newNumber < 0
-  ) {
-
-    newNumber +=
-      12;
-
-  }
-
-
-  return (
-    chromaticNotes[
-      newNumber
-    ] +
-    suffix
-  );
-
-}
-
-
-
-// =====================================================
-// TRANSPOSE CHORDS
-// =====================================================
-
-function transposeChords(
-  text,
-  amount
-) {
-
-  if (
-    !text ||
-    amount === 0
-  ) {
-
-    return text;
-
-  }
-
-
-  return text.replace(
-
-    /(^|[\s|(\[])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|7|9|11|13|M|°|\+|-)*(?:\/[A-G](?:#|b)?)?)(?=$|[\s|)\],:;])/gm,
-
-    function(
-      full,
-      prefix,
-      chord
-    ) {
-
-
-      return (
-        prefix +
-        transposeChord(
-          chord,
-          amount
-        )
-      );
-
-
-    }
-
-  );
-
-}
-
-
-
-// =====================================================
-// GET ORIGINAL KEY
-// =====================================================
-
-function getOriginalKey(
-  text
-) {
-
-  if (!text) {
-
-    return "-";
-
-  }
-
-
-  const match =
-    text.match(
-      /(?:^|[\s|(\[])([A-G](?:#|b)?)(?=m|maj|min|dim|aug|sus|add|7|9|11|13|\/|\s|$|[\]|):,;])/m
-    );
-
-
-  if (!match) {
-
-    return "-";
-
-  }
-
-
-  return match[1];
-
-}
-
-
-
-// =====================================================
-// GET DISPLAYED KEY
-// =====================================================
-
-function getDisplayedKey(
-  text,
-  amount
-) {
-
-  const originalKey =
-    getOriginalKey(
-      text
-    );
-
-
-  const number =
-    noteToNumber(
-      originalKey
-    );
-
-
-  if (
-    number === undefined
-  ) {
-
-    return "-";
-
-  }
-
-
-  let newNumber =
-    (
-      number +
-      amount
-    ) % 12;
-
-
-  if (
-    newNumber < 0
-  ) {
-
-    newNumber +=
-      12;
-
-  }
-
-
-  return chromaticNotes[
-    newNumber
-  ];
-
-}
-
-
-
-// =====================================================
-// UPDATE SONG
-// =====================================================
-
-function updateSong() {
-
-  if (!currentSong) {
-
-    return;
-
-  }
-
-
-  const original =
-    String(
-      currentSong.chords || ""
-    );
-
-
-  const transposed =
-    transposeChords(
-      original,
-      transposeAmount
-    );
-
-
-  document
-    .getElementById(
-      "chords"
-    )
-    .textContent =
-    transposed;
-
-
-  document
-    .getElementById(
-      "keyDisplay"
-    )
-    .textContent =
-    "Key: " +
-    getDisplayedKey(
-      original,
-      transposeAmount
-    );
-
-}
-
-
-
-// =====================================================
-// SUBMIT COMMENT
-// =====================================================
-
-function submitComment() {
-
-  if (!currentSong) {
-
-    return;
-
-  }
-
-
-  const textBox =
-    document.getElementById(
-      "commentText"
-    );
-
-
-  const button =
-    document.getElementById(
-      "sendComment"
-    );
-
-
-  const status =
-    document.getElementById(
-      "commentStatus"
-    );
-
-
-  const comment =
-    textBox.value.trim();
-
-
-
-  // -----------------------------------------------
-  // CHECK COMMENT
-  // -----------------------------------------------
-
-  if (!comment) {
-
-    status.textContent =
-      "Please write your comment first.";
-
-    return;
-
-  }
-
-
-
-  // -----------------------------------------------
-  // ASK NAME
-  // -----------------------------------------------
-
-  const name =
-    prompt(
-      "What's your name?"
-    );
-
-
-  if (name === null) {
-
-    return;
-
-  }
-
-
-  const cleanName =
-    name.trim();
-
-
-  if (!cleanName) {
-
-    status.textContent =
-      "Please enter your name.";
-
-    return;
-
-  }
-
-
-
-  // -----------------------------------------------
-  // DISABLE BUTTON
-  // -----------------------------------------------
-
-  button.disabled =
-    true;
-
-
-  button.textContent =
-    "Sending...";
-
-
-  status.textContent =
-    "Sending comment...";
-
-
-
-  // -----------------------------------------------
-  // CREATE CALLBACK
-  // -----------------------------------------------
-
-  const callbackName =
-    "commentCallback_" +
-    Date.now();
-
-
-  window[callbackName] =
-    function(response) {
-
-
-      button.disabled =
-        false;
-
-
-      button.textContent =
-        "Write Comment";
-
-
-      if (
-        response &&
-        response.success === true
-      ) {
-
-
-        status.textContent =
-          "✅ Comment sent successfully.";
-
-
-        textBox.value =
-          "";
-
-
-      }
-
-      else {
-
-
-        status.textContent =
-          "❌ " +
-          (
-            response &&
-            response.message
-              ? response.message
-              : "Unable to send comment."
+            }
           );
 
 
+        displaySongs(filtered);
+
       }
+    );
 
 
-      delete window[
-        callbackName
-      ];
+
+  // =====================================================
+  // OPEN SONG
+  // =====================================================
+
+  function openSong(song) {
+
+    currentSong =
+      song;
 
 
-      const script =
-        document.getElementById(
-          "commentApiScript"
+    transposeAmount =
+      0;
+
+
+    document
+      .getElementById("homePage")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("songPage")
+      .style.display =
+      "block";
+
+
+    document
+      .getElementById("songTitle")
+      .textContent =
+      song.name;
+
+
+    updateSong();
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  }
+
+
+
+  // =====================================================
+  // BACK TO HOME
+  // =====================================================
+
+  function showHome() {
+
+    currentSong =
+      null;
+
+
+    transposeAmount =
+      0;
+
+
+    document
+      .getElementById("songPage")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("homePage")
+      .style.display =
+      "block";
+
+
+    window.scrollTo(
+      0,
+      0
+    );
+
+  }
+
+
+
+  // =====================================================
+  // TRANSPOSE UP
+  // =====================================================
+
+  function transposeUp() {
+
+    if (!currentSong) {
+      return;
+    }
+
+
+    transposeAmount++;
+
+
+    updateSong();
+
+  }
+
+
+
+  // =====================================================
+  // TRANSPOSE DOWN
+  // =====================================================
+
+  function transposeDown() {
+
+    if (!currentSong) {
+      return;
+    }
+
+
+    transposeAmount--;
+
+
+    updateSong();
+
+  }
+
+
+
+  // =====================================================
+  // CHROMATIC NOTES
+  // =====================================================
+
+  const chromaticNotes = [
+
+    "C",
+    "C#",
+    "D",
+    "Eb",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "Ab",
+    "A",
+    "Bb",
+    "B"
+
+  ];
+
+
+
+  // =====================================================
+  // NOTE TO NUMBER
+  // =====================================================
+
+  function noteToNumber(note) {
+
+    const map = {
+
+      "C": 0,
+      "B#": 0,
+
+      "C#": 1,
+      "Db": 1,
+
+      "D": 2,
+
+      "D#": 3,
+      "Eb": 3,
+
+      "E": 4,
+      "Fb": 4,
+
+      "F": 5,
+      "E#": 5,
+
+      "F#": 6,
+      "Gb": 6,
+
+      "G": 7,
+
+      "G#": 8,
+      "Ab": 8,
+
+      "A": 9,
+
+      "A#": 10,
+      "Bb": 10,
+
+      "B": 11,
+      "Cb": 11
+
+    };
+
+
+    return map[note];
+
+  }
+
+
+
+  // =====================================================
+  // TRANSPOSE ONE CHORD
+  // =====================================================
+
+  function transposeChord(
+    chord,
+    amount
+  ) {
+
+    const match =
+      chord.match(
+        /^([A-G](?:#|b)?)(.*)$/
+      );
+
+
+    if (!match) {
+      return chord;
+    }
+
+
+    const root =
+      match[1];
+
+
+    const suffix =
+      match[2];
+
+
+    const rootNumber =
+      noteToNumber(root);
+
+
+    if (
+      rootNumber === undefined
+    ) {
+
+      return chord;
+
+    }
+
+
+    let newNumber =
+      (
+        rootNumber +
+        amount
+      ) % 12;
+
+
+    if (newNumber < 0) {
+
+      newNumber += 12;
+
+    }
+
+
+    return (
+      chromaticNotes[newNumber] +
+      suffix
+    );
+
+  }
+
+
+
+  // =====================================================
+  // TRANSPOSE ALL CHORDS
+  // =====================================================
+
+  function transposeChords(
+    text,
+    amount
+  ) {
+
+    if (
+      !text ||
+      amount === 0
+    ) {
+
+      return text;
+
+    }
+
+
+    return text.replace(
+
+      /(^|[\s|(\[])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|7|9|11|13|M|°|\+|-)*(?:\/[A-G](?:#|b)?)?)(?=$|[\s|)\],:;])/gm,
+
+      function(
+        full,
+        prefix,
+        chord
+      ) {
+
+        return (
+          prefix +
+          transposeChord(
+            chord,
+            amount
+          )
         );
 
-
-      if (script) {
-
-        script.remove();
-
       }
 
-
-    };
-
-
-
-  // -----------------------------------------------
-  // CREATE URL
-  // -----------------------------------------------
-
-  const url =
-    API_URL +
-
-    "?action=comment" +
-
-    "&song=" +
-    encodeURIComponent(
-      currentSong.name
-    ) +
-
-    "&name=" +
-    encodeURIComponent(
-      cleanName
-    ) +
-
-    "&comment=" +
-    encodeURIComponent(
-      comment
-    ) +
-
-    "&callback=" +
-    encodeURIComponent(
-      callbackName
     );
 
-
-
-  // -----------------------------------------------
-  // CREATE SCRIPT
-  // -----------------------------------------------
-
-  const script =
-    document.createElement(
-      "script"
-    );
-
-
-  script.id =
-    "commentApiScript";
-
-
-  script.src =
-    url;
-
-
-  script.onerror =
-    function() {
-
-
-      button.disabled =
-        false;
-
-
-      button.textContent =
-        "Write Comment";
-
-
-      status.textContent =
-        "❌ Unable to send comment.";
-
-
-      delete window[
-        callbackName
-      ];
-
-
-      script.remove();
-
-
-    };
-
-
-  document.body.appendChild(
-    script
-  );
-
-}
+  }
 
 
 
-// =====================================================
-// START APPLICATION
-// =====================================================
+  // =====================================================
+  // FIND ORIGINAL KEY
+  // =====================================================
 
-loadSongs();
+  function getOriginalKey(text) {
+
+    if (!text) {
+      return "-";
+    }
+
+
+    const match =
+      text.match(
+
+        /(?:^|[\s|(\[])([A-G](?:#|b)?)(?=m|maj|min|dim|aug|sus|add|7|9|11|13|\/|\s|$|[\]|):,;])/m
+
+      );
+
+
+    if (!match) {
+      return "-";
+    }
+
+
+    return match[1];
+
+  }
+
+
+
+  // =====================================================
+  // GET DISPLAYED KEY
+  // =====================================================
+
+  function getDisplayedKey(
+    text,
+    amount
+  ) {
+
+    const originalKey =
+      getOriginalKey(text);
+
+
+    const number =
+      noteToNumber(
+        originalKey
+      );
+
+
+    if (
+      number === undefined
+    ) {
+
+      return "-";
+
+    }
+
+
+    let newNumber =
+      (
+        number +
+        amount
+      ) % 12;
+
+
+    if (newNumber < 0) {
+
+      newNumber += 12;
+
+    }
+
+
+    return chromaticNotes[
+      newNumber
+    ];
+
+  }
+
+
+
+  // =====================================================
+  // UPDATE SONG
+  // =====================================================
+
+  function updateSong() {
+
+    if (!currentSong) {
+      return;
+    }
+
+
+    const original =
+      String(
+        currentSong.chords || ""
+      );
+
+
+    const transposed =
+      transposeChords(
+        original,
+        transposeAmount
+      );
+
+
+    document
+      .getElementById("chords")
+      .textContent =
+      transposed;
+
+
+    document
+      .getElementById("keyDisplay")
+      .textContent =
+      "Key: " +
+      getDisplayedKey(
+        original,
+        transposeAmount
+      );
+
+  }
+
+
+
+  // =====================================================
+  // START APP
+  // =====================================================
+
+  loadSongs();
 
 </script>
 

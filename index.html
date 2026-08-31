@@ -1,2299 +1,3025 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Jayro Chords</title>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-}
-
-body {
-  background: #0f172a;
-  color: white;
-  font-family: Arial, sans-serif;
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-#loginPage {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.login-box {
-  width: 100%;
-  max-width: 400px;
-  background: #1e293b;
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 15px 40px rgba(0,0,0,.3);
-  text-align: center;
-}
-
-.login-box h1 {
-  margin: 0 0 8px;
-  font-size: 30px;
-}
-
-.login-subtitle {
-  color: #94a3b8;
-  font-size: 14px;
-  margin-bottom: 25px;
-}
-
-.login-input {
-  width: 100%;
-  padding: 13px 14px;
-  margin-bottom: 12px;
-  background: white;
-  color: #111827;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  font-size: 15px;
-}
-
-.login-input::placeholder {
-  color: #64748b;
-}
-
-.login-button {
-  width: 100%;
-  padding: 13px;
-  margin-top: 5px;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.login-button:hover {
-  background: #1d4ed8;
-}
-
-.login-button:disabled {
-  opacity: .7;
-  cursor: wait;
-}
-
-.request-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: 1px solid #475569;
-  border-radius: 8px;
-  background: transparent;
-  color: #60a5fa;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.request-button:hover {
-  background: #334155;
-}
-
-.login-message {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #94a3b8;
-  min-height: 20px;
-}
-
-
-/* =========================
-   REQUEST ACCESS
-========================= */
-
-#requestPage {
-  display: none;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.request-box {
-  width: 100%;
-  max-width: 450px;
-  background: #1e293b;
-  padding: 30px;
-  border-radius: 14px;
-  box-shadow: 0 15px 40px rgba(0,0,0,.3);
-}
-
-.request-box h1 {
-  margin: 0 0 8px;
-  text-align: center;
-  font-size: 28px;
-}
-
-.request-subtitle {
-  text-align: center;
-  color: #94a3b8;
-  font-size: 14px;
-  margin-bottom: 25px;
-}
-
-.request-label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.request-input,
-.request-textarea {
-  width: 100%;
-  padding: 13px 14px;
-  margin-bottom: 15px;
-  background: white;
-  color: #111827;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  font-size: 15px;
-  font-family: Arial, sans-serif;
-}
-
-.request-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.submit-request {
-  width: 100%;
-  padding: 13px;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.back-login {
-  display: block;
-  text-align: center;
-  margin-top: 15px;
-  color: #60a5fa;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-
-/* =========================
-   HOME
-========================= */
-
-#homePage {
-  min-height: 100vh;
-  display: none;
-  flex-direction: column;
-}
-
-header {
-  text-align: center;
-  padding: 30px 15px 20px;
-}
-
-header h1 {
-  margin: 0 0 20px;
-  font-size: 32px;
-}
-
-#search {
-  width: 90%;
-  max-width: 500px;
-  padding: 14px 16px;
-  background: white;
-  color: #111827;
-  border: none;
-  border-radius: 10px;
-  outline: none;
-  font-size: 16px;
-}
-
-#songs {
-  width: 90%;
-  max-width: 700px;
-  margin: 10px auto 40px;
-  flex: 1;
-}
-
-.song {
-  background: #1e293b;
-  padding: 17px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: .2s;
-}
-
-.song:hover {
-  background: #334155;
-  transform: translateY(-1px);
-}
-
-#message {
-  text-align: center;
-  color: #94a3b8;
-  margin: 30px;
-}
-
-
-/* =========================
-   SONG PAGE
-========================= */
-
-#songPage {
-  display: none;
-  width: 90%;
-  max-width: 800px;
-  margin: 30px auto 0;
-  min-height: calc(100vh - 30px);
-}
-
-.song-navigation {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 11px 15px;
-  background: #1e293b;
-  color: #60a5fa;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.back:hover {
-  background: #334155;
-  color: #93c5fd;
-}
-
-
-/* =========================
-   SONG SEARCH
-========================= */
-
-.song-search-container {
-  position: relative;
-  width: 240px;
-}
-
-#songSearch {
-  width: 240px;
-  padding: 10px 14px;
-  background: white;
-  color: #111827;
-  border: none;
-  border-radius: 8px;
-  outline: none;
-  font-size: 14px;
-}
-
-#songSearchResults {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  width: 240px;
-  z-index: 1000;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 8px;
-  overflow: hidden;
-  display: none;
-  max-height: 300px;
-  overflow-y: auto;
-  box-shadow: 0 10px 25px rgba(0,0,0,.35);
-}
-
-.song-search-result {
-  padding: 12px 14px;
-  cursor: pointer;
-  border-bottom: 1px solid #334155;
-  font-size: 14px;
-  color: white;
-}
-
-.song-search-result:hover {
-  background: #334155;
-}
-
-.song-search-no-results {
-  padding: 12px 14px;
-  color: #94a3b8;
-  font-size: 14px;
-}
-
-
-/* =========================
-   TITLE
-========================= */
-
-#songTitle {
-  font-size: 34px;
-  margin: 0 0 20px;
-}
-
-
-/* =========================
-   TRANSPOSE
-========================= */
-
-.transpose {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 15px;
-  margin-bottom: 20px;
-  background: #1e293b;
-  border-radius: 10px;
-}
-
-.transpose span {
-  font-weight: bold;
-}
-
-.transpose button {
-  width: 45px;
-  height: 40px;
-  border: none;
-  border-radius: 8px;
-  background: #334155;
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.transpose button:hover {
-  background: #475569;
-}
-
-#keyDisplay {
-  min-width: 80px;
-  text-align: center;
-  font-weight: bold;
-}
-
-
-/* =========================
-   CHORDS
-========================= */
-
-#chords {
-  background: #111827;
-  padding: 25px;
-  border-radius: 10px;
-  white-space: pre-wrap;
-  font-family: "Courier New", monospace;
-  font-size: 18px;
-  line-height: 1.7;
-  overflow-x: auto;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-.site-footer {
-  margin-top: 50px;
-  padding: 30px 20px;
-  text-align: center;
-  border-top: 1px solid #334155;
-  color: #94a3b8;
-}
-
-.footer-brand {
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.footer-copyright {
-  font-size: 13px;
-  color: #64748b;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width:600px) {
-
-  header h1 {
-    font-size: 25px;
-  }
-
-  #songTitle {
-    font-size: 28px;
-  }
-
-  .song-navigation {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .back {
-    width: 100%;
-  }
-
-  .song-search-container {
-    width: 100%;
-  }
-
-  #songSearch {
-    width: 100%;
-  }
-
-  #songSearchResults {
-    width: 100%;
-  }
-
-  #chords {
-    font-size: 16px;
-    padding: 18px;
-  }
-
-  .site-footer {
-    margin-top: 40px;
-    padding: 25px 15px;
-  }
-}
-
-</style>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Jayro Chords</title>
+
+
+  <!-- =====================================================
+       FIREBASE
+  ====================================================== -->
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+
+  <style>
+
+    /* =====================================================
+       GLOBAL
+    ===================================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+
+    /* =====================================================
+       LOGIN PAGE
+    ===================================================== */
+
+    #loginPage {
+
+      min-height: 100vh;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+
+    .login-box {
+
+      width: 100%;
+
+      max-width: 400px;
+
+      background: #1e293b;
+
+      padding: 30px;
+
+      border-radius: 14px;
+
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.3);
+
+      text-align: center;
+    }
+
+
+    .login-box h1 {
+
+      margin: 0 0 8px;
+
+      font-size: 30px;
+    }
+
+
+    .login-subtitle {
+
+      color: #94a3b8;
+
+      font-size: 14px;
+
+      margin-bottom: 25px;
+    }
+
+
+    .login-input {
+
+      width: 100%;
+
+      padding: 13px 14px;
+
+      margin-bottom: 12px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 15px;
+    }
+
+
+    .login-button {
+
+      width: 100%;
+
+      padding: 13px;
+
+      margin-top: 5px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .login-button:hover {
+
+      background: #1d4ed8;
+    }
+
+
+    .login-button:disabled {
+
+      opacity: 0.65;
+
+      cursor: wait;
+    }
+
+
+    .request-button {
+
+      width: 100%;
+
+      padding: 12px;
+
+      margin-top: 10px;
+
+      border: 1px solid #475569;
+
+      border-radius: 8px;
+
+      background: transparent;
+
+      color: #60a5fa;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .request-button:hover {
+
+      background: #334155;
+    }
+
+
+    .login-message {
+
+      margin-top: 15px;
+
+      font-size: 14px;
+
+      color: #94a3b8;
+
+      min-height: 20px;
+
+      line-height: 20px;
+    }
+
+
+    /* =====================================================
+       REQUEST PAGE
+    ===================================================== */
+
+    #requestPage {
+
+      display: none;
+
+      min-height: 100vh;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+
+    .request-box {
+
+      width: 100%;
+
+      max-width: 450px;
+
+      background: #1e293b;
+
+      padding: 30px;
+
+      border-radius: 14px;
+
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.3);
+    }
+
+
+    .request-box h1 {
+
+      margin: 0 0 8px;
+
+      text-align: center;
+
+      font-size: 28px;
+    }
+
+
+    .request-subtitle {
+
+      text-align: center;
+
+      color: #94a3b8;
+
+      font-size: 14px;
+
+      margin-bottom: 25px;
+    }
+
+
+    .request-label {
+
+      display: block;
+
+      margin-bottom: 6px;
+
+      font-size: 14px;
+
+      font-weight: bold;
+    }
+
+
+    .request-input,
+    .request-textarea {
+
+      width: 100%;
+
+      padding: 13px 14px;
+
+      margin-bottom: 15px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 15px;
+
+      font-family: Arial, sans-serif;
+    }
+
+
+    .request-textarea {
+
+      min-height: 100px;
+
+      resize: vertical;
+    }
+
+
+    .submit-request {
+
+      width: 100%;
+
+      padding: 13px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .back-login {
+
+      display: block;
+
+      text-align: center;
+
+      margin-top: 15px;
+
+      color: #60a5fa;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    /* =====================================================
+       HOME PAGE
+    ===================================================== */
+
+    #homePage {
+
+      min-height: 100vh;
+
+      display: none;
+
+      flex-direction: column;
+    }
+
+
+    header {
+
+      text-align: center;
+
+      padding: 30px 15px 20px;
+    }
+
+
+    header h1 {
+
+      margin: 0 0 20px;
+
+      font-size: 32px;
+    }
+
+
+    #search {
+
+      width: 90%;
+
+      max-width: 500px;
+
+      padding: 14px 16px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 10px;
+
+      outline: none;
+
+      font-size: 16px;
+    }
+
+
+    #songs {
+
+      width: 90%;
+
+      max-width: 700px;
+
+      margin: 10px auto 40px;
+
+      flex: 1;
+    }
+
+
+    .song {
+
+      background: #1e293b;
+
+      padding: 17px;
+
+      margin-bottom: 10px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      font-weight: bold;
+
+      transition: 0.2s;
+    }
+
+
+    .song:hover {
+
+      background: #334155;
+
+      transform: translateY(-1px);
+    }
+
+
+    #message {
+
+      text-align: center;
+
+      color: #94a3b8;
+
+      margin: 30px;
+    }
+
+
+    /* =====================================================
+       SONG PAGE
+    ===================================================== */
+
+    #songPage {
+
+      display: none;
+
+      width: 90%;
+
+      max-width: 800px;
+
+      margin: 30px auto 0;
+
+      min-height: calc(100vh - 30px);
+    }
+
+
+    /* =====================================================
+       SONG NAVIGATION
+    ===================================================== */
+
+    .song-navigation {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      margin-bottom: 20px;
+
+      flex-wrap: wrap;
+    }
+
+
+    .back {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 11px 15px;
+
+      background: #1e293b;
+
+      color: #60a5fa;
+
+      border-radius: 8px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      white-space: nowrap;
+    }
+
+
+    .back:hover {
+
+      background: #334155;
+
+      color: #93c5fd;
+    }
+
+
+    /* =====================================================
+       SEARCH ANOTHER SONG
+    ===================================================== */
+
+    .song-search-container {
+
+      position: relative;
+
+      width: 240px;
+
+      flex: none;
+    }
+
+
+    #songSearch {
+
+      width: 240px;
+
+      padding: 10px 14px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 14px;
+    }
+
+
+    #songSearchResults {
+
+      position: absolute;
+
+      top: calc(100% + 6px);
+
+      left: 0;
+
+      width: 240px;
+
+      z-index: 1000;
+
+      background: #1e293b;
+
+      border: 1px solid #334155;
+
+      border-radius: 8px;
+
+      overflow: hidden;
+
+      display: none;
+
+      max-height: 300px;
+
+      overflow-y: auto;
+
+      box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, 0.35);
+    }
+
+
+    .song-search-result {
+
+      padding: 12px 14px;
+
+      cursor: pointer;
+
+      border-bottom: 1px solid #334155;
+
+      font-size: 14px;
+
+      color: white;
+    }
+
+
+    .song-search-result:hover {
+
+      background: #334155;
+    }
+
+
+    .song-search-no-results {
+
+      padding: 12px 14px;
+
+      color: #94a3b8;
+
+      font-size: 14px;
+    }
+
+
+    /* =====================================================
+       SONG TITLE
+    ===================================================== */
+
+    #songTitle {
+
+      font-size: 34px;
+
+      margin: 0 0 20px;
+    }
+
+
+    /* =====================================================
+       TRANSPOSE
+    ===================================================== */
+
+    .transpose {
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 15px;
+
+      padding: 15px;
+
+      margin-bottom: 20px;
+
+      background: #1e293b;
+
+      border-radius: 10px;
+    }
+
+
+    .transpose span {
+
+      font-weight: bold;
+    }
+
+
+    .transpose button {
+
+      width: 45px;
+
+      height: 40px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #334155;
+
+      color: white;
+
+      font-size: 22px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .transpose button:hover {
+
+      background: #475569;
+    }
+
+
+    #keyDisplay {
+
+      min-width: 80px;
+
+      text-align: center;
+
+      font-weight: bold;
+    }
+
+
+    /* =====================================================
+       CHORDS
+    ===================================================== */
+
+    #chords {
+
+      background: #111827;
+
+      padding: 25px;
+
+      border-radius: 10px;
+
+      white-space: pre-wrap;
+
+      font-family: "Courier New", monospace;
+
+      font-size: 18px;
+
+      line-height: 1.7;
+
+      overflow-x: auto;
+
+      min-height: 100px;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .site-footer {
+
+      margin-top: 50px;
+
+      padding: 30px 20px;
+
+      text-align: center;
+
+      border-top: 1px solid #334155;
+
+      color: #94a3b8;
+    }
+
+
+    .footer-brand {
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+      color: white;
+
+      margin-bottom: 8px;
+    }
+
+
+    .footer-copyright {
+
+      font-size: 13px;
+
+      color: #64748b;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 600px) {
+
+      header h1 {
+
+        font-size: 25px;
+      }
+
+
+      #songTitle {
+
+        font-size: 28px;
+      }
+
+
+      .song-navigation {
+
+        flex-direction: column;
+
+        align-items: stretch;
+      }
+
+
+      .back {
+
+        width: 100%;
+      }
+
+
+      .song-search-container {
+
+        width: 100%;
+      }
+
+
+      #songSearch {
+
+        width: 100%;
+      }
+
+
+      #songSearchResults {
+
+        width: 100%;
+      }
+
+
+      #chords {
+
+        font-size: 16px;
+
+        padding: 18px;
+      }
+
+
+      .site-footer {
+
+        margin-top: 40px;
+
+        padding: 25px 15px;
+      }
+
+    }
+
+  </style>
+
 </head>
 
 
 <body>
 
 
-<!-- =========================
-     LOGIN PAGE
-========================= -->
+  <!-- =====================================================
+       LOGIN PAGE
+  ===================================================== -->
 
-<div id="loginPage">
+  <div id="loginPage">
 
-  <div class="login-box">
+    <div class="login-box">
 
-    <h1>🎵 Jayro Chords</h1>
+      <h1>
+        🎵 Jayro Chords
+      </h1>
 
-    <div class="login-subtitle">
-      Sign in to access the chord library
-    </div>
+      <div class="login-subtitle">
+        Sign in to access the chord library
+      </div>
 
-    <input
-      id="loginEmail"
-      class="login-input"
-      type="email"
-      placeholder="Email"
-      autocomplete="email"
-    >
-
-    <input
-      id="loginPassword"
-      class="login-input"
-      type="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    >
-
-    <button
-      id="loginButton"
-      class="login-button"
-      onclick="login()"
-    >
-      Login
-    </button>
-
-    <button
-      class="request-button"
-      onclick="showRequestPage()"
-    >
-      Request Access
-    </button>
-
-    <div
-      id="loginMessage"
-      class="login-message"
-    ></div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     REQUEST PAGE
-========================= -->
-
-<div id="requestPage">
-
-  <div class="request-box">
-
-    <h1>Request Access</h1>
-
-    <div class="request-subtitle">
-      Request access to the Jayro Chords library.
-    </div>
-
-    <label class="request-label">
-      Name
-    </label>
-
-    <input
-      id="requestName"
-      class="request-input"
-      type="text"
-      placeholder="Your name"
-    >
-
-    <label class="request-label">
-      Email
-    </label>
-
-    <input
-      id="requestEmail"
-      class="request-input"
-      type="email"
-      placeholder="you@example.com"
-    >
-
-    <label class="request-label">
-      Why do you need access?
-    </label>
-
-    <textarea
-      id="requestReason"
-      class="request-textarea"
-      placeholder="Tell us a little about why you need access..."
-    ></textarea>
-
-    <button
-      class="submit-request"
-      onclick="submitAccessRequest()"
-    >
-      Send Request
-    </button>
-
-    <div
-      id="requestMessage"
-      class="login-message"
-    ></div>
-
-    <div
-      class="back-login"
-      onclick="showLoginPage()"
-    >
-      ← Back to Login
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =========================
-     HOME PAGE
-========================= -->
-
-<div id="homePage">
-
-  <header>
-
-    <h1>
-      🎵 VCCF Peymous Songs List
-    </h1>
-
-    <input
-      id="search"
-      type="text"
-      placeholder="Search song..."
-      autocomplete="off"
-    >
-
-    <button
-      class="request-button"
-      style="width:auto;margin-top:15px;padding:10px 18px;"
-      onclick="logout()"
-    >
-      Logout
-    </button>
-
-  </header>
-
-  <div id="songs"></div>
-
-  <div id="message">
-    Loading songs...
-  </div>
-
-</div>
-
-
-<!-- =========================
-     SONG PAGE
-========================= -->
-
-<div id="songPage">
-
-  <div class="song-navigation">
-
-    <div
-      class="back"
-      onclick="showHome()"
-    >
-      ← Back to Songs
-    </div>
-
-    <div class="song-search-container">
 
       <input
-        id="songSearch"
-        type="text"
-        placeholder="Search another song..."
-        autocomplete="off"
+        id="loginEmail"
+        class="login-input"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
       >
 
-      <div id="songSearchResults"></div>
+
+      <input
+        id="loginPassword"
+        class="login-input"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+
+      <button
+        id="loginButton"
+        class="login-button"
+        type="button"
+      >
+        Login
+      </button>
+
+
+      <button
+        id="requestButton"
+        class="request-button"
+        type="button"
+      >
+        Request Access
+      </button>
+
+
+      <div
+        id="loginMessage"
+        class="login-message"
+      ></div>
 
     </div>
 
   </div>
 
 
-  <h1 id="songTitle"></h1>
+
+  <!-- =====================================================
+       REQUEST ACCESS PAGE
+  ===================================================== -->
+
+  <div id="requestPage">
+
+    <div class="request-box">
+
+      <h1>
+        Request Access
+      </h1>
 
 
-  <div class="transpose">
+      <div class="request-subtitle">
+        Request access to the Jayro Chords library.
+      </div>
 
-    <span>
-      Transpose
-    </span>
 
-    <button
-      onclick="transposeDown()"
-      type="button"
-    >
-      −
-    </button>
+      <label
+        class="request-label"
+        for="requestName"
+      >
+        Name
+      </label>
 
-    <div id="keyDisplay">
-      Key: -
+
+      <input
+        id="requestName"
+        class="request-input"
+        type="text"
+        placeholder="Your name"
+      >
+
+
+      <label
+        class="request-label"
+        for="requestEmail"
+      >
+        Email
+      </label>
+
+
+      <input
+        id="requestEmail"
+        class="request-input"
+        type="email"
+        placeholder="you@example.com"
+      >
+
+
+      <label
+        class="request-label"
+        for="requestReason"
+      >
+        Why do you need access?
+      </label>
+
+
+      <textarea
+        id="requestReason"
+        class="request-textarea"
+        placeholder="Tell us a little about why you need access..."
+      ></textarea>
+
+
+      <button
+        id="submitRequestButton"
+        class="submit-request"
+        type="button"
+      >
+        Send Request
+      </button>
+
+
+      <div
+        id="requestMessage"
+        class="login-message"
+      ></div>
+
+
+      <div
+        id="backLogin"
+        class="back-login"
+      >
+        ← Back to Login
+      </div>
+
     </div>
-
-    <button
-      onclick="transposeUp()"
-      type="button"
-    >
-      +
-    </button>
 
   </div>
 
 
-  <div id="chords"></div>
+
+  <!-- =====================================================
+       HOME PAGE
+  ===================================================== -->
+
+  <div id="homePage">
+
+    <header>
+
+      <h1>
+        🎵 VCCF Peymous Songs List
+      </h1>
 
 
-  <footer class="site-footer">
+      <div
+        style="
+          display:flex;
+          justify-content:center;
+          gap:8px;
+          flex-wrap:wrap;
+        "
+      >
 
-    <div class="footer-brand">
-      🎵 jayrochords.com
+        <input
+          id="search"
+          type="text"
+          placeholder="Search song..."
+          autocomplete="off"
+        >
+
+
+        <button
+          id="logoutButton"
+          class="request-button"
+          style="
+            width:auto;
+            margin-top:0;
+            padding:10px 18px;
+          "
+          type="button"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div id="songs"></div>
+
+
+    <div id="message">
+      Loading songs...
     </div>
 
-    <div class="footer-copyright">
-      © 2026 Jayro
+  </div>
+
+
+
+  <!-- =====================================================
+       SONG PAGE
+  ===================================================== -->
+
+  <div id="songPage">
+
+    <div class="song-navigation">
+
+
+      <div
+        id="backButton"
+        class="back"
+      >
+        ← Back to Songs
+      </div>
+
+
+      <div class="song-search-container">
+
+
+        <input
+          id="songSearch"
+          type="text"
+          placeholder="Search another song..."
+          autocomplete="off"
+        >
+
+
+        <div
+          id="songSearchResults"
+        ></div>
+
+      </div>
+
     </div>
 
-  </footer>
 
-</div>
+    <h1 id="songTitle"></h1>
 
 
-<!-- =========================
-     FIREBASE
-========================= -->
+    <div class="transpose">
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+      <span>
+        Transpose
+      </span>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 
+      <button
+        id="transposeDownButton"
+        type="button"
+      >
+        −
+      </button>
 
-<script>
 
-const firebaseConfig = {
+      <div id="keyDisplay">
+        Key: -
+      </div>
 
-  apiKey:
-    "AIzaSyDA81ZEdidhOJyUOlN8pIC4Y2zz0o07Wps",
 
-  authDomain:
-    "auth-543a0.firebaseapp.com",
+      <button
+        id="transposeUpButton"
+        type="button"
+      >
+        +
+      </button>
 
-  projectId:
-    "auth-543a0",
+    </div>
 
-  storageBucket:
-    "auth-543a0.firebasestorage.app",
 
-  messagingSenderId:
-    "277890778144",
+    <div id="chords"></div>
 
-  appId:
-    "1:277890778144:web:d1476a3e2c8aa61144e845",
 
-  measurementId:
-    "G-7TJHNT3J41"
+    <footer class="site-footer">
 
-};
+      <div class="footer-brand">
+        🎵 jayrochords.com
+      </div>
 
+      <div class="footer-copyright">
+        © 2026 Jayro
+      </div>
 
-firebase.initializeApp(firebaseConfig);
+    </footer>
 
-const firebaseAuth =
-  firebase.auth();
+  </div>
 
-</script>
 
 
-<script>
+  <!-- =====================================================
+       JAVASCRIPT
+  ===================================================== -->
 
-/* =====================================================
-   GOOGLE APPS SCRIPT
-===================================================== */
+  <script>
 
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
 
+    /* =====================================================
+       FIREBASE CONFIG
+    ===================================================== */
 
-/* =====================================================
-   VARIABLES
-===================================================== */
+    const firebaseConfig = {
 
-let songs = [];
+      apiKey:
+        "AIzaSyDA81ZEdidhOJyUOlN8pIC4Y2zz0o07Wps",
 
-let currentSong = null;
+      authDomain:
+        "auth-543a0.firebaseapp.com",
 
-let transposeAmount = 0;
+      projectId:
+        "auth-543a0",
 
+      storageBucket:
+        "auth-543a0.firebasestorage.app",
 
-/* =====================================================
-   CHROMATIC NOTES
-===================================================== */
+      messagingSenderId:
+        "277890778144",
 
-const chromaticNotes = [
-  "C",
-  "C#",
-  "D",
-  "Eb",
-  "E",
-  "F",
-  "F#",
-  "G",
-  "G#",
-  "A",
-  "Bb",
-  "B"
-];
+      appId:
+        "1:277890778144:web:d1476a3e2c8aa61144e845",
 
+      measurementId:
+        "G-7TJHNT3J41"
 
-/* =====================================================
-   NOTE → NUMBER
-===================================================== */
+    };
 
-function noteToNumber(note) {
 
-  const map = {
+    /* =====================================================
+       INITIALIZE FIREBASE
+    ===================================================== */
 
-    "C": 0,
-    "B#": 0,
-
-    "C#": 1,
-    "Db": 1,
-
-    "D": 2,
-
-    "D#": 3,
-    "Eb": 3,
-
-    "E": 4,
-    "Fb": 4,
-
-    "F": 5,
-    "E#": 5,
-
-    "F#": 6,
-    "Gb": 6,
-
-    "G": 7,
-
-    "G#": 8,
-    "Ab": 8,
-
-    "A": 9,
-
-    "A#": 10,
-    "Bb": 10,
-
-    "B": 11,
-    "Cb": 11
-
-  };
-
-  return map[note];
-
-}
-
-
-/* =====================================================
-   TRANSPOSE NOTE
-===================================================== */
-
-function transposeNote(note, amount) {
-
-  const number =
-    noteToNumber(note);
-
-  if (number === undefined) {
-    return note;
-  }
-
-  let newNumber =
-    (number + amount) % 12;
-
-  if (newNumber < 0) {
-    newNumber += 12;
-  }
-
-  return chromaticNotes[newNumber];
-
-}
-
-
-/* =====================================================
-   CHECK IF TOKEN LOOKS LIKE CHORD
-===================================================== */
-
-function isChordToken(token) {
-
-  if (!token) {
-    return false;
-  }
-
-  token =
-    token.trim();
-
-  /*
-    Supported:
-
-    C
-    C#
-    Db
-    Cm
-    C#m
-    F#m7
-    G7
-    Gmaj7
-    Dsus2
-    Cadd9
-    Cdim
-    Caug
-    D-7
-    G+
-    C/G
-    G7/B
-  */
-
-  const chordPattern =
-    /^[A-G](?:#|b)?(?:m|min|maj|dim|aug|sus|add|M|°|\+|-)?(?:\d+)?(?:[#b]\d+)?(?:\/[A-G](?:#|b)?)?$/;
-
-  return chordPattern.test(token);
-
-}
-
-
-/* =====================================================
-   TRANSPOSE ONE CHORD
-===================================================== */
-
-function transposeChordToken(token, amount) {
-
-  const match =
-    token.match(
-      /^([A-G](?:#|b)?)(.*)$/
+    firebase.initializeApp(
+      firebaseConfig
     );
 
-  if (!match) {
-    return token;
-  }
-
-  const root =
-    match[1];
-
-  let suffix =
-    match[2];
-
-  /*
-    Check for slash chord.
-
-    Example:
-
-    G7/B
-    F#m/C#
-    D/F#
-  */
-
-  const slashMatch =
-    suffix.match(
-      /^(.*)\/([A-G](?:#|b)?)$/
-    );
-
-  if (slashMatch) {
-
-    const chordSuffix =
-      slashMatch[1];
-
-    const bass =
-      slashMatch[2];
-
-    return (
-      transposeNote(root, amount) +
-      chordSuffix +
-      "/" +
-      transposeNote(bass, amount)
-    );
-
-  }
-
-  return (
-    transposeNote(root, amount) +
-    suffix
-  );
-
-}
+    const auth =
+      firebase.auth();
 
 
-/* =====================================================
-   TRANSPOSE CHORDS
-===================================================== */
+    /* =====================================================
+       FIREBASE PERSISTENCE
+    ===================================================== */
 
-function transposeChords(text, amount) {
+    auth.setPersistence(
+      firebase.auth.Auth.Persistence.LOCAL
+    )
+    .catch(function(error) {
 
-  if (!text || amount === 0) {
-    return text;
-  }
-
-
-  /*
-    Process line-by-line.
-
-    This is important because song text can contain
-    words such as:
-
-    "God is here"
-
-    We do NOT want the G in "God" to become another chord.
-
-    But chord lines such as:
-
-    D - A - Bm - G
-
-    should transpose normally.
-  */
-
-  const lines =
-    text.split("\n");
-
-
-  return lines.map(function(line) {
-
-    /*
-      Find possible chord tokens.
-
-      We preserve all spaces, punctuation and formatting.
-    */
-
-    const tokens =
-      line.split(
-        /(\s+|[()[\]{}:,;|])/g
+      console.error(
+        "Persistence error:",
+        error
       );
-
-
-    /*
-      Determine whether this line contains chords.
-    */
-
-    let chordCount = 0;
-
-    tokens.forEach(function(token) {
-
-      if (isChordToken(token)) {
-        chordCount++;
-      }
 
     });
 
 
-    /*
-      If the line contains multiple chords,
-      it is definitely a chord line.
+    /* =====================================================
+       GOOGLE APPS SCRIPT URL
+    ===================================================== */
 
-      If it contains only one chord, we only transpose
-      it when the line itself looks like a chord line.
+    /*
+      IMPORTANT:
+
+      This URL is the Apps Script URL from
+      the previous working version.
+
+      If your NEW deployment has a different
+      /exec URL, replace ONLY this URL.
     */
 
-    const compactLine =
-      line
-        .replace(/\s+/g, "")
-        .replace(/[()[\]{}:,;|]/g, "");
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbzBa66P0S6V_UP_L7zutjkpad6B1LfETF87QEN8fWGK9Sg_52wAmUn5qdSH8A_25BGeNA/exec";
 
 
-    const looksLikeChordLine =
-      chordCount >= 2 ||
-      (
-        chordCount === 1 &&
-        compactLine.length <= 20
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    let songs = [];
+
+    let currentSong = null;
+
+    let transposeAmount = 0;
+
+    let loginInProgress = false;
+
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const loginPage =
+      document.getElementById(
+        "loginPage"
+      );
+
+    const requestPage =
+      document.getElementById(
+        "requestPage"
+      );
+
+    const homePage =
+      document.getElementById(
+        "homePage"
+      );
+
+    const songPage =
+      document.getElementById(
+        "songPage"
+      );
+
+    const loginEmail =
+      document.getElementById(
+        "loginEmail"
+      );
+
+    const loginPassword =
+      document.getElementById(
+        "loginPassword"
+      );
+
+    const loginButton =
+      document.getElementById(
+        "loginButton"
+      );
+
+    const requestButton =
+      document.getElementById(
+        "requestButton"
+      );
+
+    const loginMessage =
+      document.getElementById(
+        "loginMessage"
+      );
+
+    const logoutButton =
+      document.getElementById(
+        "logoutButton"
+      );
+
+    const search =
+      document.getElementById(
+        "search"
+      );
+
+    const songsContainer =
+      document.getElementById(
+        "songs"
+      );
+
+    const message =
+      document.getElementById(
+        "message"
+      );
+
+    const songSearch =
+      document.getElementById(
+        "songSearch"
+      );
+
+    const songSearchResults =
+      document.getElementById(
+        "songSearchResults"
+      );
+
+    const songTitle =
+      document.getElementById(
+        "songTitle"
+      );
+
+    const chords =
+      document.getElementById(
+        "chords"
+      );
+
+    const keyDisplay =
+      document.getElementById(
+        "keyDisplay"
+      );
+
+    const requestName =
+      document.getElementById(
+        "requestName"
+      );
+
+    const requestEmail =
+      document.getElementById(
+        "requestEmail"
+      );
+
+    const requestReason =
+      document.getElementById(
+        "requestReason"
+      );
+
+    const requestMessage =
+      document.getElementById(
+        "requestMessage"
       );
 
 
-    if (!looksLikeChordLine) {
+    /* =====================================================
+       CHROMATIC NOTES
+    ===================================================== */
 
-      return line;
+    const chromaticNotes = [
+
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "G#",
+      "A",
+      "Bb",
+      "B"
+
+    ];
+
+
+    /* =====================================================
+       NOTE TO NUMBER
+    ===================================================== */
+
+    function noteToNumber(note) {
+
+      const map = {
+
+        "C": 0,
+        "B#": 0,
+
+        "C#": 1,
+        "Db": 1,
+
+        "D": 2,
+
+        "D#": 3,
+        "Eb": 3,
+
+        "E": 4,
+        "Fb": 4,
+
+        "F": 5,
+        "E#": 5,
+
+        "F#": 6,
+        "Gb": 6,
+
+        "G": 7,
+
+        "G#": 8,
+        "Ab": 8,
+
+        "A": 9,
+
+        "A#": 10,
+        "Bb": 10,
+
+        "B": 11,
+        "Cb": 11
+
+      };
+
+      return map[note];
 
     }
 
 
-    return tokens.map(function(token) {
+    /* =====================================================
+       TRANSPOSE NOTE
+    ===================================================== */
 
-      if (isChordToken(token)) {
+    function transposeNote(
+      note,
+      amount
+    ) {
 
-        return transposeChordToken(
-          token,
+      const number =
+        noteToNumber(
+          note
+        );
+
+
+      if (
+        number === undefined
+      ) {
+
+        return note;
+
+      }
+
+
+      let newNumber =
+        (
+          number +
           amount
-        );
+        ) % 12;
+
+
+      if (
+        newNumber < 0
+      ) {
+
+        newNumber += 12;
 
       }
 
-      return token;
 
-    }).join("");
-
-  }).join("\n");
-
-}
-
-
-/* =====================================================
-   GET ORIGINAL KEY
-===================================================== */
-
-function getOriginalKey(text) {
-
-  if (!text) {
-    return "-";
-  }
-
-
-  /*
-    First look for a key at the beginning.
-
-    Examples:
-
-    D
-    (D)
-    A
-    Bb
-  */
-
-  const keyAtStart =
-    text.match(
-      /^\s*\(?([A-G](?:#|b)?)\)?/
-    );
-
-
-  if (keyAtStart) {
-
-    return keyAtStart[1];
-
-  }
-
-
-  /*
-    Otherwise find the first actual chord.
-  */
-
-  const lines =
-    text.split("\n");
-
-
-  for (const line of lines) {
-
-    const tokens =
-      line.split(
-        /(\s+|[()[\]{}:,;|])/g
-      );
-
-
-    for (const token of tokens) {
-
-      if (isChordToken(token)) {
-
-        const match =
-          token.match(
-            /^([A-G](?:#|b)?)/
-          );
-
-        if (match) {
-          return match[1];
-        }
-
-      }
-
-    }
-
-  }
-
-
-  return "-";
-
-}
-
-
-/* =====================================================
-   DISPLAY KEY
-===================================================== */
-
-function getDisplayedKey(text, amount) {
-
-  const originalKey =
-    getOriginalKey(text);
-
-
-  const number =
-    noteToNumber(originalKey);
-
-
-  if (number === undefined) {
-    return "-";
-  }
-
-
-  let newNumber =
-    (number + amount) % 12;
-
-
-  if (newNumber < 0) {
-    newNumber += 12;
-  }
-
-
-  return chromaticNotes[newNumber];
-
-}
-
-
-/* =====================================================
-   SHOW LOGIN
-===================================================== */
-
-function showLoginPage() {
-
-  document.getElementById(
-    "loginPage"
-  ).style.display = "flex";
-
-
-  document.getElementById(
-    "requestPage"
-  ).style.display = "none";
-
-
-  document.getElementById(
-    "homePage"
-  ).style.display = "none";
-
-
-  document.getElementById(
-    "songPage"
-  ).style.display = "none";
-
-}
-
-
-/* =====================================================
-   SHOW REQUEST PAGE
-===================================================== */
-
-function showRequestPage() {
-
-  document.getElementById(
-    "loginPage"
-  ).style.display = "none";
-
-
-  document.getElementById(
-    "requestPage"
-  ).style.display = "flex";
-
-
-  document.getElementById(
-    "requestMessage"
-  ).textContent = "";
-
-}
-
-
-/* =====================================================
-   REQUEST ACCESS
-===================================================== */
-
-function submitAccessRequest() {
-
-  const name =
-    document.getElementById(
-      "requestName"
-    ).value.trim();
-
-
-  const email =
-    document.getElementById(
-      "requestEmail"
-    ).value.trim();
-
-
-  const reason =
-    document.getElementById(
-      "requestReason"
-    ).value.trim();
-
-
-  const message =
-    document.getElementById(
-      "requestMessage"
-    );
-
-
-  if (!name) {
-
-    message.textContent =
-      "Please enter your name.";
-
-    return;
-
-  }
-
-
-  if (!email) {
-
-    message.textContent =
-      "Please enter your email.";
-
-    return;
-
-  }
-
-
-  if (!reason) {
-
-    message.textContent =
-      "Please tell us why you need access.";
-
-    return;
-
-  }
-
-
-  message.textContent =
-    "Sending request...";
-
-
-  const callbackName =
-    "accessRequest_" +
-    Date.now();
-
-
-  window[callbackName] =
-    function(response) {
-
-      message.textContent =
-        response.message ||
-        "Request submitted.";
-
-
-      if (response.success) {
-
-        document.getElementById(
-          "requestName"
-        ).value = "";
-
-
-        document.getElementById(
-          "requestEmail"
-        ).value = "";
-
-
-        document.getElementById(
-          "requestReason"
-        ).value = "";
-
-      }
-
-
-      delete window[
-        callbackName
+      return chromaticNotes[
+        newNumber
       ];
 
-
-      const oldScript =
-        document.getElementById(
-          "accessRequestScript"
-        );
-
-
-      if (oldScript) {
-        oldScript.remove();
-      }
-
-    };
-
-
-  const script =
-    document.createElement(
-      "script"
-    );
-
-
-  script.id =
-    "accessRequestScript";
-
-
-  script.src =
-    API_URL +
-    "?action=requestAccess" +
-    "&name=" +
-    encodeURIComponent(name) +
-    "&email=" +
-    encodeURIComponent(email) +
-    "&reason=" +
-    encodeURIComponent(reason) +
-    "&callback=" +
-    encodeURIComponent(callbackName);
-
-
-  script.onerror =
-    function() {
-
-      message.textContent =
-        "Unable to send request. Please try again.";
-
-      delete window[
-        callbackName
-      ];
-
-      script.remove();
-
-    };
-
-
-  document.body.appendChild(
-    script
-  );
-
-}
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-async function login() {
-
-  const email =
-    document.getElementById(
-      "loginEmail"
-    ).value.trim();
-
-
-  const password =
-    document.getElementById(
-      "loginPassword"
-    ).value;
-
-
-  const message =
-    document.getElementById(
-      "loginMessage"
-    );
-
-
-  const button =
-    document.getElementById(
-      "loginButton"
-    );
-
-
-  if (!email) {
-
-    message.textContent =
-      "Please enter your email.";
-
-    return;
-
-  }
-
-
-  if (!password) {
-
-    message.textContent =
-      "Please enter your password.";
-
-    return;
-
-  }
-
-
-  /*
-    Prevent double clicks.
-  */
-
-  button.disabled = true;
-
-  button.textContent =
-    "Signing in...";
-
-  message.textContent = "";
-
-
-  try {
-
-    await firebaseAuth
-      .signInWithEmailAndPassword(
-        email,
-        password
-      );
-
-
-    /*
-      DO NOT manually clear the login page here.
-
-      Firebase onAuthStateChanged()
-      handles the page transition.
-
-      This prevents the previous issue where
-      the page appeared to sign in but then got
-      stuck.
-    */
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Firebase login error:",
-      error
-    );
-
-
-    switch (error.code) {
-
-      case "auth/invalid-email":
-
-        message.textContent =
-          "Please enter a valid email address.";
-
-        break;
-
-
-      case "auth/user-not-found":
-
-      case "auth/wrong-password":
-
-      case "auth/invalid-credential":
-
-        message.textContent =
-          "Incorrect email or password.";
-
-        break;
-
-
-      case "auth/too-many-requests":
-
-        message.textContent =
-          "Too many attempts. Please try again later.";
-
-        break;
-
-
-      case "auth/user-disabled":
-
-        message.textContent =
-          "This account has been disabled.";
-
-        break;
-
-
-      default:
-
-        message.textContent =
-          error.message ||
-          "Unable to log in.";
-
     }
 
-  }
 
-  finally {
+    /* =====================================================
+       TRANSPOSE CHORDS
+    ===================================================== */
 
-    button.disabled = false;
+    function transposeChords(
+      text,
+      amount
+    ) {
 
-    button.textContent =
-      "Login";
+      if (
+        !text ||
+        amount === 0
+      ) {
 
-  }
-
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-async function logout() {
-
-  try {
-
-    await firebaseAuth.signOut();
-
-    currentSong = null;
-
-    transposeAmount = 0;
-
-    showLoginPage();
-
-    document.getElementById(
-      "loginEmail"
-    ).value = "";
-
-    document.getElementById(
-      "loginPassword"
-    ).value = "";
-
-    document.getElementById(
-      "loginMessage"
-    ).textContent = "";
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "Logout error:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   FIREBASE SESSION
-===================================================== */
-
-firebaseAuth.onAuthStateChanged(
-  function(user) {
-
-    if (user) {
-
-      showHome();
-
-      if (!songs.length) {
-
-        loadSongs();
+        return text;
 
       }
 
-    }
-    else {
 
-      showLoginPage();
-
-    }
-
-  }
-);
+      let result = text;
 
 
-/* =====================================================
-   LOAD SONGS
-===================================================== */
+      /*
+        Examples handled:
 
-function loadSongs() {
-
-  const callbackName =
-    "receiveSongs_" +
-    Date.now();
-
-
-  window[callbackName] =
-    function(data) {
-
-      try {
-
-        songs =
-          Array.isArray(data)
-            ? data
-            : [];
+        C
+        Cm
+        C7
+        Cmaj7
+        Cadd9
+        C/G
+        F#m7
+        Bb
+        Gsus4
+      */
 
 
-        songs.sort(
-          function(a,b) {
+      const chordRegex =
+        /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
 
-            return String(
-              a.name || ""
-            ).localeCompare(
-              String(
-                b.name || ""
-              ),
-              undefined,
-              {
-                sensitivity: "base"
-              }
+
+      result =
+        result.replace(
+          chordRegex,
+          function(
+            fullMatch,
+            separator,
+            root
+          ) {
+
+            return (
+              separator +
+              transposeNote(
+                root,
+                amount
+              )
             );
 
           }
         );
 
 
-        displaySongs(songs);
+      /*
+        Slash bass notes
 
-      }
+        C/G
+        D/F#
+        Bb/D
+      */
 
-      catch(error) {
 
-        console.error(
-          "Song processing error:",
-          error
+      const bassRegex =
+        /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
+
+
+      result =
+        result.replace(
+          bassRegex,
+          function(
+            fullMatch,
+            bassNote
+          ) {
+
+            return (
+              "/" +
+              transposeNote(
+                bassNote,
+                amount
+              )
+            );
+
+          }
         );
 
-        document.getElementById(
-          "message"
-        ).textContent =
-          "Unable to process songs.";
+
+      return result;
+
+    }
+
+
+    /* =====================================================
+       GET ORIGINAL KEY
+    ===================================================== */
+
+    function getOriginalKey(
+      text
+    ) {
+
+      if (!text) {
+
+        return "-";
 
       }
 
 
-      delete window[
-        callbackName
+      /*
+        First try:
+
+        (D)
+        D
+        (Bb)
+        F#
+      */
+
+      const keyAtStart =
+        text.match(
+          /^\s*\(?([A-G](?:#|b)?)\)?/
+        );
+
+
+      if (keyAtStart) {
+
+        return keyAtStart[1];
+
+      }
+
+
+      /*
+        Otherwise find first chord.
+      */
+
+      const firstChord =
+        text.match(
+          /(?:^|[\s(\[])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|[0-9]|\/|[\s)\],;:.]|$))/
+        );
+
+
+      if (!firstChord) {
+
+        return "-";
+
+      }
+
+
+      return firstChord[1];
+
+    }
+
+
+    /* =====================================================
+       GET DISPLAYED KEY
+    ===================================================== */
+
+    function getDisplayedKey(
+      text,
+      amount
+    ) {
+
+      const originalKey =
+        getOriginalKey(
+          text
+        );
+
+
+      const number =
+        noteToNumber(
+          originalKey
+        );
+
+
+      if (
+        number === undefined
+      ) {
+
+        return "-";
+
+      }
+
+
+      let newNumber =
+        (
+          number +
+          amount
+        ) % 12;
+
+
+      if (
+        newNumber < 0
+      ) {
+
+        newNumber += 12;
+
+      }
+
+
+      return chromaticNotes[
+        newNumber
       ];
 
-
-      const oldScript =
-        document.getElementById(
-          "songsApiScript"
-        );
+    }
 
 
-      if (oldScript) {
-        oldScript.remove();
-      }
+    /* =====================================================
+       SHOW LOGIN
+    ===================================================== */
 
-    };
+    function showLoginPage() {
 
+      loginPage.style.display =
+        "flex";
 
-  const script =
-    document.createElement(
-      "script"
-    );
+      requestPage.style.display =
+        "none";
 
+      homePage.style.display =
+        "none";
 
-  script.id =
-    "songsApiScript";
+      songPage.style.display =
+        "none";
 
+      loginButton.disabled =
+        false;
 
-  script.src =
-    API_URL +
-    "?callback=" +
-    encodeURIComponent(
-      callbackName
-    );
+      loginButton.textContent =
+        "Login";
 
-
-  script.onerror =
-    function() {
-
-      document.getElementById(
-        "message"
-      ).textContent =
-        "Unable to load songs. Please try again.";
+    }
 
 
-      delete window[
-        callbackName
-      ];
+    /* =====================================================
+       SHOW REQUEST
+    ===================================================== */
+
+    function showRequestPage() {
+
+      loginPage.style.display =
+        "none";
+
+      requestPage.style.display =
+        "flex";
+
+      homePage.style.display =
+        "none";
+
+      songPage.style.display =
+        "none";
+
+      requestMessage.textContent =
+        "";
+
+    }
 
 
-      script.remove();
+    /* =====================================================
+       SHOW HOME
+    ===================================================== */
 
-    };
+    function showHome() {
 
+      currentSong =
+        null;
 
-  document.body.appendChild(
-    script
-  );
+      transposeAmount =
+        0;
 
-}
+      songSearch.value =
+        "";
 
+      songSearchResults.innerHTML =
+        "";
 
-/* =====================================================
-   DISPLAY SONGS
-===================================================== */
+      songSearchResults.style.display =
+        "none";
 
-function displaySongs(list) {
+      songPage.style.display =
+        "none";
 
-  const container =
-    document.getElementById(
-      "songs"
-    );
+      homePage.style.display =
+        "flex";
 
-
-  const message =
-    document.getElementById(
-      "message"
-    );
-
-
-  container.innerHTML = "";
-
-
-  if (
-    !list ||
-    list.length === 0
-  ) {
-
-    message.textContent =
-      "No songs found.";
-
-    return;
-
-  }
-
-
-  message.textContent = "";
-
-
-  list.forEach(
-    function(song) {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "song";
-
-
-      div.textContent =
-        song.name || "Untitled";
-
-
-      div.onclick =
-        function() {
-
-          openSong(song);
-
-        };
-
-
-      container.appendChild(
-        div
+      window.scrollTo(
+        0,
+        0
       );
 
     }
-  );
-
-}
 
 
-/* =====================================================
-   HOME SEARCH
-===================================================== */
+    /* =====================================================
+       SHOW SONG
+    ===================================================== */
 
-document
-  .getElementById("search")
-  .addEventListener(
-    "input",
-    function() {
+    function showSongPage() {
 
-      const searchText =
-        this.value
-          .trim()
-          .toLowerCase();
+      loginPage.style.display =
+        "none";
+
+      requestPage.style.display =
+        "none";
+
+      homePage.style.display =
+        "none";
+
+      songPage.style.display =
+        "block";
+
+    }
 
 
-      if (!searchText) {
+    /* =====================================================
+       LOGIN
+    ===================================================== */
 
-        displaySongs(songs);
+    async function login() {
+
+      if (
+        loginInProgress
+      ) {
 
         return;
 
       }
 
 
-      const filtered =
-        songs.filter(
-          function(song) {
+      const email =
+        loginEmail.value
+          .trim();
 
-            return String(
-              song.name || ""
-            )
-            .toLowerCase()
-            .includes(
-              searchText
-            );
+      const password =
+        loginPassword.value;
 
-          }
+
+      /*
+        Validate email
+      */
+
+      if (!email) {
+
+        loginMessage.textContent =
+          "Please enter your email.";
+
+        loginEmail.focus();
+
+        return;
+
+      }
+
+
+      /*
+        Validate password
+      */
+
+      if (!password) {
+
+        loginMessage.textContent =
+          "Please enter your password.";
+
+        loginPassword.focus();
+
+        return;
+
+      }
+
+
+      loginInProgress =
+        true;
+
+
+      loginButton.disabled =
+        true;
+
+      loginButton.textContent =
+        "Signing in...";
+
+      loginMessage.textContent =
+        "Connecting to Firebase...";
+
+
+      /*
+        Timeout protection.
+
+        This prevents the button from
+        being stuck on "Signing in..."
+        forever.
+      */
+
+      let timeoutId;
+
+
+      try {
+
+        const loginPromise =
+          auth.signInWithEmailAndPassword(
+            email,
+            password
+          );
+
+
+        const timeoutPromise =
+          new Promise(
+            function(
+              resolve,
+              reject
+            ) {
+
+              timeoutId =
+                setTimeout(
+                  function() {
+
+                    reject({
+                      code:
+                        "custom/timeout",
+
+                      message:
+                        "Firebase did not respond within 10 seconds."
+                    });
+
+                  },
+                  10000
+                );
+
+            }
+          );
+
+
+        const result =
+          await Promise.race([
+            loginPromise,
+            timeoutPromise
+          ]);
+
+
+        clearTimeout(
+          timeoutId
         );
 
 
-      displaySongs(filtered);
+        console.log(
+          "LOGIN SUCCESS:",
+          result.user.email
+        );
+
+
+        loginMessage.textContent =
+          "Login successful.";
+
+
+        /*
+          Show the songs page.
+        */
+
+        showHome();
+
+
+        /*
+          Load songs.
+        */
+
+        loadSongs();
+
+
+      }
+      catch(error) {
+
+        clearTimeout(
+          timeoutId
+        );
+
+
+        console.error(
+          "FIREBASE LOGIN ERROR:",
+          error
+        );
+
+
+        let errorMessage =
+          "Unable to sign in.";
+
+
+        if (
+          error.code ===
+          "auth/invalid-email"
+        ) {
+
+          errorMessage =
+            "Invalid email address.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/user-not-found"
+        ) {
+
+          errorMessage =
+            "No Firebase account exists with this email.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/wrong-password"
+        ) {
+
+          errorMessage =
+            "Incorrect password.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/invalid-credential"
+        ) {
+
+          errorMessage =
+            "Incorrect email or password.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/user-disabled"
+        ) {
+
+          errorMessage =
+            "This Firebase account has been disabled.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/too-many-requests"
+        ) {
+
+          errorMessage =
+            "Too many attempts. Please try again later.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/network-request-failed"
+        ) {
+
+          errorMessage =
+            "Network error. Check your internet connection.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "auth/operation-not-allowed"
+        ) {
+
+          errorMessage =
+            "Email/password sign-in is not enabled in Firebase.";
+
+        }
+
+
+        else if (
+          error.code ===
+          "custom/timeout"
+        ) {
+
+          errorMessage =
+            "Firebase is not responding. Refresh the page and try again.";
+
+        }
+
+
+        else if (
+          error.message
+        ) {
+
+          errorMessage =
+            error.message;
+
+        }
+
+
+        loginMessage.textContent =
+          errorMessage;
+
+      }
+
+
+      finally {
+
+        loginInProgress =
+          false;
+
+        loginButton.disabled =
+          false;
+
+        loginButton.textContent =
+          "Login";
+
+      }
 
     }
-  );
 
 
-/* =====================================================
-   SONG SEARCH
-===================================================== */
+    /* =====================================================
+       LOGIN BUTTON
+    ===================================================== */
 
-const songSearch =
-  document.getElementById(
-    "songSearch"
-  );
-
-
-const songSearchResults =
-  document.getElementById(
-    "songSearchResults"
-  );
+    loginButton.addEventListener(
+      "click",
+      login
+    );
 
 
-songSearch.addEventListener(
-  "input",
-  function() {
+    /* =====================================================
+       ENTER TO LOGIN
+    ===================================================== */
 
-    const searchText =
-      this.value
-        .trim()
-        .toLowerCase();
+    loginPassword.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          event.preventDefault();
+
+          login();
+
+        }
+
+      }
+    );
 
 
-    if (!searchText) {
+    /* =====================================================
+       REQUEST ACCESS
+    ===================================================== */
 
-      songSearchResults.style.display =
-        "none";
-
-      songSearchResults.innerHTML =
-        "";
-
-      return;
-
-    }
+    requestButton.addEventListener(
+      "click",
+      showRequestPage
+    );
 
 
-    const matches =
-      songs.filter(
-        function(song) {
+    /* =====================================================
+       BACK TO LOGIN
+    ===================================================== */
 
-          return String(
-            song.name || ""
-          )
-          .toLowerCase()
-          .includes(
-            searchText
+    document
+      .getElementById(
+        "backLogin"
+      )
+      .addEventListener(
+        "click",
+        showLoginPage
+      );
+
+
+    /* =====================================================
+       SUBMIT ACCESS REQUEST
+    ===================================================== */
+
+    document
+      .getElementById(
+        "submitRequestButton"
+      )
+      .addEventListener(
+        "click",
+        function() {
+
+          const name =
+            requestName.value
+              .trim();
+
+          const email =
+            requestEmail.value
+              .trim();
+
+          const reason =
+            requestReason.value
+              .trim();
+
+
+          if (!name) {
+
+            requestMessage.textContent =
+              "Please enter your name.";
+
+            return;
+
+          }
+
+
+          if (!email) {
+
+            requestMessage.textContent =
+              "Please enter your email.";
+
+            return;
+
+          }
+
+
+          if (!reason) {
+
+            requestMessage.textContent =
+              "Please tell us why you need access.";
+
+            return;
+
+          }
+
+
+          requestMessage.textContent =
+            "Sending request...";
+
+
+          const callbackName =
+            "accessRequest_" +
+            Date.now();
+
+
+          window[callbackName] =
+            function(response) {
+
+              requestMessage.textContent =
+                response.message ||
+                "Request submitted.";
+
+
+              if (
+                response.success
+              ) {
+
+                requestName.value =
+                  "";
+
+                requestEmail.value =
+                  "";
+
+                requestReason.value =
+                  "";
+
+              }
+
+
+              delete window[
+                callbackName
+              ];
+
+
+              const script =
+                document.getElementById(
+                  "accessRequestScript"
+                );
+
+
+              if (script) {
+
+                script.remove();
+
+              }
+
+            };
+
+
+          const script =
+            document.createElement(
+              "script"
+            );
+
+
+          script.id =
+            "accessRequestScript";
+
+
+          script.src =
+            API_URL +
+            "?action=requestAccess" +
+            "&name=" +
+            encodeURIComponent(
+              name
+            ) +
+            "&email=" +
+            encodeURIComponent(
+              email
+            ) +
+            "&reason=" +
+            encodeURIComponent(
+              reason
+            ) +
+            "&callback=" +
+            encodeURIComponent(
+              callbackName
+            );
+
+
+          script.onerror =
+            function() {
+
+              requestMessage.textContent =
+                "Unable to send request. Please try again.";
+
+
+              delete window[
+                callbackName
+              ];
+
+
+              script.remove();
+
+            };
+
+
+          document.body.appendChild(
+            script
           );
 
         }
       );
 
 
-    songSearchResults.innerHTML =
-      "";
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+
+    logoutButton.addEventListener(
+      "click",
+      async function() {
+
+        try {
+
+          await auth.signOut();
+
+          currentSong =
+            null;
+
+          songs = [];
+
+          showLoginPage();
+
+          loginEmail.value =
+            "";
+
+          loginPassword.value =
+            "";
+
+          loginMessage.textContent =
+            "";
+
+          songsContainer.innerHTML =
+            "";
+
+        }
+        catch(error) {
+
+          console.error(
+            "Logout error:",
+            error
+          );
+
+        }
+
+      }
+    );
 
 
-    if (
-      matches.length === 0
-    ) {
+    /* =====================================================
+       FIREBASE AUTH STATE
+    ===================================================== */
 
-      const noResults =
-        document.createElement(
-          "div"
+    auth.onAuthStateChanged(
+      function(user) {
+
+        console.log(
+          "AUTH STATE:",
+          user
+            ? user.email
+            : "Not logged in"
         );
 
 
-      noResults.className =
-        "song-search-no-results";
+        if (user) {
+
+          /*
+            User is already authenticated.
+          */
+
+          showHome();
+
+          loadSongs();
+
+        }
+
+        else {
+
+          showLoginPage();
+
+        }
+
+      },
+
+      function(error) {
+
+        console.error(
+          "Auth state error:",
+          error
+        );
+
+        showLoginPage();
+
+        loginMessage.textContent =
+          "Firebase authentication error.";
+
+      }
+
+    );
 
 
-      noResults.textContent =
-        "No songs found.";
+    /* =====================================================
+       LOAD SONGS
+    ===================================================== */
+
+    function loadSongs() {
+
+      message.textContent =
+        "Loading songs...";
 
 
-      songSearchResults.appendChild(
-        noResults
+      songsContainer.innerHTML =
+        "";
+
+
+      const callbackName =
+        "receiveSongs_" +
+        Date.now();
+
+
+      window[callbackName] =
+        function(data) {
+
+          try {
+
+            songs =
+              Array.isArray(data)
+                ? data
+                : [];
+
+
+            /*
+              Sort alphabetically.
+            */
+
+            songs.sort(
+              function(a, b) {
+
+                return String(
+                  a.name || ""
+                ).localeCompare(
+                  String(
+                    b.name || ""
+                  ),
+                  undefined,
+                  {
+                    sensitivity:
+                      "base"
+                  }
+                );
+
+              }
+            );
+
+
+            displaySongs(
+              songs
+            );
+
+
+          }
+          catch(error) {
+
+            console.error(
+              "Song processing error:",
+              error
+            );
+
+            message.textContent =
+              "Unable to process songs.";
+
+          }
+
+
+          delete window[
+            callbackName
+          ];
+
+
+          const oldScript =
+            document.getElementById(
+              "songsApiScript"
+            );
+
+
+          if (oldScript) {
+
+            oldScript.remove();
+
+          }
+
+        };
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      script.id =
+        "songsApiScript";
+
+
+      script.src =
+        API_URL +
+        "?action=getSongs" +
+        "&callback=" +
+        encodeURIComponent(
+          callbackName
+        );
+
+
+      script.onerror =
+        function() {
+
+          console.error(
+            "Apps Script failed."
+          );
+
+
+          message.textContent =
+            "Unable to load songs. Please try again.";
+
+
+          delete window[
+            callbackName
+          ];
+
+
+          script.remove();
+
+        };
+
+
+      document.body.appendChild(
+        script
       );
-
-
-      songSearchResults.style.display =
-        "block";
-
-
-      return;
 
     }
 
 
-    matches
-      .slice(0,15)
-      .forEach(
+    /* =====================================================
+       DISPLAY SONGS
+    ===================================================== */
+
+    function displaySongs(
+      list
+    ) {
+
+      songsContainer.innerHTML =
+        "";
+
+
+      if (
+        !list ||
+        list.length === 0
+      ) {
+
+        message.textContent =
+          "No songs found.";
+
+        return;
+
+      }
+
+
+      message.textContent =
+        "";
+
+
+      list.forEach(
         function(song) {
 
-          const result =
+          const div =
             document.createElement(
               "div"
             );
 
 
-          result.className =
-            "song-search-result";
+          div.className =
+            "song";
 
 
-          result.textContent =
-            song.name;
+          div.textContent =
+            song.name ||
+            "Untitled";
 
 
-          result.onclick =
+          div.addEventListener(
+            "click",
             function() {
 
-              openSongFromSearch(
+              openSong(
                 song
               );
 
-            };
+            }
+          );
 
 
-          songSearchResults.appendChild(
-            result
+          songsContainer.appendChild(
+            div
           );
 
         }
       );
 
-
-    songSearchResults.style.display =
-      "block";
-
-  }
-);
+    }
 
 
-/* =====================================================
-   OPEN SONG FROM SEARCH
-===================================================== */
+    /* =====================================================
+       HOME SEARCH
+    ===================================================== */
 
-function openSongFromSearch(song) {
+    search.addEventListener(
+      "input",
+      function() {
 
-  songSearch.value = "";
-
-  songSearchResults.innerHTML = "";
-
-  songSearchResults.style.display =
-    "none";
-
-  openSong(song);
-
-}
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
 
 
-/* =====================================================
-   CLOSE SEARCH
-===================================================== */
+        if (
+          !searchText
+        ) {
 
-document.addEventListener(
-  "click",
-  function(event) {
+          displaySongs(
+            songs
+          );
 
-    const container =
-      document.querySelector(
-        ".song-search-container"
-      );
+          return;
+
+        }
 
 
-    if (
-      container &&
-      !container.contains(
-        event.target
-      )
+        const filtered =
+          songs.filter(
+            function(song) {
+
+              return String(
+                song.name || ""
+              )
+              .toLowerCase()
+              .includes(
+                searchText
+              );
+
+            }
+          );
+
+
+        displaySongs(
+          filtered
+        );
+
+      }
+    );
+
+
+    /* =====================================================
+       SONG SEARCH
+    ===================================================== */
+
+    songSearch.addEventListener(
+      "input",
+      function() {
+
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
+
+
+        if (
+          !searchText
+        ) {
+
+          songSearchResults.style.display =
+            "none";
+
+          songSearchResults.innerHTML =
+            "";
+
+          return;
+
+        }
+
+
+        const matches =
+          songs.filter(
+            function(song) {
+
+              return String(
+                song.name || ""
+              )
+              .toLowerCase()
+              .includes(
+                searchText
+              );
+
+            }
+          );
+
+
+        songSearchResults.innerHTML =
+          "";
+
+
+        if (
+          matches.length === 0
+        ) {
+
+          const noResults =
+            document.createElement(
+              "div"
+            );
+
+
+          noResults.className =
+            "song-search-no-results";
+
+
+          noResults.textContent =
+            "No songs found.";
+
+
+          songSearchResults.appendChild(
+            noResults
+          );
+
+
+          songSearchResults.style.display =
+            "block";
+
+          return;
+
+        }
+
+
+        matches
+          .slice(
+            0,
+            15
+          )
+          .forEach(
+            function(song) {
+
+              const result =
+                document.createElement(
+                  "div"
+                );
+
+
+              result.className =
+                "song-search-result";
+
+
+              result.textContent =
+                song.name;
+
+
+              result.addEventListener(
+                "click",
+                function() {
+
+                  openSongFromSearch(
+                    song
+                  );
+
+                }
+              );
+
+
+              songSearchResults.appendChild(
+                result
+              );
+
+            }
+          );
+
+
+        songSearchResults.style.display =
+          "block";
+
+      }
+    );
+
+
+    /* =====================================================
+       OPEN SONG FROM SEARCH
+    ===================================================== */
+
+    function openSongFromSearch(
+      song
     ) {
+
+      songSearch.value =
+        "";
+
+      songSearchResults.innerHTML =
+        "";
 
       songSearchResults.style.display =
         "none";
 
+
+      openSong(
+        song
+      );
+
     }
 
-  }
-);
+
+    /* =====================================================
+       CLOSE SEARCH RESULTS
+    ===================================================== */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        const container =
+          document.querySelector(
+            ".song-search-container"
+          );
 
 
-/* =====================================================
-   OPEN SONG
-===================================================== */
+        if (
+          container &&
+          !container.contains(
+            event.target
+          )
+        ) {
 
-function openSong(song) {
+          songSearchResults.style.display =
+            "none";
 
-  if (!song) {
-    return;
-  }
+        }
 
-
-  currentSong =
-    song;
-
-
-  transposeAmount =
-    0;
+      }
+    );
 
 
-  document.getElementById(
-    "homePage"
-  ).style.display =
-    "none";
+    /* =====================================================
+       OPEN SONG
+    ===================================================== */
+
+    function openSong(
+      song
+    ) {
+
+      currentSong =
+        song;
 
 
-  document.getElementById(
-    "songPage"
-  ).style.display =
-    "block";
+      transposeAmount =
+        0;
 
 
-  document.getElementById(
-    "songTitle"
-  ).textContent =
-    song.name || "Untitled";
+      homePage.style.display =
+        "none";
 
 
-  songSearch.value = "";
-
-  songSearchResults.innerHTML = "";
-
-  songSearchResults.style.display =
-    "none";
+      songPage.style.display =
+        "block";
 
 
-  updateSong();
+      songTitle.textContent =
+        song.name ||
+        "Untitled";
 
 
-  window.scrollTo(
-    0,
-    0
-  );
+      songSearch.value =
+        "";
 
-}
+      songSearchResults.innerHTML =
+        "";
+
+      songSearchResults.style.display =
+        "none";
 
 
-/* =====================================================
-   SHOW HOME
-===================================================== */
+      updateSong();
 
-function showHome() {
 
-  if (!firebaseAuth.currentUser) {
+      window.scrollTo(
+        0,
+        0
+      );
+
+    }
+
+
+    /* =====================================================
+       BACK TO SONGS
+    ===================================================== */
+
+    document
+      .getElementById(
+        "backButton"
+      )
+      .addEventListener(
+        "click",
+        showHome
+      );
+
+
+    /* =====================================================
+       TRANSPOSE UP
+    ===================================================== */
+
+    document
+      .getElementById(
+        "transposeUpButton"
+      )
+      .addEventListener(
+        "click",
+        function() {
+
+          if (
+            !currentSong
+          ) {
+
+            return;
+
+          }
+
+
+          transposeAmount++;
+
+          updateSong();
+
+        }
+      );
+
+
+    /* =====================================================
+       TRANSPOSE DOWN
+    ===================================================== */
+
+    document
+      .getElementById(
+        "transposeDownButton"
+      )
+      .addEventListener(
+        "click",
+        function() {
+
+          if (
+            !currentSong
+          ) {
+
+            return;
+
+          }
+
+
+          transposeAmount--;
+
+          updateSong();
+
+        }
+      );
+
+
+    /* =====================================================
+       UPDATE SONG
+    ===================================================== */
+
+    function updateSong() {
+
+      if (
+        !currentSong
+      ) {
+
+        return;
+
+      }
+
+
+      const original =
+        String(
+          currentSong.chords || ""
+        );
+
+
+      const transposed =
+        transposeChords(
+          original,
+          transposeAmount
+        );
+
+
+      chords.textContent =
+        transposed;
+
+
+      keyDisplay.textContent =
+        "Key: " +
+        getDisplayedKey(
+          original,
+          transposeAmount
+        );
+
+    }
+
+
+    /* =====================================================
+       START
+    ===================================================== */
 
     showLoginPage();
 
-    return;
-
-  }
-
-
-  currentSong = null;
-
-  transposeAmount = 0;
-
-
-  songSearch.value = "";
-
-  songSearchResults.innerHTML = "";
-
-  songSearchResults.style.display =
-    "none";
-
-
-  document.getElementById(
-    "songPage"
-  ).style.display =
-    "none";
-
-
-  document.getElementById(
-    "homePage"
-  ).style.display =
-    "flex";
-
-
-  window.scrollTo(
-    0,
-    0
-  );
-
-}
-
-
-/* =====================================================
-   TRANSPOSE UP
-===================================================== */
-
-function transposeUp() {
-
-  if (!currentSong) {
-    return;
-  }
-
-
-  transposeAmount++;
-
-
-  updateSong();
-
-}
-
-
-/* =====================================================
-   TRANSPOSE DOWN
-===================================================== */
-
-function transposeDown() {
-
-  if (!currentSong) {
-    return;
-  }
-
-
-  transposeAmount--;
-
-
-  updateSong();
-
-}
-
-
-/* =====================================================
-   UPDATE SONG
-===================================================== */
-
-function updateSong() {
-
-  if (!currentSong) {
-    return;
-  }
-
-
-  /*
-    ALWAYS use the original chord text.
-
-    This prevents:
-
-    C
-    + → C#
-    + → D
-
-    from becoming:
-
-    C
-    + → C#
-    + → D
-
-    based on already modified text.
-  */
-
-  const original =
-    String(
-      currentSong.chords || ""
-    );
-
-
-  const transposed =
-    transposeChords(
-      original,
-      transposeAmount
-    );
-
-
-  document.getElementById(
-    "chords"
-  ).textContent =
-    transposed;
-
-
-  document.getElementById(
-    "keyDisplay"
-  ).textContent =
-    "Key: " +
-    getDisplayedKey(
-      original,
-      transposeAmount
-    );
-
-}
-
-
-/* =====================================================
-   START
-===================================================== */
-
-showLoginPage();
-
-</script>
+  </script>
 
 </body>
+
 </html>

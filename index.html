@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>VCCF Peymous Songs List</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Jayro Chords</title>
 
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 
   <style>
 
@@ -16,17 +21,23 @@
       box-sizing: border-box;
     }
 
+    html,
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
       background: #0f172a;
       color: white;
       font-family: Arial, sans-serif;
     }
 
-    /* =========================
-       LOGIN PAGE
-    ========================= */
+
+    /* =====================================================
+       LOGIN
+    ===================================================== */
 
     #loginPage {
       min-height: 100vh;
@@ -36,261 +47,531 @@
       padding: 20px;
     }
 
-    .login-container {
+    .login-box {
       width: 100%;
       max-width: 400px;
       background: #1e293b;
       padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      text-align: center;
     }
 
-    .logo {
-      text-align: center;
-      font-size: 32px;
-      margin-bottom: 5px;
-    }
-
-    .title {
-      text-align: center;
+    .login-box h1 {
+      margin: 0 0 8px;
       font-size: 30px;
-      font-weight: bold;
-      margin-bottom: 8px;
     }
 
-    .subtitle {
-      text-align: center;
+    .login-subtitle {
       color: #94a3b8;
-      margin-bottom: 28px;
+      font-size: 14px;
+      margin-bottom: 25px;
     }
 
     .login-input {
       width: 100%;
-      padding: 14px;
+      padding: 13px 14px;
       margin-bottom: 12px;
-
+      background: white;
+      color: #111827;
       border: none;
       border-radius: 8px;
-
-      font-size: 15px;
       outline: none;
+      font-size: 15px;
     }
 
     .login-button {
       width: 100%;
-      padding: 14px;
-
-      background: #2563eb;
-      color: white;
-
+      padding: 13px;
+      margin-top: 5px;
       border: none;
       border-radius: 8px;
-
-      font-size: 16px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
       font-weight: bold;
-
       cursor: pointer;
-
-      position: relative;
-      z-index: 100;
     }
 
     .login-button:hover {
       background: #1d4ed8;
     }
 
-    .login-button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
     .request-button {
       width: 100%;
       padding: 12px;
       margin-top: 10px;
-
-      background: transparent;
-      color: #60a5fa;
-
       border: 1px solid #475569;
       border-radius: 8px;
-
-      font-size: 15px;
+      background: transparent;
+      color: #60a5fa;
+      font-size: 14px;
       font-weight: bold;
-
       cursor: pointer;
     }
 
-    .message {
-      min-height: 40px;
-      margin-top: 15px;
-
-      text-align: center;
-
-      color: #f87171;
-      font-size: 14px;
-      line-height: 20px;
+    .request-button:hover {
+      background: #334155;
     }
 
-    /* =========================
-       APP PAGE
-    ========================= */
+    .login-message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #94a3b8;
+      min-height: 20px;
+    }
 
-    #appPage {
+
+    /* =====================================================
+       REQUEST ACCESS
+    ===================================================== */
+
+    #requestPage {
       display: none;
       min-height: 100vh;
-      padding: 30px 20px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .app-container {
-      max-width: 1000px;
-      margin: auto;
+    .request-box {
+      width: 100%;
+      max-width: 450px;
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
     }
 
-    .app-title {
+    .request-box h1 {
+      margin: 0 0 8px;
       text-align: center;
-      font-size: 32px;
+      font-size: 28px;
+    }
+
+    .request-subtitle {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .request-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
       font-weight: bold;
-      margin-bottom: 30px;
     }
 
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      max-width: 600px;
-      margin: auto;
+    .request-input,
+    .request-textarea {
+      width: 100%;
+      padding: 13px 14px;
+      margin-bottom: 15px;
+      background: white;
+      color: #111827;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
     }
 
-    #searchInput {
-      flex: 1;
+    .request-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
 
-      padding: 14px;
+    .submit-request {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
+    .submit-request:hover {
+      background: #1d4ed8;
+    }
+
+    .back-login {
+      text-align: center;
+      margin-top: 15px;
+      color: #60a5fa;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
+    /* =====================================================
+       HOME
+    ===================================================== */
+
+    #homePage {
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 15px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 20px;
+      font-size: 32px;
+    }
+
+    #search {
+      width: 90%;
+      max-width: 500px;
+      padding: 14px 16px;
+      background: white;
+      color: #111827;
       border: none;
       border-radius: 10px;
-
-      font-size: 15px;
       outline: none;
+      font-size: 16px;
     }
 
-    .logout-button {
-      padding: 0 20px;
-
-      background: transparent;
-      color: #60a5fa;
-
-      border: 1px solid #475569;
-      border-radius: 8px;
-
-      font-weight: bold;
-
-      cursor: pointer;
+    .logout-home {
+      display: block;
+      width: fit-content;
+      margin: 15px auto 0;
+      padding: 10px 18px;
     }
 
-    .logout-button:hover {
+    #songs {
+      width: 90%;
+      max-width: 700px;
+      margin: 10px auto 40px;
+      flex: 1;
+    }
+
+    .song {
       background: #1e293b;
-    }
-
-    #songsContainer {
-      margin-top: 40px;
-    }
-
-    .song-card {
-      background: #1e293b;
-
-      padding: 20px;
-      margin-bottom: 12px;
-
+      padding: 17px;
+      margin-bottom: 10px;
       border-radius: 10px;
-
       cursor: pointer;
-
+      font-weight: bold;
       transition: 0.2s;
     }
 
-    .song-card:hover {
-      background: #263449;
+    .song:hover {
+      background: #334155;
+      transform: translateY(-1px);
     }
 
-    .song-name {
-      font-size: 18px;
+    #message {
+      text-align: center;
+      color: #94a3b8;
+      margin: 30px;
+    }
+
+
+    /* =====================================================
+       SONG PAGE
+    ===================================================== */
+
+    #songPage {
+      display: none;
+      width: 90%;
+      max-width: 800px;
+      margin: 30px auto 0;
+      min-height: calc(100vh - 30px);
+    }
+
+
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
+
+    .song-navigation {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 15px;
+      background: #1e293b;
+      color: #60a5fa;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .back:hover {
+      background: #334155;
+      color: #93c5fd;
+    }
+
+
+    /* =====================================================
+       SEARCH ANOTHER SONG
+    ===================================================== */
+
+    .song-search-container {
+      position: relative;
+      width: 240px;
+      flex: none;
+    }
+
+    #songSearch {
+      width: 240px;
+      padding: 10px 14px;
+      background: white;
+      color: #111827;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    #songSearchResults {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      width: 240px;
+      z-index: 1000;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      overflow: hidden;
+      display: none;
+      max-height: 300px;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+
+    .song-search-result {
+      padding: 12px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #334155;
+      font-size: 14px;
+      color: white;
+    }
+
+    .song-search-result:hover {
+      background: #334155;
+    }
+
+    .song-search-no-results {
+      padding: 12px 14px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+
+    /* =====================================================
+       SONG TITLE
+    ===================================================== */
+
+    #songTitle {
+      font-size: 34px;
+      margin: 0 0 20px;
+    }
+
+
+    /* =====================================================
+       TRANSPOSE
+    ===================================================== */
+
+    .transpose {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #1e293b;
+      border-radius: 10px;
+    }
+
+    .transpose span {
       font-weight: bold;
     }
 
-    .song-chords {
-      margin-top: 12px;
-
-      color: #cbd5e1;
-
-      white-space: pre-wrap;
-
-      line-height: 1.6;
+    .transpose button {
+      width: 45px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      background: #334155;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
-    .status {
+    .transpose button:hover {
+      background: #475569;
+    }
+
+    #keyDisplay {
+      min-width: 80px;
       text-align: center;
-      color: #94a3b8;
+      font-weight: bold;
+    }
+
+
+    /* =====================================================
+       CHORDS
+    ===================================================== */
+
+    #chords {
+      background: #111827;
+      padding: 25px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      font-family: "Courier New", monospace;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .site-footer {
       margin-top: 50px;
+      padding: 30px 20px;
+      text-align: center;
+      border-top: 1px solid #334155;
+      color: #94a3b8;
+    }
+
+    .footer-brand {
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 600px) {
+
+      header h1 {
+        font-size: 25px;
+      }
+
+      #songTitle {
+        font-size: 28px;
+      }
+
+      .song-navigation {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .back {
+        width: 100%;
+      }
+
+      .song-search-container {
+        width: 100%;
+      }
+
+      #songSearch {
+        width: 100%;
+      }
+
+      #songSearchResults {
+        width: 100%;
+      }
+
+      #chords {
+        font-size: 16px;
+        padding: 18px;
+      }
+
+      .site-footer {
+        margin-top: 40px;
+        padding: 25px 15px;
+      }
     }
 
   </style>
+
 </head>
+
 
 <body>
 
+
   <!-- =====================================================
        LOGIN PAGE
-  ====================================================== -->
+  ===================================================== -->
 
   <div id="loginPage">
 
-    <div class="login-container">
+    <div class="login-box">
 
-      <div class="logo">🎵</div>
+      <h1>
+        🎵 Jayro Chords
+      </h1>
 
-      <div class="title">
-        Jayro Chords
-      </div>
-
-      <div class="subtitle">
+      <div class="login-subtitle">
         Sign in to access the chord library
       </div>
 
       <input
-        type="email"
-        id="emailInput"
+        id="loginEmail"
         class="login-input"
+        type="email"
         placeholder="Email"
         autocomplete="email"
       >
 
       <input
-        type="password"
-        id="passwordInput"
+        id="loginPassword"
         class="login-input"
+        type="password"
         placeholder="Password"
         autocomplete="current-password"
       >
 
       <button
-        type="button"
-        id="loginButton"
         class="login-button"
+        onclick="login()"
       >
         Login
       </button>
 
       <button
-        type="button"
-        id="requestButton"
         class="request-button"
+        onclick="showRequestPage()"
       >
         Request Access
       </button>
 
       <div
         id="loginMessage"
-        class="message"
+        class="login-message"
       ></div>
 
     </div>
@@ -299,41 +580,70 @@
 
 
   <!-- =====================================================
-       APP PAGE
-  ====================================================== -->
+       REQUEST ACCESS PAGE
+  ===================================================== -->
 
-  <div id="appPage">
+  <div id="requestPage">
 
-    <div class="app-container">
+    <div class="request-box">
 
-      <div class="app-title">
-        🎵 VCCF Peymous Songs List
+      <h1>
+        Request Access
+      </h1>
+
+      <div class="request-subtitle">
+        Request access to the Jayro Chords library.
       </div>
 
-      <div class="toolbar">
+      <label class="request-label">
+        Name
+      </label>
 
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search song..."
-        >
+      <input
+        id="requestName"
+        class="request-input"
+        type="text"
+        placeholder="Your name"
+      >
 
-        <button
-          type="button"
-          id="logoutButton"
-          class="logout-button"
-        >
-          Logout
-        </button>
+      <label class="request-label">
+        Email
+      </label>
 
-      </div>
+      <input
+        id="requestEmail"
+        class="request-input"
+        type="email"
+        placeholder="you@example.com"
+      >
 
-      <div id="songsContainer">
+      <label class="request-label">
+        Why do you need access?
+      </label>
 
-        <div class="status">
-          Loading songs...
-        </div>
+      <textarea
+        id="requestReason"
+        class="request-textarea"
+        placeholder="Tell us a little about why you need access..."
+      ></textarea>
 
+      <button
+        class="submit-request"
+        onclick="submitAccessRequest()"
+      >
+        Send Request
+      </button>
+
+      <div
+        id="requestMessage"
+        class="login-message"
+      ></div>
+
+      <div
+        class="back-login"
+        onclick="showLoginPage()"
+      >
+        ← Back to Login
       </div>
 
     </div>
@@ -342,112 +652,690 @@
 
 
   <!-- =====================================================
-       FIREBASE + APPLICATION JAVASCRIPT
-  ====================================================== -->
+       HOME PAGE
+  ===================================================== -->
+
+  <div id="homePage">
+
+    <header>
+
+      <h1>
+        🎵 VCCF Peymous Songs List
+      </h1>
+
+      <input
+        id="search"
+        type="text"
+        placeholder="Search song..."
+        autocomplete="off"
+      >
+
+      <button
+        class="request-button logout-home"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
+    </header>
+
+    <div id="songs"></div>
+
+    <div id="message">
+      Loading songs...
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       SONG PAGE
+  ===================================================== -->
+
+  <div id="songPage">
+
+    <div class="song-navigation">
+
+      <div
+        class="back"
+        onclick="showHome()"
+      >
+        ← Back to Songs
+      </div>
+
+      <div class="song-search-container">
+
+        <input
+          id="songSearch"
+          type="text"
+          placeholder="Search another song..."
+          autocomplete="off"
+        >
+
+        <div id="songSearchResults"></div>
+
+      </div>
+
+    </div>
+
+
+    <h1 id="songTitle"></h1>
+
+
+    <div class="transpose">
+
+      <span>
+        Transpose
+      </span>
+
+      <button
+        onclick="transposeDown()"
+      >
+        −
+      </button>
+
+      <div id="keyDisplay">
+        Key: -
+      </div>
+
+      <button
+        onclick="transposeUp()"
+      >
+        +
+      </button>
+
+    </div>
+
+
+    <div id="chords"></div>
+
+
+    <footer class="site-footer">
+
+      <div class="footer-brand">
+        🎵 jayrochords.com
+      </div>
+
+      <div class="footer-copyright">
+        © 2026 Jayro
+      </div>
+
+    </footer>
+
+  </div>
+
+
+  <!-- =====================================================
+       FIREBASE
+  ===================================================== -->
 
   <script>
 
-    /* =====================================================
-       FIREBASE CONFIG
-    ===================================================== */
-
     const firebaseConfig = {
 
-      apiKey: "AIzaSyDA81ZEdidhOJyUOlN8pIC4Y2zz0o07Wps",
+      apiKey:
+        "AIzaSyDAE8Z1ZEdidhOjUyOU1N8pIC4Yz2zo07Wps",
 
-      authDomain: "auth-543a0.firebaseapp.com",
+      authDomain:
+        "auth-543a0.firebaseapp.com",
 
-      projectId: "auth-543a0",
+      projectId:
+        "auth-543a0",
 
-      storageBucket: "auth-543a0.firebasestorage.app",
+      storageBucket:
+        "auth-543a0.firebasestorage.app",
 
-      messagingSenderId: "277890778144",
+      messagingSenderId:
+        "277890778144",
 
-      appId: "1:277890778144:web:d1476a3e2c8aa61144e845",
+      appId:
+        "1:277890778144:web:d1476a3e2c8aa61144e845",
 
-      measurementId: "G-7TJHNT3J41"
+      measurementId:
+        "G-7TJHNT3J41"
 
     };
 
 
+    firebase.initializeApp(
+      firebaseConfig
+    );
+
+
+    const firebaseAuth =
+      firebase.auth();
+
+
+  </script>
+
+
+  <!-- =====================================================
+       APPLICATION
+  ===================================================== -->
+
+  <script>
+
+
     /* =====================================================
-       INITIALIZE FIREBASE
+       APPS SCRIPT
     ===================================================== */
 
-    firebase.initializeApp(firebaseConfig);
-
-    const auth = firebase.auth();
-
-
-    /* =====================================================
-       APPS SCRIPT WEB APP URL
-    ===================================================== */
-
-  const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzBa66P0S6V_UP_L7zutjkpad6B1LfETF87QEN8fWGK9Sg_52wAmUn5qdSH8A_25BGeNA/exec";
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
 
 
     /* =====================================================
-       GET ELEMENTS
+       VARIABLES
     ===================================================== */
 
-    const loginPage =
-      document.getElementById("loginPage");
+    let songs = [];
 
-    const appPage =
-      document.getElementById("appPage");
+    let currentSong = null;
 
-    const emailInput =
-      document.getElementById("emailInput");
+    let transposeAmount = 0;
 
-    const passwordInput =
-      document.getElementById("passwordInput");
 
-    const loginButton =
-      document.getElementById("loginButton");
+    /* =====================================================
+       CHROMATIC NOTES
+    ===================================================== */
 
-    const requestButton =
-      document.getElementById("requestButton");
+    const chromaticNotes = [
 
-    const logoutButton =
-      document.getElementById("logoutButton");
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "G#",
+      "A",
+      "Bb",
+      "B"
 
-    const loginMessage =
-      document.getElementById("loginMessage");
+    ];
 
-    const searchInput =
-      document.getElementById("searchInput");
 
-    const songsContainer =
-      document.getElementById("songsContainer");
+    /* =====================================================
+       NOTE → NUMBER
+    ===================================================== */
+
+    function noteToNumber(note) {
+
+      const map = {
+
+        "C": 0,
+        "B#": 0,
+
+        "C#": 1,
+        "Db": 1,
+
+        "D": 2,
+
+        "D#": 3,
+        "Eb": 3,
+
+        "E": 4,
+        "Fb": 4,
+
+        "F": 5,
+        "E#": 5,
+
+        "F#": 6,
+        "Gb": 6,
+
+        "G": 7,
+
+        "G#": 8,
+        "Ab": 8,
+
+        "A": 9,
+
+        "A#": 10,
+        "Bb": 10,
+
+        "B": 11,
+        "Cb": 11
+
+      };
+
+      return map[note];
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE NOTE
+    ===================================================== */
+
+    function transposeNote(
+      note,
+      amount
+    ) {
+
+      const number =
+        noteToNumber(note);
+
+
+      if (
+        number === undefined
+      ) {
+
+        return note;
+
+      }
+
+
+      let newNumber =
+        (
+          number +
+          amount
+        ) % 12;
+
+
+      if (
+        newNumber < 0
+      ) {
+
+        newNumber += 12;
+
+      }
+
+
+      return chromaticNotes[
+        newNumber
+      ];
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE CHORDS
+    ===================================================== */
+
+    function transposeChords(
+      text,
+      amount
+    ) {
+
+      if (
+        !text ||
+        amount === 0
+      ) {
+
+        return text;
+
+      }
+
+
+      let result = text;
+
+
+      /* Main chord roots */
+
+      const rootRegex =
+        /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
+
+
+      result =
+        result.replace(
+          rootRegex,
+          function(
+            fullMatch,
+            separator,
+            root
+          ) {
+
+            return (
+              separator +
+              transposeNote(
+                root,
+                amount
+              )
+            );
+
+          }
+        );
+
+
+      /* Slash chord bass notes */
+
+      const bassRegex =
+        /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
+
+
+      result =
+        result.replace(
+          bassRegex,
+          function(
+            fullMatch,
+            bassNote
+          ) {
+
+            return (
+              "/" +
+              transposeNote(
+                bassNote,
+                amount
+              )
+            );
+
+          }
+        );
+
+
+      return result;
+
+    }
+
+
+    /* =====================================================
+       ORIGINAL KEY
+    ===================================================== */
+
+    function getOriginalKey(text) {
+
+      if (!text) {
+
+        return "-";
+
+      }
+
+
+      const keyAtStart =
+        text.match(
+          /^\s*\(?([A-G](?:#|b)?)\)?/
+        );
+
+
+      if (keyAtStart) {
+
+        return keyAtStart[1];
+
+      }
+
+
+      const firstChord =
+        text.match(
+          /(?:^|[\s(\[])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|[0-9]|\/|[\s)\],;:.]|$))/
+        );
+
+
+      if (!firstChord) {
+
+        return "-";
+
+      }
+
+
+      return firstChord[1];
+
+    }
+
+
+    /* =====================================================
+       DISPLAYED KEY
+    ===================================================== */
+
+    function getDisplayedKey(
+      text,
+      amount
+    ) {
+
+      const originalKey =
+        getOriginalKey(text);
+
+
+      const number =
+        noteToNumber(
+          originalKey
+        );
+
+
+      if (
+        number === undefined
+      ) {
+
+        return "-";
+
+      }
+
+
+      let newNumber =
+        (
+          number +
+          amount
+        ) % 12;
+
+
+      if (
+        newNumber < 0
+      ) {
+
+        newNumber += 12;
+
+      }
+
+
+      return chromaticNotes[
+        newNumber
+      ];
+
+    }
 
 
     /* =====================================================
        SHOW LOGIN
     ===================================================== */
 
-    function showLogin() {
+    function showLoginPage() {
 
-      loginPage.style.display = "flex";
+      document
+        .getElementById("loginPage")
+        .style.display = "flex";
 
-      appPage.style.display = "none";
 
-      loginButton.disabled = false;
+      document
+        .getElementById("requestPage")
+        .style.display = "none";
 
-      loginButton.textContent = "Login";
+
+      document
+        .getElementById("homePage")
+        .style.display = "none";
+
+
+      document
+        .getElementById("songPage")
+        .style.display = "none";
 
     }
 
 
     /* =====================================================
-       SHOW APP
+       SHOW REQUEST PAGE
     ===================================================== */
 
-    function showApp() {
+    function showRequestPage() {
 
-      loginPage.style.display = "none";
+      document
+        .getElementById("loginPage")
+        .style.display = "none";
 
-      appPage.style.display = "block";
+
+      document
+        .getElementById("requestPage")
+        .style.display = "flex";
+
+
+      document
+        .getElementById("requestMessage")
+        .textContent = "";
+
+    }
+
+
+    /* =====================================================
+       SUBMIT ACCESS REQUEST
+    ===================================================== */
+
+    function submitAccessRequest() {
+
+      const name =
+        document
+          .getElementById("requestName")
+          .value
+          .trim();
+
+
+      const email =
+        document
+          .getElementById("requestEmail")
+          .value
+          .trim();
+
+
+      const reason =
+        document
+          .getElementById("requestReason")
+          .value
+          .trim();
+
+
+      const message =
+        document.getElementById(
+          "requestMessage"
+        );
+
+
+      if (!name) {
+
+        message.textContent =
+          "Please enter your name.";
+
+        return;
+
+      }
+
+
+      if (!email) {
+
+        message.textContent =
+          "Please enter your email.";
+
+        return;
+
+      }
+
+
+      if (!reason) {
+
+        message.textContent =
+          "Please tell us why you need access.";
+
+        return;
+
+      }
+
+
+      message.textContent =
+        "Sending request...";
+
+
+      const callbackName =
+        "accessRequest_" +
+        Date.now();
+
+
+      window[callbackName] =
+        function(response) {
+
+          message.textContent =
+            response.message ||
+            "Request submitted.";
+
+
+          if (
+            response.success
+          ) {
+
+            document
+              .getElementById("requestName")
+              .value = "";
+
+            document
+              .getElementById("requestEmail")
+              .value = "";
+
+            document
+              .getElementById("requestReason")
+              .value = "";
+
+          }
+
+
+          delete window[
+            callbackName
+          ];
+
+
+          const script =
+            document.getElementById(
+              "accessRequestScript"
+            );
+
+
+          if (script) {
+
+            script.remove();
+
+          }
+
+        };
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      script.id =
+        "accessRequestScript";
+
+
+      script.src =
+        API_URL +
+        "?action=requestAccess" +
+        "&name=" +
+        encodeURIComponent(name) +
+        "&email=" +
+        encodeURIComponent(email) +
+        "&reason=" +
+        encodeURIComponent(reason) +
+        "&callback=" +
+        encodeURIComponent(callbackName);
+
+
+      script.onerror =
+        function() {
+
+          message.textContent =
+            "Unable to send request. Please try again.";
+
+          delete window[
+            callbackName
+          ];
+
+          script.remove();
+
+        };
+
+
+      document
+        .body
+        .appendChild(script);
 
     }
 
@@ -456,22 +1344,30 @@
        LOGIN
     ===================================================== */
 
-    loginButton.addEventListener("click", async function () {
-
-      console.log("LOGIN BUTTON CLICKED");
+    async function login() {
 
       const email =
-        emailInput.value.trim();
+        document
+          .getElementById("loginEmail")
+          .value
+          .trim();
+
 
       const password =
-        passwordInput.value;
+        document
+          .getElementById("loginPassword")
+          .value;
 
 
-      /* Validate email */
+      const message =
+        document.getElementById(
+          "loginMessage"
+        );
+
 
       if (!email) {
 
-        loginMessage.textContent =
+        message.textContent =
           "Please enter your email.";
 
         return;
@@ -479,11 +1375,9 @@
       }
 
 
-      /* Validate password */
-
       if (!password) {
 
-        loginMessage.textContent =
+        message.textContent =
           "Please enter your password.";
 
         return;
@@ -491,39 +1385,24 @@
       }
 
 
-      loginButton.disabled = true;
-
-      loginButton.textContent =
+      message.textContent =
         "Signing in...";
-
-      loginMessage.textContent = "";
 
 
       try {
 
-        console.log("Attempting Firebase login...");
-
-        const result =
-          await auth.signInWithEmailAndPassword(
+        await firebaseAuth
+          .signInWithEmailAndPassword(
             email,
             password
           );
 
 
-        console.log(
-          "Firebase login successful:",
-          result.user.email
-        );
+        message.textContent = "";
 
+      }
 
-        loginMessage.textContent = "";
-
-        showApp();
-
-        loadSongs();
-
-
-      } catch (error) {
+      catch (error) {
 
         console.error(
           "Firebase login error:",
@@ -531,154 +1410,120 @@
         );
 
 
-        loginButton.disabled = false;
-
-        loginButton.textContent =
-          "Login";
-
-
-        let message =
-          error.message;
-
-
-        if (error.code === "auth/invalid-credential") {
-
-          message =
-            "Invalid email or password.";
-
-        }
-
-        else if (
-          error.code ===
-          "auth/user-not-found"
+        switch (
+          error.code
         ) {
 
-          message =
-            "No account found with this email.";
+          case "auth/invalid-email":
 
-        }
+            message.textContent =
+              "Please enter a valid email address.";
 
-        else if (
-          error.code ===
-          "auth/wrong-password"
-        ) {
-
-          message =
-            "Incorrect password.";
-
-        }
-
-        else if (
-          error.code ===
-          "auth/invalid-email"
-        ) {
-
-          message =
-            "Invalid email address.";
-
-        }
-
-        else if (
-          error.code ===
-          "auth/too-many-requests"
-        ) {
-
-          message =
-            "Too many login attempts. Please try again later.";
-
-        }
+            break;
 
 
-        loginMessage.textContent =
-          message;
+          case "auth/user-not-found":
 
-      }
+          case "auth/wrong-password":
 
-    });
+          case "auth/invalid-credential":
+
+            message.textContent =
+              "Incorrect email or password.";
+
+            break;
 
 
-    /* =====================================================
-       ENTER KEY LOGIN
-    ===================================================== */
+          case "auth/too-many-requests":
 
-    passwordInput.addEventListener(
-      "keydown",
-      function(event) {
+            message.textContent =
+              "Too many attempts. Please try again later.";
 
-        if (event.key === "Enter") {
+            break;
 
-          loginButton.click();
+
+          case "auth/user-disabled":
+
+            message.textContent =
+              "This account has been disabled.";
+
+            break;
+
+
+          default:
+
+            message.textContent =
+              error.message ||
+              "Unable to log in.";
 
         }
 
       }
-    );
+
+    }
 
 
     /* =====================================================
        LOGOUT
     ===================================================== */
 
-    logoutButton.addEventListener(
-      "click",
-      async function() {
+    async function logout() {
 
-        try {
+      try {
 
-          await auth.signOut();
+        await firebaseAuth.signOut();
 
-          console.log("Logged out");
 
-          showLogin();
+        document
+          .getElementById("loginEmail")
+          .value = "";
 
-          emailInput.value = "";
 
-          passwordInput.value = "";
+        document
+          .getElementById("loginPassword")
+          .value = "";
 
-          songsContainer.innerHTML =
-            '<div class="status">Loading songs...</div>';
 
-        }
-
-        catch(error) {
-
-          console.error(
-            "Logout error:",
-            error
-          );
-
-        }
+        document
+          .getElementById("loginMessage")
+          .textContent = "";
 
       }
-    );
+
+      catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+      }
+
+    }
 
 
     /* =====================================================
-       FIREBASE AUTH STATE
+       FIREBASE SESSION
     ===================================================== */
 
-    auth.onAuthStateChanged(
+    firebaseAuth.onAuthStateChanged(
       function(user) {
-
-        console.log(
-          "Auth state changed:",
-          user
-            ? user.email
-            : "Not logged in"
-        );
-
 
         if (user) {
 
-          showApp();
+          showHome();
 
-          loadSongs();
+          if (!songs.length) {
+
+            loadSongs();
+
+          }
 
         }
 
         else {
 
-          showLogin();
+          showLoginPage();
 
         }
 
@@ -690,75 +1535,112 @@
        LOAD SONGS
     ===================================================== */
 
-    async function loadSongs() {
+    function loadSongs() {
 
-      songsContainer.innerHTML =
-        '<div class="status">Loading songs...</div>';
-
-
-      if (
-        APPS_SCRIPT_URL ===
-        "YOUR_APPS_SCRIPT_WEB_APP_URL"
-      ) {
-
-        songsContainer.innerHTML =
-          '<div class="status">Apps Script URL has not been configured.</div>';
-
-        return;
-
-      }
-
-
-      try {
-
-        console.log(
-          "Loading songs from Apps Script..."
+      const message =
+        document.getElementById(
+          "message"
         );
 
 
-        const response =
-          await fetch(
-            APPS_SCRIPT_URL +
-            "?action=getSongs"
+      message.textContent =
+        "Loading songs...";
+
+
+      const callbackName =
+        "receiveSongs_" +
+        Date.now();
+
+
+      window[callbackName] =
+        function(data) {
+
+          songs =
+            Array.isArray(data)
+              ? data
+              : [];
+
+
+          songs.sort(
+            function(a, b) {
+
+              return String(
+                a.name || ""
+              ).localeCompare(
+                String(
+                  b.name || ""
+                ),
+                undefined,
+                {
+                  sensitivity: "base"
+                }
+              );
+
+            }
           );
 
 
-        if (!response.ok) {
+          delete window[
+            callbackName
+          ];
 
-          throw new Error(
-            "HTTP error " +
-            response.status
+
+          const oldScript =
+            document.getElementById(
+              "songsApiScript"
+            );
+
+
+          if (oldScript) {
+
+            oldScript.remove();
+
+          }
+
+
+          displaySongs(
+            songs
           );
 
-        }
+        };
 
 
-        const songs =
-          await response.json();
-
-
-        console.log(
-          "Songs received:",
-          songs
+      const script =
+        document.createElement(
+          "script"
         );
 
 
-        displaySongs(songs);
+      script.id =
+        "songsApiScript";
 
-      }
 
-      catch(error) {
-
-        console.error(
-          "Song loading error:",
-          error
+      script.src =
+        API_URL +
+        "?callback=" +
+        encodeURIComponent(
+          callbackName
         );
 
 
-        songsContainer.innerHTML =
-          '<div class="status">Unable to load songs.</div>';
+      script.onerror =
+        function() {
 
-      }
+          message.textContent =
+            "Unable to load songs. Please try again.";
+
+          delete window[
+            callbackName
+          ];
+
+          script.remove();
+
+        };
+
+
+      document
+        .body
+        .appendChild(script);
 
     }
 
@@ -767,143 +1649,534 @@
        DISPLAY SONGS
     ===================================================== */
 
-    function displaySongs(songs) {
+    function displaySongs(
+      list
+    ) {
 
-      songsContainer.innerHTML = "";
+      const container =
+        document.getElementById(
+          "songs"
+        );
+
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+
+      container.innerHTML =
+        "";
 
 
       if (
-        !songs ||
-        songs.length === 0
+        !list ||
+        list.length === 0
       ) {
 
-        songsContainer.innerHTML =
-          '<div class="status">No songs found.</div>';
+        message.textContent =
+          "No songs found.";
 
         return;
 
       }
 
 
-      songs.forEach(function(song) {
-
-        const card =
-          document.createElement("div");
-
-        card.className =
-          "song-card";
+      message.textContent =
+        "";
 
 
-        const name =
-          document.createElement("div");
+      list.forEach(
+        function(song) {
 
-        name.className =
-          "song-name";
-
-        name.textContent =
-          song.name || "Untitled";
-
-
-        const chords =
-          document.createElement("div");
-
-        chords.className =
-          "song-chords";
-
-        chords.textContent =
-          song.chords || "";
+          const div =
+            document.createElement(
+              "div"
+            );
 
 
-        card.appendChild(name);
+          div.className =
+            "song";
 
-        card.appendChild(chords);
+
+          div.textContent =
+            song.name ||
+            "Untitled";
 
 
-        songsContainer.appendChild(card);
+          div.onclick =
+            function() {
 
-      });
+              openSong(
+                song
+              );
+
+            };
+
+
+          container.appendChild(
+            div
+          );
+
+        }
+      );
 
     }
 
 
     /* =====================================================
-       SEARCH
+       HOME SEARCH
     ===================================================== */
 
-    searchInput.addEventListener(
-      "input",
-      function() {
+    document
+      .getElementById("search")
+      .addEventListener(
+        "input",
+        function() {
 
-        const search =
-          searchInput.value
-            .toLowerCase()
-            .trim();
-
-
-        const cards =
-          document.querySelectorAll(
-            ".song-card"
-          );
-
-
-        cards.forEach(function(card) {
-
-          const text =
-            card.textContent
+          const searchText =
+            this.value
+              .trim()
               .toLowerCase();
 
 
-          if (
-            text.includes(search)
-          ) {
+          if (!searchText) {
 
-            card.style.display =
-              "block";
+            displaySongs(
+              songs
+            );
 
-          }
-
-          else {
-
-            card.style.display =
-              "none";
+            return;
 
           }
 
-        });
 
-      }
-    );
+          const filtered =
+            songs.filter(
+              function(song) {
+
+                return String(
+                  song.name || ""
+                )
+                .toLowerCase()
+                .includes(
+                  searchText
+                );
+
+              }
+            );
+
+
+          displaySongs(
+            filtered
+          );
+
+        }
+      );
 
 
     /* =====================================================
-       REQUEST ACCESS
+       SONG SEARCH
     ===================================================== */
 
-    requestButton.addEventListener(
-      "click",
+    const songSearch =
+      document.getElementById(
+        "songSearch"
+      );
+
+
+    const songSearchResults =
+      document.getElementById(
+        "songSearchResults"
+      );
+
+
+    songSearch.addEventListener(
+      "input",
       function() {
 
-        const email =
-          emailInput.value.trim();
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
 
 
-        if (!email) {
+        if (!searchText) {
 
-          loginMessage.textContent =
-            "Enter your email first.";
+          songSearchResults.style.display =
+            "none";
+
+          songSearchResults.innerHTML =
+            "";
 
           return;
 
         }
 
 
-        loginMessage.textContent =
-          "Access request feature coming soon.";
+        const matches =
+          songs.filter(
+            function(song) {
+
+              return String(
+                song.name || ""
+              )
+              .toLowerCase()
+              .includes(
+                searchText
+              );
+
+            }
+          );
+
+
+        songSearchResults.innerHTML =
+          "";
+
+
+        if (
+          matches.length === 0
+        ) {
+
+          const noResults =
+            document.createElement(
+              "div"
+            );
+
+
+          noResults.className =
+            "song-search-no-results";
+
+
+          noResults.textContent =
+            "No songs found.";
+
+
+          songSearchResults.appendChild(
+            noResults
+          );
+
+
+          songSearchResults.style.display =
+            "block";
+
+
+          return;
+
+        }
+
+
+        matches
+          .slice(0, 15)
+          .forEach(
+            function(song) {
+
+              const result =
+                document.createElement(
+                  "div"
+                );
+
+
+              result.className =
+                "song-search-result";
+
+
+              result.textContent =
+                song.name;
+
+
+              result.onclick =
+                function() {
+
+                  openSongFromSearch(
+                    song
+                  );
+
+                };
+
+
+              songSearchResults.appendChild(
+                result
+              );
+
+            }
+          );
+
+
+        songSearchResults.style.display =
+          "block";
 
       }
     );
 
+
+    /* =====================================================
+       CLOSE SONG SEARCH
+    ===================================================== */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        const container =
+          document.querySelector(
+            ".song-search-container"
+          );
+
+
+        if (
+          container &&
+          !container.contains(
+            event.target
+          )
+        ) {
+
+          songSearchResults.style.display =
+            "none";
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       OPEN SONG FROM SEARCH
+    ===================================================== */
+
+    function openSongFromSearch(
+      song
+    ) {
+
+      songSearch.value =
+        "";
+
+
+      songSearchResults.innerHTML =
+        "";
+
+
+      songSearchResults.style.display =
+        "none";
+
+
+      openSong(
+        song
+      );
+
+    }
+
+
+    /* =====================================================
+       OPEN SONG
+    ===================================================== */
+
+    function openSong(
+      song
+    ) {
+
+      currentSong =
+        song;
+
+
+      transposeAmount =
+        0;
+
+
+      document
+        .getElementById("homePage")
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById("songPage")
+        .style.display =
+        "block";
+
+
+      document
+        .getElementById("songTitle")
+        .textContent =
+        song.name ||
+        "Untitled";
+
+
+      songSearch.value =
+        "";
+
+
+      songSearchResults.innerHTML =
+        "";
+
+
+      songSearchResults.style.display =
+        "none";
+
+
+      updateSong();
+
+
+      window.scrollTo(
+        0,
+        0
+      );
+
+    }
+
+
+    /* =====================================================
+       SHOW HOME
+    ===================================================== */
+
+    function showHome() {
+
+      if (
+        !firebaseAuth.currentUser
+      ) {
+
+        showLoginPage();
+
+        return;
+
+      }
+
+
+      currentSong =
+        null;
+
+
+      transposeAmount =
+        0;
+
+
+      songSearch.value =
+        "";
+
+
+      songSearchResults.innerHTML =
+        "";
+
+
+      songSearchResults.style.display =
+        "none";
+
+
+      document
+        .getElementById("songPage")
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById("homePage")
+        .style.display =
+        "flex";
+
+
+      window.scrollTo(
+        0,
+        0
+      );
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE UP
+    ===================================================== */
+
+    function transposeUp() {
+
+      if (!currentSong) {
+
+        return;
+
+      }
+
+
+      transposeAmount++;
+
+
+      updateSong();
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE DOWN
+    ===================================================== */
+
+    function transposeDown() {
+
+      if (!currentSong) {
+
+        return;
+
+      }
+
+
+      transposeAmount--;
+
+
+      updateSong();
+
+    }
+
+
+    /* =====================================================
+       UPDATE SONG
+    ===================================================== */
+
+    function updateSong() {
+
+      if (!currentSong) {
+
+        return;
+
+      }
+
+
+      const original =
+        String(
+          currentSong.chords || ""
+        );
+
+
+      const transposed =
+        transposeChords(
+          original,
+          transposeAmount
+        );
+
+
+      document
+        .getElementById("chords")
+        .textContent =
+        transposed;
+
+
+      document
+        .getElementById("keyDisplay")
+        .textContent =
+        "Key: " +
+        getDisplayedKey(
+          original,
+          transposeAmount
+        );
+
+    }
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+    showLoginPage();
+
+
   </script>
+
 
 </body>
 </html>

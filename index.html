@@ -2,10 +2,18 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>VCCF Peymous Songs List</title>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    VCCF Peymous Songs List
+  </title>
+
 
   <style>
 
@@ -13,243 +21,548 @@
       box-sizing: border-box;
     }
 
+
     body {
+
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      background:
+        #0f172a;
+
+      color:
+        white;
+
     }
+
+
+    /* =================================
+       HOME
+    ================================= */
 
     header {
+
       text-align: center;
-      padding: 25px 15px;
-      background: #0f172a;
-      position: sticky;
+
+      padding:
+        25px 15px;
+
+      background:
+        #0f172a;
+
+      position:
+        sticky;
+
       top: 0;
+
       z-index: 10;
+
     }
+
 
     h1 {
-      margin: 0 0 20px;
-      font-size: 32px;
+
+      margin:
+        0 0 20px;
+
+      font-size:
+        32px;
+
     }
+
 
     #search {
-      width: 90%;
-      max-width: 500px;
-      padding: 14px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-      outline: none;
+
+      width:
+        90%;
+
+      max-width:
+        500px;
+
+      padding:
+        14px;
+
+      border:
+        none;
+
+      border-radius:
+        10px;
+
+      font-size:
+        16px;
+
+      outline:
+        none;
+
     }
+
 
     #songs {
-      width: 90%;
-      max-width: 700px;
-      margin: 20px auto;
+
+      width:
+        90%;
+
+      max-width:
+        700px;
+
+      margin:
+        20px auto;
+
     }
+
 
     .song {
-      background: #1e293b;
-      margin-bottom: 10px;
-      padding: 17px 15px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.2s;
+
+      background:
+        #1e293b;
+
+      margin-bottom:
+        10px;
+
+      padding:
+        17px 15px;
+
+      border-radius:
+        10px;
+
+      cursor:
+        pointer;
+
+      font-weight:
+        bold;
+
+      transition:
+        0.2s;
+
     }
+
 
     .song:hover {
-      background: #334155;
-      transform: translateY(-1px);
+
+      background:
+        #334155;
+
+      transform:
+        translateY(-1px);
+
     }
+
 
     #message {
-      text-align: center;
-      margin: 30px;
-      color: #94a3b8;
+
+      text-align:
+        center;
+
+      margin:
+        30px;
+
+      color:
+        #94a3b8;
+
     }
 
 
-    /* ==========================
+
+    /* =================================
        SONG PAGE
-    ========================== */
+    ================================= */
 
     #songPage {
-      display: none;
-      width: 90%;
-      max-width: 800px;
-      margin: 30px auto;
-      padding-bottom: 60px;
+
+      display:
+        none;
+
+      width:
+        90%;
+
+      max-width:
+        800px;
+
+      margin:
+        30px auto;
+
+      padding-bottom:
+        60px;
+
     }
+
 
     .back {
-      display: inline-block;
-      margin-bottom: 20px;
-      cursor: pointer;
-      color: #60a5fa;
-      font-size: 16px;
-      font-weight: bold;
+
+      display:
+        inline-block;
+
+      margin-bottom:
+        20px;
+
+      cursor:
+        pointer;
+
+      color:
+        #60a5fa;
+
+      font-size:
+        16px;
+
+      font-weight:
+        bold;
+
     }
+
 
     .back:hover {
-      color: #93c5fd;
+
+      color:
+        #93c5fd;
+
     }
+
 
     #songTitle {
-      font-size: 34px;
-      margin-bottom: 20px;
+
+      font-size:
+        34px;
+
+      margin-bottom:
+        20px;
+
     }
 
 
-    /* ==========================
+
+    /* =================================
        TRANSPOSE
-    ========================== */
+    ================================= */
 
     .transpose {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
-      padding: 15px;
-      background: #1e293b;
-      border-radius: 10px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      gap:
+        15px;
+
+      margin:
+        20px 0;
+
+      padding:
+        15px;
+
+      background:
+        #1e293b;
+
+      border-radius:
+        10px;
+
     }
+
 
     .transpose-label {
-      font-weight: bold;
+
+      font-weight:
+        bold;
+
     }
+
 
     .transpose button {
-      width: 45px;
-      height: 40px;
-      border: none;
-      border-radius: 8px;
-      font-size: 22px;
-      font-weight: bold;
-      cursor: pointer;
-      background: #334155;
-      color: white;
+
+      width:
+        45px;
+
+      height:
+        40px;
+
+      border:
+        none;
+
+      border-radius:
+        8px;
+
+      font-size:
+        22px;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+
+      background:
+        #334155;
+
+      color:
+        white;
+
     }
+
 
     .transpose button:hover {
-      background: #475569;
+
+      background:
+        #475569;
+
     }
+
 
     #keyDisplay {
-      min-width: 80px;
-      text-align: center;
-      font-weight: bold;
+
+      min-width:
+        80px;
+
+      text-align:
+        center;
+
+      font-weight:
+        bold;
+
     }
 
 
-    /* ==========================
+
+    /* =================================
        CHORDS
-    ========================== */
+    ================================= */
 
     #chords {
-      background: #111827;
-      border-radius: 10px;
-      padding: 25px;
-      white-space: pre-wrap;
-      font-family: "Courier New", monospace;
-      font-size: 18px;
-      line-height: 1.7;
-      overflow-x: auto;
+
+      background:
+        #111827;
+
+      border-radius:
+        10px;
+
+      padding:
+        25px;
+
+      white-space:
+        pre-wrap;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:
+        18px;
+
+      line-height:
+        1.7;
+
+      overflow-x:
+        auto;
+
     }
 
 
-    /* ==========================
+
+    /* =================================
        COMMENTS
-    ========================== */
+    ================================= */
 
     .comments {
-      margin-top: 35px;
-      padding: 22px;
-      background: #1e293b;
-      border-radius: 12px;
+
+      margin-top:
+        35px;
+
+      padding:
+        22px;
+
+      background:
+        #1e293b;
+
+      border-radius:
+        12px;
+
     }
+
 
     .comments h2 {
-      margin: 0 0 18px;
-      font-size: 21px;
+
+      margin:
+        0 0 18px;
+
+      font-size:
+        21px;
+
     }
+
 
     #commentText {
-      width: 100%;
-      min-height: 120px;
-      padding: 14px;
-      resize: vertical;
-      border: none;
-      outline: none;
-      border-radius: 8px;
-      background: #0f172a;
-      color: white;
-      font-size: 15px;
-      font-family: Arial, sans-serif;
+
+      width:
+        100%;
+
+      min-height:
+        120px;
+
+      padding:
+        14px;
+
+      resize:
+        vertical;
+
+      border:
+        none;
+
+      outline:
+        none;
+
+      border-radius:
+        8px;
+
+      background:
+        #0f172a;
+
+      color:
+        white;
+
+      font-size:
+        15px;
+
+      font-family:
+        Arial,
+        sans-serif;
+
     }
+
 
     #commentText::placeholder {
-      color: #64748b;
+
+      color:
+        #64748b;
+
     }
+
 
     #sendComment {
-      width: 100%;
-      margin-top: 12px;
-      padding: 13px;
-      border: none;
-      border-radius: 8px;
-      background: #3b82f6;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
+
+      width:
+        100%;
+
+      margin-top:
+        12px;
+
+      padding:
+        13px;
+
+      border:
+        none;
+
+      border-radius:
+        8px;
+
+      background:
+        #3b82f6;
+
+      color:
+        white;
+
+      font-size:
+        15px;
+
+      font-weight:
+        bold;
+
+      cursor:
+        pointer;
+
     }
+
 
     #sendComment:hover {
-      background: #2563eb;
+
+      background:
+        #2563eb;
+
     }
+
 
     #sendComment:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+
+      opacity:
+        0.6;
+
+      cursor:
+        not-allowed;
+
     }
+
 
     #commentStatus {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 14px;
-      color: #94a3b8;
+
+      text-align:
+        center;
+
+      margin-top:
+        12px;
+
+      font-size:
+        14px;
+
+      color:
+        #94a3b8;
+
     }
 
 
-    /* ==========================
-       MOBILE
-    ========================== */
 
-    @media (max-width: 600px) {
+    /* =================================
+       MOBILE
+    ================================= */
+
+    @media (
+      max-width: 600px
+    ) {
 
       h1 {
-        font-size: 25px;
+
+        font-size:
+          25px;
+
       }
+
 
       #songTitle {
-        font-size: 28px;
+
+        font-size:
+          28px;
+
       }
+
 
       #chords {
-        font-size: 16px;
-        padding: 18px;
+
+        font-size:
+          16px;
+
+        padding:
+          18px;
+
       }
+
 
       .transpose {
-        gap: 10px;
+
+        gap:
+          10px;
+
       }
 
+
       .comments {
-        padding: 18px;
+
+        padding:
+          18px;
+
       }
 
     }
@@ -259,20 +572,23 @@
 </head>
 
 
+
 <body>
 
 
-  <!-- ==========================
+  <!-- =================================
        HOME PAGE
-  ========================== -->
+  ================================= -->
 
   <div id="homePage">
+
 
     <header>
 
       <h1>
         🎵 VCCF Peymous Songs List
       </h1>
+
 
       <input
         type="text"
@@ -291,13 +607,14 @@
       Loading songs...
     </div>
 
+
   </div>
 
 
 
-  <!-- ==========================
+  <!-- =================================
        SONG PAGE
-  ========================== -->
+  ================================= -->
 
   <div id="songPage">
 
@@ -313,9 +630,11 @@
     <h1 id="songTitle"></h1>
 
 
+
     <!-- TRANSPOSE -->
 
     <div class="transpose">
+
 
       <span class="transpose-label">
         Transpose
@@ -324,7 +643,6 @@
 
       <button
         onclick="transposeDown()"
-        aria-label="Transpose down"
       >
         −
       </button>
@@ -337,12 +655,13 @@
 
       <button
         onclick="transposeUp()"
-        aria-label="Transpose up"
       >
         +
       </button>
 
+
     </div>
+
 
 
     <!-- CHORDS -->
@@ -355,6 +674,7 @@
 
     <div class="comments">
 
+
       <h2>
         💬 Comments
       </h2>
@@ -362,7 +682,7 @@
 
       <textarea
         id="commentText"
-        placeholder="Write a comment"
+        placeholder="Write your comment"
         maxlength="2000"
       ></textarea>
 
@@ -371,11 +691,14 @@
         id="sendComment"
         onclick="submitComment()"
       >
-        Send Comment
+        Write Comment
       </button>
 
 
-      <div id="commentStatus"></div>
+      <div
+        id="commentStatus"
+      ></div>
+
 
     </div>
 
@@ -410,7 +733,8 @@
   function loadSongs() {
 
     const callbackName =
-      "receiveSongs_" + Date.now();
+      "receiveSongs_" +
+      Date.now();
 
 
     window[callbackName] =
@@ -422,7 +746,9 @@
             : [];
 
 
-        delete window[callbackName];
+        delete window[
+          callbackName
+        ];
 
 
         const oldScript =
@@ -432,17 +758,23 @@
 
 
         if (oldScript) {
+
           oldScript.remove();
+
         }
 
 
-        displaySongs(songs);
+        displaySongs(
+          songs
+        );
 
       };
 
 
     const script =
-      document.createElement("script");
+      document.createElement(
+        "script"
+      );
 
 
     script.id =
@@ -459,12 +791,17 @@
       function() {
 
         document
-          .getElementById("message")
+          .getElementById(
+            "message"
+          )
           .textContent =
           "Unable to load songs. Please try again.";
 
 
-        delete window[callbackName];
+        delete window[
+          callbackName
+        ];
+
 
         script.remove();
 
@@ -473,7 +810,9 @@
 
     document
       .body
-      .appendChild(script);
+      .appendChild(
+        script
+      );
 
   }
 
@@ -483,7 +822,9 @@
   // DISPLAY SONGS
   // ==========================================
 
-  function displaySongs(list) {
+  function displaySongs(
+    list
+  ) {
 
     const container =
       document.getElementById(
@@ -538,7 +879,9 @@
         div.onclick =
           function() {
 
-            openSong(song);
+            openSong(
+              song
+            );
 
           };
 
@@ -559,7 +902,9 @@
   // ==========================================
 
   document
-    .getElementById("search")
+    .getElementById(
+      "search"
+    )
     .addEventListener(
       "input",
       function() {
@@ -572,7 +917,9 @@
 
         if (!searchText) {
 
-          displaySongs(songs);
+          displaySongs(
+            songs
+          );
 
           return;
 
@@ -608,7 +955,9 @@
   // OPEN SONG
   // ==========================================
 
-  function openSong(song) {
+  function openSong(
+    song
+  ) {
 
     currentSong =
       song;
@@ -671,7 +1020,7 @@
 
 
   // ==========================================
-  // BACK TO SONGS
+  // BACK HOME
   // ==========================================
 
   function showHome() {
@@ -793,7 +1142,8 @@
         "keyDisplay"
       )
       .textContent =
-      "Key: " + key;
+      "Key: " +
+      key;
 
   }
 
@@ -826,7 +1176,9 @@
   // NOTE TO NUMBER
   // ==========================================
 
-  function noteToNumber(note) {
+  function noteToNumber(
+    note
+  ) {
 
     const map = {
 
@@ -873,7 +1225,7 @@
 
 
   // ==========================================
-  // TRANSPOSE SINGLE CHORD
+  // TRANSPOSE CHORD
   // ==========================================
 
   function transposeChord(
@@ -1109,19 +1461,21 @@
         );
 
 
-    // Make sure comment exists
+    // Check comment
 
     if (!comment) {
 
       status.textContent =
-        "Please write a comment first.";
+        "Please write your comment first.";
 
       return;
 
     }
 
 
-    // Ask for name
+    // ======================================
+    // ASK NAME
+    // ======================================
 
     const name =
       prompt(
@@ -1129,7 +1483,7 @@
       );
 
 
-    // User pressed Cancel
+    // Cancel
 
     if (name === null) {
       return;
@@ -1140,7 +1494,7 @@
       name.trim();
 
 
-    // Name required
+    // Check name
 
     if (!cleanName) {
 
@@ -1151,6 +1505,10 @@
 
     }
 
+
+    // ======================================
+    // DISABLE BUTTON
+    // ======================================
 
     button.disabled =
       true;
@@ -1164,9 +1522,9 @@
       "";
 
 
-    /*
-     * JSONP callback
-     */
+    // ======================================
+    // JSONP CALLBACK
+    // ======================================
 
     const callbackName =
       "commentResponse_" +
@@ -1181,7 +1539,7 @@
 
 
         button.textContent =
-          "Send Comment";
+          "Write Comment";
 
 
         if (
@@ -1191,6 +1549,7 @@
 
           status.textContent =
             "✅ Comment sent.";
+
 
           document
             .getElementById(
@@ -1204,19 +1563,27 @@
         else {
 
           status.textContent =
-            "❌ Unable to send comment.";
+            "❌ " +
+            (
+              response &&
+              response.message
+                ? response.message
+                : "Unable to send comment."
+            );
 
         }
 
 
-        delete window[callbackName];
+        delete window[
+          callbackName
+        ];
 
       };
 
 
-    /*
-     * Create script request
-     */
+    // ======================================
+    // CREATE REQUEST
+    // ======================================
 
     const script =
       document.createElement(
@@ -1226,19 +1593,24 @@
 
     script.src =
       API_URL +
+
       "?action=comment" +
+
       "&song=" +
       encodeURIComponent(
         currentSong.name
       ) +
+
       "&name=" +
       encodeURIComponent(
         cleanName
       ) +
+
       "&comment=" +
       encodeURIComponent(
         comment
       ) +
+
       "&callback=" +
       callbackName;
 
@@ -1251,14 +1623,16 @@
 
 
         button.textContent =
-          "Send Comment";
+          "Write Comment";
 
 
         status.textContent =
           "❌ Unable to send comment.";
 
 
-        delete window[callbackName];
+        delete window[
+          callbackName
+        ];
 
 
         script.remove();
@@ -1266,8 +1640,24 @@
       };
 
 
-    document.body.appendChild(
-      script
+    document
+      .body
+      .appendChild(
+        script
+      );
+
+
+    // Remove script after response
+
+    setTimeout(
+      function() {
+
+        if (script) {
+          script.remove();
+        }
+
+      },
+      5000
     );
 
   }

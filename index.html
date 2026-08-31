@@ -1036,6 +1036,14 @@
         autocomplete="off"
       >
 
+      <button
+        class="request-button"
+        style="width:auto; margin-top:15px; padding:10px 18px;"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+
     </header>
 
 
@@ -1147,6 +1155,26 @@
 
 <script>
 
+
+
+  <!-- FIREBASE AUTHENTICATION -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAE8Z1ZEdidhOjUyOU1N8pIC4Yzzo07Wps",
+      authDomain: "auth-543a0.firebaseapp.com",
+      projectId: "auth-543a0",
+      storageBucket: "auth-543a0.firebasestorage.app",
+      messagingSenderId: "277890778144",
+      appId: "1:277890778144:web:d1476a3e2c8aa61144e845",
+      measurementId: "G-7TJHNT3J41"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const firebaseAuth = firebase.auth();
+  </script>
 
   // =====================================================
   // GOOGLE APPS SCRIPT URL
@@ -1732,28 +1760,126 @@
 
 
 
+
   // =====================================================
   // LOGIN
-  //
-  // TEMPORARY:
-  //
-  // The backend authentication will be added next.
   // =====================================================
 
-  function login() {
+  async function login() {
+
+    const email =
+      document.getElementById("loginEmail").value.trim();
+
+    const password =
+      document.getElementById("loginPassword").value;
 
     const message =
-      document
-        .getElementById(
-          "loginMessage"
-        );
+      document.getElementById("loginMessage");
 
+    if (!email) {
+      message.textContent = "Please enter your email.";
+      return;
+    }
 
-    message.textContent =
-      "Login system is being prepared. Please request access first.";
+    if (!password) {
+      message.textContent = "Please enter your password.";
+      return;
+    }
 
+    message.textContent = "Signing in...";
+
+    try {
+
+      await firebaseAuth.signInWithEmailAndPassword(
+        email,
+        password
+      );
+
+      message.textContent = "";
+
+      showHome();
+      loadSongs();
+
+    } catch (error) {
+
+      console.error("Firebase login error:", error);
+
+      switch (error.code) {
+
+        case "auth/invalid-email":
+          message.textContent = "Please enter a valid email address.";
+          break;
+
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+        case "auth/invalid-credential":
+          message.textContent = "Incorrect email or password.";
+          break;
+
+        case "auth/too-many-requests":
+          message.textContent =
+            "Too many attempts. Please try again later.";
+          break;
+
+        case "auth/user-disabled":
+          message.textContent = "This account has been disabled.";
+          break;
+
+        default:
+          message.textContent =
+            error.message || "Unable to log in.";
+      }
+    }
   }
 
+
+  // =====================================================
+  // LOGOUT
+  // =====================================================
+
+  async function logout() {
+
+    try {
+
+      await firebaseAuth.signOut();
+
+      showLoginPage();
+
+      document.getElementById("loginEmail").value = "";
+      document.getElementById("loginPassword").value = "";
+      document.getElementById("loginMessage").textContent = "";
+
+    } catch (error) {
+
+      console.error("Logout error:", error);
+
+    }
+  }
+
+
+  // =====================================================
+  // FIREBASE SESSION
+  // =====================================================
+
+  firebaseAuth.onAuthStateChanged(
+    function(user) {
+
+      if (user) {
+
+        showHome();
+
+        if (!songs.length) {
+          loadSongs();
+        }
+
+      } else {
+
+        showLoginPage();
+
+      }
+
+    }
+  );
 
 
   // =====================================================
@@ -2264,6 +2390,11 @@
   // =====================================================
 
   function showHome() {
+
+    if (!firebaseAuth.currentUser) {
+      showLoginPage();
+      return;
+    }
 
     currentSong =
       null;

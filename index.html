@@ -1246,7 +1246,7 @@
     return "-";
   }
 
-  // Above All is originally in G
+  // Special case: Above All is in G
   if (
     currentSong &&
     String(currentSong.name).trim().toLowerCase() === "above all"
@@ -1254,13 +1254,22 @@
     return "G";
   }
 
-  // Look for an explicit Key declaration
+  // First look for an explicit key declaration
   const keyMatch = text.match(
     /(?:^|\n|\r)\s*(?:Key\s*[:=]\s*|\()\s*([A-G](?:#|b)?)\s*\)?/i
   );
 
   if (keyMatch) {
     return keyMatch[1];
+  }
+
+  // Otherwise detect the first chord in the song
+  const firstChord = text.match(
+    /(?:^|[\s(\[])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|[0-9]|\/|[\s)\],;:.]|$))/
+  );
+
+  if (firstChord) {
+    return firstChord[1];
   }
 
   return "-";

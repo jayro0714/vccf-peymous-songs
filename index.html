@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
 
   <meta
@@ -130,10 +129,8 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
-
       padding: 15px;
       margin-bottom: 20px;
-
       background: #1e293b;
       border-radius: 10px;
     }
@@ -145,16 +142,12 @@
     .transpose button {
       width: 45px;
       height: 40px;
-
       border: none;
       border-radius: 8px;
-
       background: #334155;
       color: white;
-
       font-size: 22px;
       font-weight: bold;
-
       cursor: pointer;
     }
 
@@ -175,9 +168,7 @@
 
     #chords {
       background: #111827;
-
       padding: 25px;
-
       border-radius: 10px;
 
       white-space: pre-wrap;
@@ -198,7 +189,6 @@
 
     .site-footer {
       margin-top: 50px;
-
       padding: 30px 20px;
 
       text-align: center;
@@ -210,7 +200,6 @@
 
     .footer-brand {
       font-size: 18px;
-
       font-weight: bold;
 
       color: #ffffff;
@@ -222,7 +211,6 @@
 
     .footer-copyright {
       font-size: 13px;
-
       color: #64748b;
     }
 
@@ -330,7 +318,7 @@
 
 
     <!-- =====================================
-         TRANSPOSE CONTROLS
+         TRANSPOSE
     ====================================== -->
 
     <div class="transpose">
@@ -413,9 +401,18 @@
   let transposeAmount = 0;
 
 
-
   // =====================================================
   // CHROMATIC NOTES
+  //
+  // PREFERRED DISPLAY:
+  //
+  // Ab -> G#
+  // A# -> Bb
+  //
+  // This means transposed chords will use:
+  //
+  // G# instead of Ab
+  // Bb instead of A#
   // =====================================================
 
   const chromaticNotes = [
@@ -428,13 +425,12 @@
     "F",
     "F#",
     "G",
-    "Ab",
+    "G#",
     "A",
     "Bb",
     "B"
 
   ];
-
 
 
   // =====================================================
@@ -485,9 +481,8 @@
   }
 
 
-
   // =====================================================
-  // TRANSPOSE NOTE
+  // TRANSPOSE ONE NOTE
   // =====================================================
 
   function transposeNote(
@@ -531,25 +526,21 @@
   }
 
 
-
   // =====================================================
   // TRANSPOSE CHORDS
   //
-  // IMPORTANT:
+  // Handles:
   //
-  // This handles:
-  //
-  // D
-  // Dm
-  // D7
-  // Dsus4
-  // D/F#
+  // C
+  // Cm
+  // C7
+  // Cmaj7
+  // Csus4
+  // C/F
   // Eb/F#
   // Cm/Bb
-  // (D-Em)
+  // (Eb - Ab)
   // (Eb/F# - Ab)
-  //
-  // Both the ROOT and BASS note are transposed.
   // =====================================================
 
   function transposeChords(
@@ -570,30 +561,10 @@
     let result = text;
 
 
-
     // =================================================
     // STEP 1
-    // TRANSPOSE THE MAIN CHORD ROOT
+    // TRANSPOSE CHORD ROOTS
     // =================================================
-
-    /*
-      A chord root is recognized when:
-
-      - It starts the string
-      - OR follows whitespace
-      - OR follows (
-      - OR follows [
-      - OR follows {
-      - OR follows -
-      - OR follows comma/colon/semicolon
-
-      This allows:
-
-      (Eb
-      D-Em
-      Eb/F#
-      Cm/Bb
-    */
 
     const rootRegex =
       /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
@@ -620,32 +591,10 @@
       );
 
 
-
     // =================================================
     // STEP 2
     // TRANSPOSE SLASH-CHORD BASS NOTES
     // =================================================
-
-    /*
-      This specifically handles:
-
-      /F#
-      /Bb
-      /C
-      /Ab
-
-      So:
-
-      Eb/F#
-          ↓
-      E/G
-
-      Cm/Bb
-          ↓
-      C#m/B
-
-      The slash itself is preserved.
-    */
 
     const bassRegex =
       /\/([A-G](?:#|b)?)(?=[\s)\]\},;:.+\-]|$)/g;
@@ -676,7 +625,6 @@
   }
 
 
-
   // =====================================================
   // FIND ORIGINAL KEY
   // =====================================================
@@ -688,18 +636,13 @@
     }
 
 
-    /*
-      First look for a key written at the
-      beginning of the song.
-
-      Example:
-
-      (Eb)
-
-      (Ab)
-
-      (F#)
-    */
+    // Look for key at beginning.
+    //
+    // Example:
+    //
+    // (Eb)
+    // (Ab)
+    // (F#)
 
     const keyAtStart =
       text.match(
@@ -714,9 +657,7 @@
     }
 
 
-    /*
-      Otherwise find the first chord.
-    */
+    // Otherwise find first chord.
 
     const firstChord =
       text.match(
@@ -734,7 +675,6 @@
     return firstChord[1];
 
   }
-
 
 
   // =====================================================
@@ -788,7 +728,6 @@
   }
 
 
-
   // =====================================================
   // LOAD SONGS
   // =====================================================
@@ -809,9 +748,7 @@
             : [];
 
 
-        // ==============================================
-        // SORT ALPHABETICALLY
-        // ==============================================
+        // Sort alphabetically A-Z
 
         songs.sort(
           function(a, b) {
@@ -905,7 +842,6 @@
   }
 
 
-
   // =====================================================
   // DISPLAY SONGS
   // =====================================================
@@ -984,7 +920,6 @@
   }
 
 
-
   // =====================================================
   // SEARCH
   // =====================================================
@@ -1038,7 +973,6 @@
     );
 
 
-
   // =====================================================
   // OPEN SONG
   // =====================================================
@@ -1090,7 +1024,6 @@
   }
 
 
-
   // =====================================================
   // SHOW HOME
   // =====================================================
@@ -1129,7 +1062,6 @@
   }
 
 
-
   // =====================================================
   // TRANSPOSE UP
   // =====================================================
@@ -1151,7 +1083,6 @@
   }
 
 
-
   // =====================================================
   // TRANSPOSE DOWN
   // =====================================================
@@ -1171,7 +1102,6 @@
     updateSong();
 
   }
-
 
 
   // =====================================================
@@ -1222,13 +1152,11 @@
   }
 
 
-
   // =====================================================
   // START APPLICATION
   // =====================================================
 
   loadSongs();
-
 
 </script>
 

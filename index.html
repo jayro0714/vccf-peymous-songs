@@ -161,10 +161,15 @@
       background: #111827;
       padding: 25px;
       border-radius: 10px;
+
       white-space: pre-wrap;
+
       font-family: "Courier New", monospace;
+
       font-size: 18px;
+
       line-height: 1.7;
+
       overflow-x: auto;
     }
 
@@ -252,7 +257,9 @@
     <h1 id="songTitle"></h1>
 
 
-    <!-- TRANSPOSE -->
+    <!-- =====================================
+         TRANSPOSE
+    ====================================== -->
 
     <div class="transpose">
 
@@ -284,7 +291,9 @@
     </div>
 
 
-    <!-- CHORDS -->
+    <!-- =====================================
+         CHORDS
+    ====================================== -->
 
     <div id="chords"></div>
 
@@ -335,10 +344,7 @@
             : [];
 
 
-        // ==========================================
-        // SORT SONGS ALPHABETICALLY A-Z
-        // ==========================================
-
+        // Sort songs alphabetically A-Z
         songs.sort(function(a, b) {
 
           return String(
@@ -430,9 +436,7 @@
   // DISPLAY SONGS
   // =====================================================
 
-  function displaySongs(
-    list
-  ) {
+  function displaySongs(list) {
 
     const container =
       document.getElementById(
@@ -467,39 +471,35 @@
       "";
 
 
-    list.forEach(
-      function(song) {
+    list.forEach(function(song) {
 
-        const div =
-          document.createElement(
-            "div"
-          );
-
-
-        div.className =
-          "song";
-
-
-        div.textContent =
-          song.name;
-
-
-        div.onclick =
-          function() {
-
-            openSong(
-              song
-            );
-
-          };
-
-
-        container.appendChild(
-          div
+      const div =
+        document.createElement(
+          "div"
         );
 
-      }
-    );
+
+      div.className =
+        "song";
+
+
+      div.textContent =
+        song.name;
+
+
+      div.onclick =
+        function() {
+
+          openSong(song);
+
+        };
+
+
+      container.appendChild(
+        div
+      );
+
+    });
 
   }
 
@@ -563,9 +563,7 @@
   // OPEN SONG
   // =====================================================
 
-  function openSong(
-    song
-  ) {
+  function openSong(song) {
 
     currentSong =
       song;
@@ -717,9 +715,7 @@
   // NOTE TO NUMBER
   // =====================================================
 
-  function noteToNumber(
-    note
-  ) {
+  function noteToNumber(note) {
 
     const map = {
 
@@ -819,8 +815,7 @@
       newNumber < 0
     ) {
 
-      newNumber +=
-        12;
+      newNumber += 12;
 
     }
 
@@ -838,6 +833,13 @@
 
   // =====================================================
   // TRANSPOSE ALL CHORDS
+  //
+  // This version also catches chords inside:
+  //
+  // (D-Em)
+  // (D - Em)
+  // (D/F# - G)
+  //
   // =====================================================
 
   function transposeChords(
@@ -855,26 +857,75 @@
     }
 
 
+    /*
+      Match chord roots anywhere they appear
+      after a valid chord separator.
+
+      Examples detected:
+
+      D
+      Em
+      D/F#
+      C#m
+      Bb
+      (D
+      (Em
+      D-Em
+      D / Em
+      D/F#
+    */
+
+    const chordRegex =
+      /(^|[\s(\[\]|,;:-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|7|9|11|13|M|°|\+|-|\/|\s|[)\],;:.]|$))/g;
+
+
     return text.replace(
-
-      /(^|[\s|(\[])([A-G](?:#|b)?(?:m|maj|min|dim|aug|sus|add|7|9|11|13|M|°|\+|-)*(?:\/[A-G](?:#|b)?)?)(?=$|[\s|)\],:;])/gm,
-
+      chordRegex,
       function(
         full,
-        prefix,
-        chord
+        separator,
+        root
       ) {
 
-        return (
-          prefix +
-          transposeChord(
-            chord,
+        const rootNumber =
+          noteToNumber(
+            root
+          );
+
+
+        if (
+          rootNumber === undefined
+        ) {
+
+          return full;
+
+        }
+
+
+        let newNumber =
+          (
+            rootNumber +
             amount
-          )
+          ) % 12;
+
+
+        if (
+          newNumber < 0
+        ) {
+
+          newNumber += 12;
+
+        }
+
+
+        return (
+          separator +
+          chromaticNotes[
+            newNumber
+          ]
         );
 
       }
-
     );
 
   }
@@ -882,12 +933,10 @@
 
 
   // =====================================================
-  // GET ORIGINAL KEY
+  // FIND ORIGINAL KEY
   // =====================================================
 
-  function getOriginalKey(
-    text
-  ) {
+  function getOriginalKey(text) {
 
     if (!text) {
       return "-";
@@ -897,7 +946,7 @@
     const match =
       text.match(
 
-        /(?:^|[\s|(\[])([A-G](?:#|b)?)(?=m|maj|min|dim|aug|sus|add|7|9|11|13|\/|\s|$|[\]|):,;])/m
+        /(?:^|[\s(\[])([A-G](?:#|b)?)(?=m|maj|min|dim|aug|sus|add|7|9|11|13|\/|\s|$|[\])}:,;-])/m
 
       );
 
@@ -954,8 +1003,7 @@
       newNumber < 0
     ) {
 
-      newNumber +=
-        12;
+      newNumber += 12;
 
     }
 

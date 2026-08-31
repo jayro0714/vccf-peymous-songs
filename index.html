@@ -1246,30 +1246,57 @@
     return "-";
   }
 
-  // Special case: Above All is in G
+  // =====================================================
+  // 1. CHECK FOR EXPLICIT KEY DECLARATION
+  // =====================================================
+
+  const explicitKey = text.match(
+    /(?:^|\n|\r)\s*(?:Key|KEY|key)\s*[:=]\s*([A-G](?:#|b)?)/m
+  );
+
+  if (explicitKey) {
+    return explicitKey[1];
+  }
+
+
+  // =====================================================
+  // 2. SONG-SPECIFIC KEYS
+  // =====================================================
+
   if (
     currentSong &&
-    String(currentSong.name).trim().toLowerCase() === "above all"
+    currentSong.name
   ) {
-    return "G";
+    const songName =
+      currentSong.name
+        .trim()
+        .toLowerCase();
+
+    // Above All = G
+    if (songName === "above all") {
+      return "G";
+    }
+
+    // Alive Again = C#
+    if (songName === "alive again") {
+      return "C#";
+    }
   }
 
-  // First look for an explicit key declaration
-  const keyMatch = text.match(
-    /(?:^|\n|\r)\s*(?:Key\s*[:=]\s*|\()\s*([A-G](?:#|b)?)\s*\)?/i
-  );
 
-  if (keyMatch) {
-    return keyMatch[1];
-  }
+  // =====================================================
+  // 3. FALLBACK
+  // =====================================================
+  // If no explicit key or known song key exists,
+  // use the first recognizable chord.
 
-  // Otherwise detect the first chord in the song
-  const firstChord = text.match(
-    /(?:^|[\s(\[])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|[0-9]|\/|[\s)\],;:.]|$))/
-  );
+  const chordRegex =
+    /(?:^|[\s(\[\{,;:\-–—])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|\/[A-G]|[\s)\]\},;:.\/\-–—]|$))/g;
 
-  if (firstChord) {
-    return firstChord[1];
+  const match = chordRegex.exec(text);
+
+  if (match) {
+    return match[1];
   }
 
   return "-";

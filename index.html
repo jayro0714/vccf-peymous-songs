@@ -18,8 +18,14 @@
       box-sizing: border-box;
     }
 
+    html,
     body {
       margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
       background: #0f172a;
       color: white;
       font-family: Arial, sans-serif;
@@ -32,6 +38,8 @@
 
     #homePage {
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -58,6 +66,7 @@
       width: 90%;
       max-width: 700px;
       margin: 10px auto 40px;
+      flex: 1;
     }
 
     .song {
@@ -90,7 +99,9 @@
       display: none;
       width: 90%;
       max-width: 800px;
-      margin: 30px auto 60px;
+      margin: 30px auto 0;
+      min-height: calc(100vh - 30px);
+      position: relative;
     }
 
     .back {
@@ -175,25 +186,35 @@
 
 
     /* =========================================
-       JAYROCHORDS BRANDING
+       FOOTER
     ========================================= */
 
-    .song-footer {
-      text-align: right;
-      margin-top: 20px;
-      padding: 10px 5px 0;
+    .site-footer {
+      margin-top: 50px;
+      padding: 30px 20px;
 
+      text-align: center;
+
+      border-top: 1px solid #334155;
+
+      color: #94a3b8;
+    }
+
+    .footer-brand {
+      font-size: 18px;
+      font-weight: bold;
+
+      color: #ffffff;
+
+      margin-bottom: 8px;
+
+      letter-spacing: 0.3px;
+    }
+
+    .footer-copyright {
       font-size: 13px;
 
       color: #64748b;
-
-      font-weight: bold;
-
-      letter-spacing: 0.5px;
-    }
-
-    .song-footer span {
-      color: #94a3b8;
     }
 
 
@@ -220,7 +241,21 @@
         gap: 10px;
       }
 
-      .song-footer {
+      .transpose button {
+        width: 42px;
+        height: 38px;
+      }
+
+      .site-footer {
+        margin-top: 40px;
+        padding: 25px 15px;
+      }
+
+      .footer-brand {
+        font-size: 16px;
+      }
+
+      .footer-copyright {
         font-size: 12px;
       }
 
@@ -326,12 +361,20 @@
 
 
     <!-- =====================================
-         JAYROCHORDS BRANDING
+         FOOTER
     ====================================== -->
 
-    <div class="song-footer">
-      <span>jayrochords.com</span>
-    </div>
+    <footer class="site-footer">
+
+      <div class="footer-brand">
+        🎵 jayrochords.com
+      </div>
+
+      <div class="footer-copyright">
+        © 2026 Jayro
+      </div>
+
+    </footer>
 
   </div>
 
@@ -380,10 +423,7 @@
             : [];
 
 
-        // ==========================================
-        // SORT SONGS ALPHABETICALLY A-Z
-        // ==========================================
-
+        // Sort songs alphabetically A-Z
         songs.sort(function(a, b) {
 
           return String(
@@ -675,7 +715,7 @@
         "homePage"
       )
       .style.display =
-      "block";
+      "flex";
 
 
     window.scrollTo(
@@ -801,88 +841,7 @@
 
 
   // =====================================================
-  // TRANSPOSE ONE CHORD
-  // =====================================================
-
-  function transposeChord(
-    chord,
-    amount
-  ) {
-
-    const match =
-      chord.match(
-        /^([A-G](?:#|b)?)(.*)$/
-      );
-
-
-    if (!match) {
-      return chord;
-    }
-
-
-    const root =
-      match[1];
-
-
-    const suffix =
-      match[2];
-
-
-    const rootNumber =
-      noteToNumber(
-        root
-      );
-
-
-    if (
-      rootNumber === undefined
-    ) {
-
-      return chord;
-
-    }
-
-
-    let newNumber =
-      (
-        rootNumber +
-        amount
-      ) % 12;
-
-
-    if (
-      newNumber < 0
-    ) {
-
-      newNumber += 12;
-
-    }
-
-
-    return (
-      chromaticNotes[
-        newNumber
-      ] +
-      suffix
-    );
-
-  }
-
-
-
-  // =====================================================
-  // TRANSPOSE ALL CHORDS
-  //
-  // Works with chords:
-  //
-  // D
-  // Em
-  // D-Em
-  // (D-Em)
-  // (D - Em)
-  // D/F#
-  // (D/F# - G)
-  //
+  // TRANSPOSE CHORDS
   // =====================================================
 
   function transposeChords(

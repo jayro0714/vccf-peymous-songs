@@ -38,37 +38,363 @@
 
 
     /* =====================================================
+       LOGIN PAGE
+    ===================================================== */
+
+    #loginPage {
+
+      min-height: 100vh;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+
+    .login-box {
+
+      width: 100%;
+
+      max-width: 400px;
+
+      background: #1e293b;
+
+      padding: 30px;
+
+      border-radius: 14px;
+
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.3);
+
+      text-align: center;
+    }
+
+
+    .login-box h1 {
+
+      margin: 0 0 8px;
+
+      font-size: 30px;
+    }
+
+
+    .login-subtitle {
+
+      color: #94a3b8;
+
+      font-size: 14px;
+
+      margin-bottom: 25px;
+    }
+
+
+    .login-input {
+
+      width: 100%;
+
+      padding: 13px 14px;
+
+      margin-bottom: 12px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 15px;
+    }
+
+
+    .login-input::placeholder {
+
+      color: #64748b;
+    }
+
+
+    .login-button {
+
+      width: 100%;
+
+      padding: 13px;
+
+      margin-top: 5px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .login-button:hover {
+
+      background: #1d4ed8;
+    }
+
+
+    .request-button {
+
+      width: 100%;
+
+      padding: 12px;
+
+      margin-top: 10px;
+
+      border: 1px solid #475569;
+
+      border-radius: 8px;
+
+      background: transparent;
+
+      color: #60a5fa;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .request-button:hover {
+
+      background: #334155;
+    }
+
+
+    .login-message {
+
+      margin-top: 15px;
+
+      font-size: 14px;
+
+      color: #94a3b8;
+
+      min-height: 20px;
+    }
+
+
+
+    /* =====================================================
+       REQUEST ACCESS
+    ===================================================== */
+
+    #requestPage {
+
+      display: none;
+
+      min-height: 100vh;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+
+    .request-box {
+
+      width: 100%;
+
+      max-width: 450px;
+
+      background: #1e293b;
+
+      padding: 30px;
+
+      border-radius: 14px;
+
+      box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.3);
+    }
+
+
+    .request-box h1 {
+
+      margin: 0 0 8px;
+
+      text-align: center;
+
+      font-size: 28px;
+    }
+
+
+    .request-subtitle {
+
+      text-align: center;
+
+      color: #94a3b8;
+
+      font-size: 14px;
+
+      margin-bottom: 25px;
+    }
+
+
+    .request-label {
+
+      display: block;
+
+      margin-bottom: 6px;
+
+      font-size: 14px;
+
+      font-weight: bold;
+    }
+
+
+    .request-input,
+    .request-textarea {
+
+      width: 100%;
+
+      padding: 13px 14px;
+
+      margin-bottom: 15px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 15px;
+
+      font-family: Arial, sans-serif;
+    }
+
+
+    .request-input::placeholder,
+    .request-textarea::placeholder {
+
+      color: #64748b;
+    }
+
+
+    .request-textarea {
+
+      min-height: 100px;
+
+      resize: vertical;
+    }
+
+
+    .submit-request {
+
+      width: 100%;
+
+      padding: 13px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    .submit-request:hover {
+
+      background: #1d4ed8;
+    }
+
+
+    .back-login {
+
+      display: block;
+
+      text-align: center;
+
+      margin-top: 15px;
+
+      color: #60a5fa;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+
+    /* =====================================================
        HOME PAGE
     ===================================================== */
 
     #homePage {
+
       min-height: 100vh;
-      display: flex;
+
+      display: none;
+
       flex-direction: column;
     }
 
 
     header {
+
       text-align: center;
+
       padding: 30px 15px 20px;
     }
 
 
     header h1 {
+
       margin: 0 0 20px;
+
       font-size: 32px;
     }
 
 
     #search {
+
       width: 90%;
+
       max-width: 500px;
+
       padding: 14px 16px;
 
       background: white;
+
       color: #111827;
 
       border: none;
+
       border-radius: 10px;
 
       outline: none;
@@ -78,12 +404,15 @@
 
 
     #search::placeholder {
+
       color: #64748b;
     }
 
 
     #songs {
+
       width: 90%;
+
       max-width: 700px;
 
       margin: 10px auto 40px;
@@ -93,6 +422,7 @@
 
 
     .song {
+
       background: #1e293b;
 
       padding: 17px;
@@ -110,12 +440,15 @@
 
 
     .song:hover {
+
       background: #334155;
+
       transform: translateY(-1px);
     }
 
 
     #message {
+
       text-align: center;
 
       color: #94a3b8;
@@ -130,9 +463,11 @@
     ===================================================== */
 
     #songPage {
+
       display: none;
 
       width: 90%;
+
       max-width: 800px;
 
       margin: 30px auto 0;
@@ -181,8 +516,6 @@
       cursor: pointer;
 
       white-space: nowrap;
-
-      transition: 0.2s;
     }
 
 
@@ -192,7 +525,6 @@
 
       color: #93c5fd;
     }
-
 
 
     /* =====================================================
@@ -235,19 +567,6 @@
     }
 
 
-    #songSearch:focus {
-
-      border: none;
-
-      outline: none;
-    }
-
-
-
-    /* =====================================================
-       SEARCH RESULTS
-    ===================================================== */
-
     #songSearchResults {
 
       position: absolute;
@@ -274,7 +593,9 @@
 
       overflow-y: auto;
 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      box-shadow:
+        0 10px 25px
+        rgba(0, 0, 0, 0.35);
     }
 
 
@@ -289,12 +610,6 @@
       font-size: 14px;
 
       color: white;
-    }
-
-
-    .song-search-result:last-child {
-
-      border-bottom: none;
     }
 
 
@@ -449,8 +764,6 @@
       color: white;
 
       margin-bottom: 8px;
-
-      letter-spacing: 0.3px;
     }
 
 
@@ -483,9 +796,9 @@
 
       .song-navigation {
 
-        align-items: stretch;
-
         flex-direction: column;
+
+        align-items: stretch;
       }
 
 
@@ -513,20 +826,6 @@
       }
 
 
-      .transpose {
-
-        gap: 10px;
-      }
-
-
-      .transpose button {
-
-        width: 42px;
-
-        height: 38px;
-      }
-
-
       #chords {
 
         font-size: 16px;
@@ -542,18 +841,6 @@
         padding: 25px 15px;
       }
 
-
-      .footer-brand {
-
-        font-size: 16px;
-      }
-
-
-      .footer-copyright {
-
-        font-size: 12px;
-      }
-
     }
 
   </style>
@@ -563,6 +850,169 @@
 
 
 <body>
+
+
+  <!-- =====================================================
+       LOGIN PAGE
+  ===================================================== -->
+
+  <div id="loginPage">
+
+
+    <div class="login-box">
+
+
+      <h1>
+        🎵 Jayro Chords
+      </h1>
+
+
+      <div class="login-subtitle">
+        Sign in to access the chord library
+      </div>
+
+
+      <input
+        id="loginEmail"
+        class="login-input"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
+      >
+
+
+      <input
+        id="loginPassword"
+        class="login-input"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+      >
+
+
+      <button
+        class="login-button"
+        onclick="login()"
+      >
+        Login
+      </button>
+
+
+      <button
+        class="request-button"
+        onclick="showRequestPage()"
+      >
+        Request Access
+      </button>
+
+
+      <div
+        id="loginMessage"
+        class="login-message"
+      ></div>
+
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       REQUEST ACCESS PAGE
+  ===================================================== -->
+
+  <div id="requestPage">
+
+
+    <div class="request-box">
+
+
+      <h1>
+        Request Access
+      </h1>
+
+
+      <div class="request-subtitle">
+
+        Request access to the Jayro Chords library.
+
+      </div>
+
+
+      <label
+        class="request-label"
+        for="requestName"
+      >
+        Name
+      </label>
+
+
+      <input
+        id="requestName"
+        class="request-input"
+        type="text"
+        placeholder="Your name"
+      >
+
+
+      <label
+        class="request-label"
+        for="requestEmail"
+      >
+        Email
+      </label>
+
+
+      <input
+        id="requestEmail"
+        class="request-input"
+        type="email"
+        placeholder="you@example.com"
+      >
+
+
+      <label
+        class="request-label"
+        for="requestReason"
+      >
+        Why do you need access?
+      </label>
+
+
+      <textarea
+        id="requestReason"
+        class="request-textarea"
+        placeholder="Tell us a little about why you need access..."
+      ></textarea>
+
+
+      <button
+        class="submit-request"
+        onclick="submitAccessRequest()"
+      >
+        Send Request
+      </button>
+
+
+      <div
+        id="requestMessage"
+        class="login-message"
+      ></div>
+
+
+      <div
+        class="back-login"
+        onclick="showLoginPage()"
+      >
+        ← Back to Login
+      </div>
+
+
+    </div>
+
+  </div>
+
 
 
   <!-- =====================================================
@@ -608,8 +1058,6 @@
   <div id="songPage">
 
 
-    <!-- NAVIGATION -->
-
     <div class="song-navigation">
 
 
@@ -641,14 +1089,8 @@
     </div>
 
 
-
-    <!-- SONG TITLE -->
-
     <h1 id="songTitle"></h1>
 
-
-
-    <!-- TRANSPOSE -->
 
     <div class="transpose">
 
@@ -660,7 +1102,6 @@
 
       <button
         onclick="transposeDown()"
-        title="Transpose down"
       >
         −
       </button>
@@ -673,7 +1114,6 @@
 
       <button
         onclick="transposeUp()"
-        title="Transpose up"
       >
         +
       </button>
@@ -682,14 +1122,8 @@
     </div>
 
 
-
-    <!-- CHORDS -->
-
     <div id="chords"></div>
 
-
-
-    <!-- FOOTER -->
 
     <footer class="site-footer">
 
@@ -737,35 +1171,21 @@
 
   // =====================================================
   // PREFERRED CHORD SPELLING
-  //
-  // Ab -> G#
-  // A# -> Bb
   // =====================================================
 
   const chromaticNotes = [
 
     "C",
-
     "C#",
-
     "D",
-
     "Eb",
-
     "E",
-
     "F",
-
     "F#",
-
     "G",
-
     "G#",
-
     "A",
-
     "Bb",
-
     "B"
 
   ];
@@ -823,7 +1243,7 @@
 
 
   // =====================================================
-  // TRANSPOSE ONE NOTE
+  // TRANSPOSE NOTE
   // =====================================================
 
   function transposeNote(
@@ -870,25 +1290,6 @@
 
   // =====================================================
   // TRANSPOSE CHORDS
-  //
-  // Supports:
-  //
-  // C
-  // Cm
-  // C7
-  // Cmaj7
-  // Csus4
-  //
-  // Slash chords:
-  //
-  // C/F
-  // C#/F#m
-  // Eb/F#
-  // D/F#
-  // Cm/Bb
-  // F#m/C#
-  //
-  // Parentheses are supported.
   // =====================================================
 
   function transposeChords(
@@ -909,10 +1310,7 @@
     let result = text;
 
 
-
-    // =================================================
-    // TRANSPOSE MAIN CHORD ROOTS
-    // =================================================
+    // Main chord roots
 
     const rootRegex =
       /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
@@ -939,19 +1337,7 @@
       );
 
 
-
-    // =================================================
-    // TRANSPOSE SLASH-CHORD BASS NOTES
-    //
-    // This handles:
-    //
-    // /F#
-    // /F#m
-    // /Bb
-    // /Bbm
-    // /C#
-    // /C#m
-    // =================================================
+    // Slash chord bass notes
 
     const bassRegex =
       /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
@@ -1081,6 +1467,296 @@
 
 
   // =====================================================
+  // SHOW LOGIN PAGE
+  // =====================================================
+
+  function showLoginPage() {
+
+    document
+      .getElementById(
+        "loginPage"
+      )
+      .style.display =
+      "flex";
+
+
+    document
+      .getElementById(
+        "requestPage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "homePage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "songPage"
+      )
+      .style.display =
+      "none";
+
+  }
+
+
+
+  // =====================================================
+  // SHOW REQUEST PAGE
+  // =====================================================
+
+  function showRequestPage() {
+
+    document
+      .getElementById(
+        "loginPage"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "requestPage"
+      )
+      .style.display =
+      "flex";
+
+
+    document
+      .getElementById(
+        "requestMessage"
+      )
+      .textContent =
+      "";
+
+  }
+
+
+
+  // =====================================================
+  // SUBMIT ACCESS REQUEST
+  // =====================================================
+
+  function submitAccessRequest() {
+
+    const name =
+      document
+        .getElementById(
+          "requestName"
+        )
+        .value
+        .trim();
+
+
+    const email =
+      document
+        .getElementById(
+          "requestEmail"
+        )
+        .value
+        .trim();
+
+
+    const reason =
+      document
+        .getElementById(
+          "requestReason"
+        )
+        .value
+        .trim();
+
+
+    const message =
+      document
+        .getElementById(
+          "requestMessage"
+        );
+
+
+    if (!name) {
+
+      message.textContent =
+        "Please enter your name.";
+
+      return;
+
+    }
+
+
+    if (!email) {
+
+      message.textContent =
+        "Please enter your email.";
+
+      return;
+
+    }
+
+
+    if (!reason) {
+
+      message.textContent =
+        "Please tell us why you need access.";
+
+      return;
+
+    }
+
+
+    message.textContent =
+      "Sending request...";
+
+
+    const callbackName =
+      "accessRequest_" +
+      Date.now();
+
+
+    window[callbackName] =
+      function(response) {
+
+        message.textContent =
+          response.message;
+
+
+        if (
+          response.success
+        ) {
+
+          document
+            .getElementById(
+              "requestName"
+            )
+            .value =
+            "";
+
+
+          document
+            .getElementById(
+              "requestEmail"
+            )
+            .value =
+            "";
+
+
+          document
+            .getElementById(
+              "requestReason"
+            )
+            .value =
+            "";
+
+        }
+
+
+        delete window[
+          callbackName
+        ];
+
+
+        const script =
+          document.getElementById(
+            "accessRequestScript"
+          );
+
+
+        if (script) {
+
+          script.remove();
+
+        }
+
+      };
+
+
+    const script =
+      document.createElement(
+        "script"
+      );
+
+
+    script.id =
+      "accessRequestScript";
+
+
+    script.src =
+      API_URL +
+      "?action=requestAccess" +
+      "&name=" +
+      encodeURIComponent(
+        name
+      ) +
+      "&email=" +
+      encodeURIComponent(
+        email
+      ) +
+      "&reason=" +
+      encodeURIComponent(
+        reason
+      ) +
+      "&callback=" +
+      encodeURIComponent(
+        callbackName
+      );
+
+
+    script.onerror =
+      function() {
+
+        message.textContent =
+          "Unable to send request. Please try again.";
+
+        delete window[
+          callbackName
+        ];
+
+        script.remove();
+
+      };
+
+
+    document
+      .body
+      .appendChild(
+        script
+      );
+
+  }
+
+
+
+  // =====================================================
+  // LOGIN
+  //
+  // TEMPORARY:
+  //
+  // The backend authentication will be added next.
+  // =====================================================
+
+  function login() {
+
+    const message =
+      document
+        .getElementById(
+          "loginMessage"
+        );
+
+
+    message.textContent =
+      "Login system is being prepared. Please request access first.";
+
+  }
+
+
+
+  // =====================================================
   // LOAD SONGS
   // =====================================================
 
@@ -1099,8 +1775,6 @@
             ? data
             : [];
 
-
-        // Alphabetical order
 
         songs.sort(
           function(a, b) {
@@ -1174,11 +1848,9 @@
           .textContent =
           "Unable to load songs. Please try again.";
 
-
         delete window[
           callbackName
         ];
-
 
         script.remove();
 
@@ -1196,7 +1868,7 @@
 
 
   // =====================================================
-  // DISPLAY HOME SONGS
+  // DISPLAY SONGS
   // =====================================================
 
   function displaySongs(
@@ -1329,7 +2001,7 @@
 
 
   // =====================================================
-  // SEARCH ANOTHER SONG
+  // SONG SEARCH
   // =====================================================
 
   const songSearch =
@@ -1342,7 +2014,6 @@
     document.getElementById(
       "songSearchResults"
     );
-
 
 
   songSearch.addEventListener(
@@ -1494,7 +2165,7 @@
 
 
   // =====================================================
-  // CLOSE SEARCH WHEN CLICKING OUTSIDE
+  // CLOSE SEARCH
   // =====================================================
 
   document.addEventListener(
@@ -1733,10 +2404,10 @@
 
 
   // =====================================================
-  // START APP
+  // START
   // =====================================================
 
-  loadSongs();
+  showLoginPage();
 
 </script>
 

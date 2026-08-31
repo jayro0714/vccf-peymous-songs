@@ -1918,196 +1918,136 @@
 
     function loadSongs() {
 
-      return new Promise(
-        function(resolve, reject) {
+  const message =
+    document.getElementById("message");
 
-          const callbackName =
-            "receiveSongs_" +
-            Date.now();
+  const container =
+    document.getElementById("songs");
 
+  message.textContent =
+    "Loading songs...";
 
-          const script =
-            document.createElement(
-              "script"
-            );
+  container.innerHTML = "";
 
 
-          script.id =
-            "songsApiScript";
+  const callbackName =
+    "receiveSongs_" + Date.now();
 
 
-          /*
-            JSONP is used intentionally.
+  window[callbackName] =
+    function(data) {
 
-            This avoids the CORS / JSON parsing
-            problem you were seeing.
-          */
-
-          script.src =
-            API_URL +
-            "?callback=" +
-            encodeURIComponent(
-              callbackName
-            );
+      console.log(
+        "Songs received:",
+        data
+      );
 
 
-          let finished =
-            false;
+      songs =
+        Array.isArray(data)
+          ? data
+          : [];
 
 
-          function cleanup() {
+      songs.sort(
+        function(a, b) {
 
-            delete window[
-              callbackName
-            ];
-
-
-            if (
-              script.parentNode
-            ) {
-
-              script.parentNode
-                .removeChild(
-                  script
-                );
-
+          return String(
+            a.name || ""
+          ).localeCompare(
+            String(
+              b.name || ""
+            ),
+            undefined,
+            {
+              sensitivity: "base"
             }
-
-          }
-
-
-          window[callbackName] =
-            function(data) {
-
-              if (finished) {
-
-                return;
-
-              }
-
-
-              finished =
-                true;
-
-
-              try {
-
-                songs =
-                  Array.isArray(data)
-                    ? data
-                    : [];
-
-
-                /*
-                  Remove empty entries.
-                */
-
-                songs =
-                  songs.filter(
-                    function(song) {
-
-                      return (
-                        song &&
-                        String(
-                          song.name || ""
-                        ).trim() !== ""
-                      );
-
-                    }
-                  );
-
-
-                /*
-                  Sort alphabetically.
-                */
-
-                songs.sort(
-                  function(a, b) {
-
-                    return String(
-                      a.name || ""
-                    ).localeCompare(
-                      String(
-                        b.name || ""
-                      ),
-                      undefined,
-                      {
-                        sensitivity:
-                          "base"
-                      }
-                    );
-
-                  }
-                );
-
-
-                displaySongs(
-                  songs
-                );
-
-
-                cleanup();
-
-
-                resolve(
-                  songs
-                );
-
-              } catch (error) {
-
-                cleanup();
-
-                reject(
-                  error
-                );
-
-              }
-
-            };
-
-
-          script.onerror =
-            function() {
-
-              if (finished) {
-
-                return;
-
-              }
-
-
-              finished =
-                true;
-
-
-              document
-                .getElementById(
-                  "message"
-                )
-                .textContent =
-                "Unable to load songs. Please try again.";
-
-
-              cleanup();
-
-
-              reject(
-                new Error(
-                  "Unable to load songs."
-                )
-              );
-
-            };
-
-
-          document.body.appendChild(
-            script
           );
 
         }
       );
 
-    }
+
+      delete window[
+        callbackName
+      ];
+
+
+      const script =
+        document.getElementById(
+          "songsApiScript"
+        );
+
+
+      if (script) {
+        script.remove();
+      }
+
+
+      displaySongs(
+        songs
+      );
+
+    };
+
+
+  const script =
+    document.createElement(
+      "script"
+    );
+
+
+  script.id =
+    "songsApiScript";
+
+
+  /*
+    IMPORTANT:
+    The Apps Script backend expects
+    the callback parameter.
+  */
+
+  script.src =
+    API_URL +
+    "?callback=" +
+    encodeURIComponent(
+      callbackName
+    );
+
+
+  console.log(
+    "Loading songs from:",
+    script.src
+  );
+
+
+  script.onerror =
+    function() {
+
+      console.error(
+        "Songs API failed."
+      );
+
+
+      message.textContent =
+        "Unable to load songs. Check the Apps Script deployment.";
+
+
+      delete window[
+        callbackName
+      ];
+
+
+      script.remove();
+
+    };
+
+
+  document.body.appendChild(
+    script
+  );
+
+}
 
 
     /* =====================================================

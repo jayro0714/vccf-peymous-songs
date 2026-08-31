@@ -175,6 +175,29 @@
 
 
     /* =========================================
+       JAYROCHORDS BRANDING
+    ========================================= */
+
+    .song-footer {
+      text-align: right;
+      margin-top: 20px;
+      padding: 10px 5px 0;
+
+      font-size: 13px;
+
+      color: #64748b;
+
+      font-weight: bold;
+
+      letter-spacing: 0.5px;
+    }
+
+    .song-footer span {
+      color: #94a3b8;
+    }
+
+
+    /* =========================================
        MOBILE
     ========================================= */
 
@@ -195,6 +218,10 @@
 
       .transpose {
         gap: 10px;
+      }
+
+      .song-footer {
+        font-size: 12px;
       }
 
     }
@@ -297,6 +324,15 @@
 
     <div id="chords"></div>
 
+
+    <!-- =====================================
+         JAYROCHORDS BRANDING
+    ====================================== -->
+
+    <div class="song-footer">
+      <span>jayrochords.com</span>
+    </div>
+
   </div>
 
 
@@ -344,7 +380,10 @@
             : [];
 
 
-        // Sort songs alphabetically A-Z
+        // ==========================================
+        // SORT SONGS ALPHABETICALLY A-Z
+        // ==========================================
+
         songs.sort(function(a, b) {
 
           return String(
@@ -834,10 +873,14 @@
   // =====================================================
   // TRANSPOSE ALL CHORDS
   //
-  // This version also catches chords inside:
+  // Works with chords:
   //
+  // D
+  // Em
+  // D-Em
   // (D-Em)
   // (D - Em)
+  // D/F#
   // (D/F# - G)
   //
   // =====================================================
@@ -856,24 +899,6 @@
 
     }
 
-
-    /*
-      Match chord roots anywhere they appear
-      after a valid chord separator.
-
-      Examples detected:
-
-      D
-      Em
-      D/F#
-      C#m
-      Bb
-      (D
-      (Em
-      D-Em
-      D / Em
-      D/F#
-    */
 
     const chordRegex =
       /(^|[\s(\[\]|,;:-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|7|9|11|13|M|°|\+|-|\/|\s|[)\],;:.]|$))/g;

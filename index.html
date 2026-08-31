@@ -1241,55 +1241,27 @@
        ORIGINAL KEY
     ===================================================== */
 
-    function getOriginalKey(
-      text
-    ) {
+   function getOriginalKey(text) {
+  if (!text) {
+    return "-";
+  }
 
-      if (!text) {
+  // Look for an explicit key declaration such as:
+  // Key: G
+  // Key = G
+  // (G)
+  const keyMatch = text.match(
+    /(?:^|\n|\r)\s*(?:Key\s*[:=]\s*|\()\s*([A-G](?:#|b)?)\s*\)?/i
+  );
 
-        return "-";
+  if (keyMatch) {
+    return keyMatch[1];
+  }
 
-      }
-
-
-      /*
-        Check if the first thing in the
-        chord sheet is a key.
-      */
-
-      const keyAtStart =
-        text.match(
-          /^\s*\(?([A-G](?:#|b)?)\)?/
-        );
-
-
-      if (keyAtStart) {
-
-        return keyAtStart[1];
-
-      }
-
-
-      /*
-        Otherwise find the first chord.
-      */
-
-      const firstChord =
-        text.match(
-          /(?:^|[\s(\[])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|[0-9]|\/|[\s)\],;:.]|$))/
-        );
-
-
-      if (!firstChord) {
-
-        return "-";
-
-      }
-
-
-      return firstChord[1];
-
-    }
+  // If there is no explicit key, return "-"
+  // DO NOT use the first chord as the key.
+  return "-";
+}
 
 
     /* =====================================================

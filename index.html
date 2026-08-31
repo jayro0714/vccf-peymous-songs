@@ -1246,10 +1246,15 @@
     return "-";
   }
 
-  // Look for an explicit key declaration such as:
-  // Key: G
-  // Key = G
-  // (G)
+  // Above All is originally in G
+  if (
+    currentSong &&
+    String(currentSong.name).trim().toLowerCase() === "above all"
+  ) {
+    return "G";
+  }
+
+  // Look for an explicit Key declaration
   const keyMatch = text.match(
     /(?:^|\n|\r)\s*(?:Key\s*[:=]\s*|\()\s*([A-G](?:#|b)?)\s*\)?/i
   );
@@ -1258,61 +1263,8 @@
     return keyMatch[1];
   }
 
-  // If there is no explicit key, return "-"
-  // DO NOT use the first chord as the key.
   return "-";
 }
-
-
-    /* =====================================================
-       DISPLAY KEY
-    ===================================================== */
-
-    function getDisplayedKey(
-      text,
-      amount
-    ) {
-
-      const originalKey =
-        getOriginalKey(text);
-
-
-      const number =
-        noteToNumber(
-          originalKey
-        );
-
-
-      if (
-        number === undefined
-      ) {
-
-        return "-";
-
-      }
-
-
-      let newNumber =
-        (
-          number +
-          amount
-        ) % 12;
-
-
-      if (
-        newNumber < 0
-      ) {
-
-        newNumber += 12;
-
-      }
-
-
-      return chromaticNotes[
-        newNumber
-      ];
-
-    }
 
 
     /* =====================================================

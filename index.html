@@ -839,6 +839,16 @@
         placeholder="you@example.com"
       >
 
+      <label class="request-label" for="requestPassword">Password</label>
+
+      <input
+        id="requestPassword"
+        class="request-input"
+        type="password"
+        placeholder="Create a password"
+        autocomplete="new-password"
+      >
+
       <label
         class="request-label"
         for="requestReason"
@@ -1003,72 +1013,6 @@
 
 
 
-  <!-- =====================================================
-       FIREBASE
-  ===================================================== -->
-
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-
-
-  <script>
-
-    /* =====================================================
-       FIREBASE CONFIG
-    ===================================================== */
-
-    const firebaseConfig = {
-
-      apiKey:
-        "AIzaSyDA81ZEdidhOJyUOlN8pIC4Y2zz0o07Wps",
-
-      authDomain:
-        "auth-543a0.firebaseapp.com",
-
-      projectId:
-        "auth-543a0",
-
-      storageBucket:
-        "auth-543a0.firebasestorage.app",
-
-      messagingSenderId:
-        "277890778144",
-
-      appId:
-        "1:277890778144:web:d1476a3e2c8aa61144e845",
-
-      measurementId:
-        "G-7TJHNT3J41"
-
-    };
-
-
-    firebase.initializeApp(
-      firebaseConfig
-    );
-
-
-    const firebaseAuth =
-      firebase.auth();
-
-
-    /*
-      IMPORTANT
-
-      We use this flag so Firebase's initial
-      auth-state check cannot interfere with
-      an active login attempt.
-    */
-
-    let authInitialized = false;
-
-    let loginInProgress = false;
-
-  </script>
-
-
-
   <script>
 
     /* =====================================================
@@ -1088,6 +1032,8 @@
     let currentSong = null;
 
     let transposeAmount = 0;
+
+    let loginInProgress = false;
 
 
     /* =====================================================
@@ -1466,6 +1412,8 @@
         .textContent =
         "";
 
+      document.getElementById("requestPassword").value = "";
+
     }
 
 
@@ -1550,504 +1498,113 @@
     /* =====================================================
        LOGIN
     ===================================================== */
-
     async function login() {
-
-      const emailInput =
-        document.getElementById(
-          "loginEmail"
-        );
-
-      const passwordInput =
-        document.getElementById(
-          "loginPassword"
-        );
-
-      const button =
-        document.getElementById(
-          "loginButton"
-        );
-
-      const message =
-        document.getElementById(
-          "loginMessage"
-        );
-
-
-      const email =
-        emailInput.value.trim();
-
-
-      const password =
-        passwordInput.value;
-
-
-      if (!email) {
-
-        message.textContent =
-          "Please enter your email.";
-
-        return;
-
-      }
-
-
-      if (!password) {
-
-        message.textContent =
-          "Please enter your password.";
-
-        return;
-
-      }
-
-
-      /*
-        Prevent double clicks.
-      */
-
-      if (loginInProgress) {
-
-        return;
-
-      }
-
-
-      loginInProgress =
-        true;
-
-
-      button.disabled =
-        true;
-
-
-      button.textContent =
-        "Signing in...";
-
-
-      message.textContent =
-        "Signing in...";
-
-
-      try {
-
-        /*
-          Firebase authentication.
-        */
-
-        const result =
-          await firebaseAuth
-            .signInWithEmailAndPassword(
-              email,
-              password
-            );
-
-
-        console.log(
-          "Firebase login successful:",
-          result.user.email
-        );
-
-
-        /*
-          IMPORTANT:
-
-          Immediately show the app.
-
-          We do NOT wait for another callback
-          to change the screen.
-        */
-
-        showHome();
-
-
-        /*
-          Load the songs.
-        */
-
-        message.textContent =
-          "";
-
-
-        await loadSongs();
-
-
-      } catch (error) {
-
-        console.error(
-          "Firebase login error:",
-          error
-        );
-
-
-        switch (
-          error.code
-        ) {
-
-          case "auth/invalid-email":
-
-            message.textContent =
-              "Please enter a valid email address.";
-
-            break;
-
-
-          case "auth/user-not-found":
-
-          case "auth/wrong-password":
-
-          case "auth/invalid-credential":
-
-            message.textContent =
-              "Incorrect email or password.";
-
-            break;
-
-
-          case "auth/too-many-requests":
-
-            message.textContent =
-              "Too many attempts. Please try again later.";
-
-            break;
-
-
-          case "auth/user-disabled":
-
-            message.textContent =
-              "This account has been disabled.";
-
-            break;
-
-
-          case "auth/network-request-failed":
-
-            message.textContent =
-              "Network error. Please check your connection.";
-
-            break;
-
-
-          default:
-
-            message.textContent =
-              error.message ||
-              "Unable to log in.";
-
+      const emailInput = document.getElementById("loginEmail");
+      const passwordInput = document.getElementById("loginPassword");
+      const button = document.getElementById("loginButton");
+      const message = document.getElementById("loginMessage");
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email) { message.textContent = "Please enter your email."; return; }
+      if (!password) { message.textContent = "Please enter your password."; return; }
+      if (loginInProgress) return;
+      loginInProgress = true; button.disabled = true; button.textContent = "Signing in..."; message.textContent = "Checking access...";
+      const callbackName = "loginResponse_" + Date.now();
+      const script = document.createElement("script");
+      window[callbackName] = async function(response) {
+        try {
+          if (response && response.success) {
+            localStorage.setItem("jayro_token", response.token || "");
+            localStorage.setItem("jayro_email", response.email || email);
+            localStorage.setItem("jayro_name", response.name || "");
+            localStorage.setItem("jayro_role", response.role || "User");
+            message.textContent = "";
+            showHome();
+            await loadSongs();
+          } else {
+            message.textContent = response && response.message ? response.message : "Unable to log in.";
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          message.textContent = error.message || "Unable to log in.";
+        } finally {
+          loginInProgress = false; button.disabled = false; button.textContent = "Login";
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
         }
-
-      } finally {
-
-        loginInProgress =
-          false;
-
-
-        button.disabled =
-          false;
-
-
-        button.textContent =
-          "Login";
-
-      }
-
+      };
+      script.src = API_URL + "?action=login" + "&email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password) + "&callback=" + encodeURIComponent(callbackName);
+      script.onerror = function() {
+        loginInProgress = false; button.disabled = false; button.textContent = "Login";
+        message.textContent = "Unable to connect to the server. Please try again.";
+        delete window[callbackName]; if (script.parentNode) script.parentNode.removeChild(script);
+      };
+      document.body.appendChild(script);
     }
 
 
     /* =====================================================
        LOGOUT
     ===================================================== */
-
     async function logout() {
-
+      const token = localStorage.getItem("jayro_token");
       try {
-
-        await firebaseAuth
-          .signOut();
-
-
-        songs = [];
-
-        currentSong = null;
-
-        transposeAmount = 0;
-
-
-        document
-          .getElementById(
-            "songs"
-          )
-          .innerHTML =
-          "";
-
-
-        document
-          .getElementById(
-            "loginEmail"
-          )
-          .value =
-          "";
-
-
-        document
-          .getElementById(
-            "loginPassword"
-          )
-          .value =
-          "";
-
-
-        document
-          .getElementById(
-            "loginMessage"
-          )
-          .textContent =
-          "";
-
-
-        showLoginPage();
-
-
-      } catch (error) {
-
-        console.error(
-          "Logout error:",
-          error
-        );
-
-      }
-
+        if (token) {
+          await new Promise(function(resolve) {
+            const callbackName = "logoutResponse_" + Date.now();
+            const script = document.createElement("script");
+            window[callbackName] = function() {
+              delete window[callbackName];
+              if (script.parentNode) script.parentNode.removeChild(script);
+              resolve();
+            };
+            script.src = API_URL + "?action=logout" + "&token=" + encodeURIComponent(token) + "&callback=" + encodeURIComponent(callbackName);
+            script.onerror = function() {
+              delete window[callbackName];
+              if (script.parentNode) script.parentNode.removeChild(script);
+              resolve();
+            };
+            document.body.appendChild(script);
+          });
+        }
+      } catch (error) { console.error("Logout error:", error); }
+      localStorage.removeItem("jayro_token"); localStorage.removeItem("jayro_email"); localStorage.removeItem("jayro_name"); localStorage.removeItem("jayro_role");
+      songs = []; currentSong = null; transposeAmount = 0;
+      document.getElementById("songs").innerHTML = "";
+      document.getElementById("loginEmail").value = "";
+      document.getElementById("loginPassword").value = "";
+      document.getElementById("loginMessage").textContent = "";
+      showLoginPage();
     }
-
-
-    /* =====================================================
-       FIREBASE AUTH STATE
-    ===================================================== */
-
-    firebaseAuth.onAuthStateChanged(
-      function(user) {
-
-        console.log(
-          "Auth state:",
-          user
-            ? user.email
-            : "signed out"
-        );
-
-
-        /*
-          Initial Firebase state check.
-        */
-
-        if (!authInitialized) {
-
-          authInitialized =
-            true;
-
-
-          if (user) {
-
-            showHome();
-
-            loadSongs();
-
-          } else {
-
-            showLoginPage();
-
-          }
-
-
-          return;
-
-        }
-
-
-        /*
-          Later authentication changes.
-        */
-
-        if (user) {
-
-          /*
-            User is authenticated.
-
-            Do not interrupt an active login.
-          */
-
-          if (
-            !loginInProgress
-          ) {
-
-            showHome();
-
-            if (
-              !songs.length
-            ) {
-
-              loadSongs();
-
-            }
-
-          }
-
-        } else {
-
-          /*
-            Only return to login if the user
-            is actually signed out.
-          */
-
-          if (
-            !loginInProgress
-          ) {
-
-            showLoginPage();
-
-          }
-
-        }
-
-      }
-    );
 
 
     /* =====================================================
        LOAD SONGS
     ===================================================== */
-
     function loadSongs() {
-
-  const message =
-    document.getElementById("message");
-
-  const container =
-    document.getElementById("songs");
-
-  message.textContent =
-    "Loading songs...";
-
-  container.innerHTML = "";
-
-
-  const callbackName =
-    "receiveSongs_" + Date.now();
-
-
-  window[callbackName] =
-    function(data) {
-
-      console.log(
-        "Songs received:",
-        data
-      );
-
-
-      songs =
-        Array.isArray(data)
-          ? data
-          : [];
-
-
-      songs.sort(
-        function(a, b) {
-
-          return String(
-            a.name || ""
-          ).localeCompare(
-            String(
-              b.name || ""
-            ),
-            undefined,
-            {
-              sensitivity: "base"
+      return new Promise(function(resolve) {
+        const token = localStorage.getItem("jayro_token");
+        if (!token) { document.getElementById("message").textContent = "Please log in first."; showLoginPage(); resolve(false); return; }
+        const callbackName = "receiveSongs_" + Date.now();
+        const script = document.createElement("script");
+        window[callbackName] = function(data) {
+          try {
+            if (data && data.success === false) {
+              localStorage.removeItem("jayro_token"); localStorage.removeItem("jayro_email"); localStorage.removeItem("jayro_name"); localStorage.removeItem("jayro_role");
+              songs = []; document.getElementById("songs").innerHTML = "";
+              document.getElementById("message").textContent = data.message || "Session expired. Please log in again.";
+              showLoginPage(); resolve(false); return;
             }
-          );
-
-        }
-      );
-
-
-      delete window[
-        callbackName
-      ];
-
-
-      const script =
-        document.getElementById(
-          "songsApiScript"
-        );
-
-
-      if (script) {
-        script.remove();
-      }
-
-
-      displaySongs(
-        songs
-      );
-
-    };
-
-
-  const script =
-    document.createElement(
-      "script"
-    );
-
-
-  script.id =
-    "songsApiScript";
-
-
-  /*
-    IMPORTANT:
-    The Apps Script backend expects
-    the callback parameter.
-  */
-
-  script.src =
-    API_URL +
-    "?callback=" +
-    encodeURIComponent(
-      callbackName
-    );
-
-
-  console.log(
-    "Loading songs from:",
-    script.src
-  );
-
-
-  script.onerror =
-    function() {
-
-      console.error(
-        "Songs API failed."
-      );
-
-
-      message.textContent =
-        "Unable to load songs. Check the Apps Script deployment.";
-
-
-      delete window[
-        callbackName
-      ];
-
-
-      script.remove();
-
-    };
-
-
-  document.body.appendChild(
-    script
-  );
-
-}
+            songs = Array.isArray(data) ? data : [];
+            songs.sort(function(a,b){ return String(a.name||"").localeCompare(String(b.name||""), undefined, {sensitivity:"base"}); });
+            displaySongs(songs); resolve(true);
+          } finally { delete window[callbackName]; if (script.parentNode) script.parentNode.removeChild(script); }
+        };
+        script.src = API_URL + "?action=getSongs" + "&token=" + encodeURIComponent(token) + "&callback=" + encodeURIComponent(callbackName);
+        script.onerror = function(){ document.getElementById("message").textContent="Unable to load songs. Please try again."; delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script); resolve(false); };
+        document.body.appendChild(script);
+      });
+    }
 
 
     /* =====================================================
@@ -2562,196 +2119,27 @@
     /* =====================================================
        REQUEST ACCESS
     ===================================================== */
-
     function submitAccessRequest() {
-
-      const name =
-        document
-          .getElementById(
-            "requestName"
-          )
-          .value
-          .trim();
-
-
-      const email =
-        document
-          .getElementById(
-            "requestEmail"
-          )
-          .value
-          .trim();
-
-
-      const reason =
-        document
-          .getElementById(
-            "requestReason"
-          )
-          .value
-          .trim();
-
-
-      const message =
-        document
-          .getElementById(
-            "requestMessage"
-          );
-
-
-      if (!name) {
-
-        message.textContent =
-          "Please enter your name.";
-
-        return;
-
-      }
-
-
-      if (!email) {
-
-        message.textContent =
-          "Please enter your email.";
-
-        return;
-
-      }
-
-
-      if (!reason) {
-
-        message.textContent =
-          "Please tell us why you need access.";
-
-        return;
-
-      }
-
-
-      message.textContent =
-        "Sending request...";
-
-
-      const callbackName =
-        "accessRequest_" +
-        Date.now();
-
-
-      const script =
-        document.createElement(
-          "script"
-        );
-
-
-      window[callbackName] =
-        function(response) {
-
-          message.textContent =
-            response.message ||
-            "Request submitted.";
-
-
-          if (
-            response.success
-          ) {
-
-            document
-              .getElementById(
-                "requestName"
-              )
-              .value =
-              "";
-
-
-            document
-              .getElementById(
-                "requestEmail"
-              )
-              .value =
-              "";
-
-
-            document
-              .getElementById(
-                "requestReason"
-              )
-              .value =
-              "";
-
-          }
-
-
-          delete window[
-            callbackName
-          ];
-
-
-          if (
-            script.parentNode
-          ) {
-
-            script.parentNode
-              .removeChild(
-                script
-              );
-
-          }
-
-        };
-
-
-      script.src =
-        API_URL +
-        "?action=requestAccess" +
-        "&name=" +
-        encodeURIComponent(
-          name
-        ) +
-        "&email=" +
-        encodeURIComponent(
-          email
-        ) +
-        "&reason=" +
-        encodeURIComponent(
-          reason
-        ) +
-        "&callback=" +
-        encodeURIComponent(
-          callbackName
-        );
-
-
-      script.onerror =
-        function() {
-
-          message.textContent =
-            "Unable to send request. Please try again.";
-
-
-          delete window[
-            callbackName
-          ];
-
-
-          if (
-            script.parentNode
-          ) {
-
-            script.parentNode
-              .removeChild(
-                script
-              );
-
-          }
-
-        };
-
-
-      document.body.appendChild(
-        script
-      );
-
+      const name = document.getElementById("requestName").value.trim();
+      const email = document.getElementById("requestEmail").value.trim();
+      const password = document.getElementById("requestPassword").value;
+      const reason = document.getElementById("requestReason").value.trim();
+      const message = document.getElementById("requestMessage");
+      if (!name) { message.textContent="Please enter your name."; return; }
+      if (!email) { message.textContent="Please enter your email."; return; }
+      if (!password) { message.textContent="Please create a password."; return; }
+      if (password.length < 6) { message.textContent="Password must be at least 6 characters."; return; }
+      if (!reason) { message.textContent="Please tell us why you need access."; return; }
+      message.textContent="Sending request...";
+      const callbackName="accessRequest_"+Date.now(); const script=document.createElement("script");
+      window[callbackName]=function(response){
+        message.textContent=response.message||"Request submitted.";
+        if(response.success){ document.getElementById("requestName").value=""; document.getElementById("requestEmail").value=""; document.getElementById("requestPassword").value=""; document.getElementById("requestReason").value=""; }
+        delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script);
+      };
+      script.src=API_URL+"?action=requestAccess"+"&name="+encodeURIComponent(name)+"&email="+encodeURIComponent(email)+"&password="+encodeURIComponent(password)+"&reason="+encodeURIComponent(reason)+"&callback="+encodeURIComponent(callbackName);
+      script.onerror=function(){ message.textContent="Unable to send request. Please try again."; delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script); };
+      document.body.appendChild(script);
     }
 
 
@@ -2801,6 +2189,11 @@
 
         }
       );
+
+    (function restoreSession() {
+      const token = localStorage.getItem("jayro_token");
+      if (token) { showHome(); loadSongs(); } else { showLoginPage(); }
+    })();
 
   </script>
 

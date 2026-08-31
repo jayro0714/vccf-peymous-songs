@@ -614,15 +614,6 @@
       background: #475569;
     }
 
-    #keyDisplay {
-      min-width: 80px;
-
-      text-align: center;
-
-      font-weight: bold;
-    }
-
-
     /* =====================================================
        CHORDS
     ===================================================== */
@@ -980,10 +971,6 @@
         −
       </button>
 
-      <div id="keyDisplay">
-        Key: -
-      </div>
-
       <button
         type="button"
         onclick="transposeUp()"
@@ -1235,72 +1222,6 @@
       return result;
 
     }
-
-
-    /* =====================================================
-       ORIGINAL KEY
-    ===================================================== */
-
-   function getOriginalKey(text) {
-  if (!text) {
-    return "-";
-  }
-
-  // =====================================================
-  // 1. CHECK FOR EXPLICIT KEY DECLARATION
-  // =====================================================
-
-  const explicitKey = text.match(
-    /(?:^|\n|\r)\s*(?:Key|KEY|key)\s*[:=]\s*([A-G](?:#|b)?)/m
-  );
-
-  if (explicitKey) {
-    return explicitKey[1];
-  }
-
-
-  // =====================================================
-  // 2. SONG-SPECIFIC KEYS
-  // =====================================================
-
-  if (
-    currentSong &&
-    currentSong.name
-  ) {
-    const songName =
-      currentSong.name
-        .trim()
-        .toLowerCase();
-
-    // Above All = G
-    if (songName === "above all") {
-      return "G";
-    }
-
-    // Alive Again = C#
-    if (songName === "alive again") {
-      return "C#";
-    }
-  }
-
-
-  // =====================================================
-  // 3. FALLBACK
-  // =====================================================
-  // If no explicit key or known song key exists,
-  // use the first recognizable chord.
-
-  const chordRegex =
-    /(?:^|[\s(\[\{,;:\-–—])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|\/[A-G]|[\s)\]\},;:.\/\-–—]|$))/g;
-
-  const match = chordRegex.exec(text);
-
-  if (match) {
-    return match[1];
-  }
-
-  return "-";
-}
 
 
     /* =====================================================
@@ -2101,17 +2022,6 @@
         .textContent =
         transposed;
 
-
-      document
-        .getElementById(
-          "keyDisplay"
-        )
-        .textContent =
-        "Key: " +
-        getDisplayedKey(
-          original,
-          transposeAmount
-        );
 
     }
 

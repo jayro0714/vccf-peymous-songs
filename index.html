@@ -1109,10 +1109,43 @@
         );
 
 
+    // Make sure comment exists
+
     if (!comment) {
 
       status.textContent =
         "Please write a comment first.";
+
+      return;
+
+    }
+
+
+    // Ask for name
+
+    const name =
+      prompt(
+        "What's your name?"
+      );
+
+
+    // User pressed Cancel
+
+    if (name === null) {
+      return;
+    }
+
+
+    const cleanName =
+      name.trim();
+
+
+    // Name required
+
+    if (!cleanName) {
+
+      status.textContent =
+        "Please enter your name.";
 
       return;
 
@@ -1132,119 +1165,85 @@
 
 
     /*
-     * Create hidden form
-     * for Google Apps Script.
+     * JSONP callback
      */
 
-    const form =
-      document.createElement(
-        "form"
-      );
+    const callbackName =
+      "commentResponse_" +
+      Date.now();
 
 
-    form.method =
-      "GET";
+    window[callbackName] =
+      function(response) {
+
+        button.disabled =
+          false;
 
 
-    form.action =
-      API_URL;
+        button.textContent =
+          "Send Comment";
 
 
-    form.target =
-      "commentFrame";
+        if (
+          response &&
+          response.success
+        ) {
+
+          status.textContent =
+            "✅ Comment sent.";
+
+          document
+            .getElementById(
+              "commentText"
+            )
+            .value =
+            "";
+
+        }
+
+        else {
+
+          status.textContent =
+            "❌ Unable to send comment.";
+
+        }
 
 
-    // ACTION
+        delete window[callbackName];
 
-    const action =
-      document.createElement(
-        "input"
-      );
-
-
-    action.type =
-      "hidden";
-
-
-    action.name =
-      "action";
-
-
-    action.value =
-      "feedback";
-
-
-    form.appendChild(
-      action
-    );
-
-
-    // SONG
-
-    const song =
-      document.createElement(
-        "input"
-      );
-
-
-    song.type =
-      "hidden";
-
-
-    song.name =
-      "song";
-
-
-    song.value =
-      currentSong.name;
-
-
-    form.appendChild(
-      song
-    );
-
-
-    // COMMENT
-
-    const feedback =
-      document.createElement(
-        "input"
-      );
-
-
-    feedback.type =
-      "hidden";
-
-
-    feedback.name =
-      "feedback";
-
-
-    feedback.value =
-      comment;
-
-
-    form.appendChild(
-      feedback
-    );
-
-
-    document.body.appendChild(
-      form
-    );
-
-
-    form.submit();
-
-
-    form.remove();
+      };
 
 
     /*
-     * Confirmation message.
+     * Create script request
      */
 
-    setTimeout(
+    const script =
+      document.createElement(
+        "script"
+      );
+
+
+    script.src =
+      API_URL +
+      "?action=comment" +
+      "&song=" +
+      encodeURIComponent(
+        currentSong.name
+      ) +
+      "&name=" +
+      encodeURIComponent(
+        cleanName
+      ) +
+      "&comment=" +
+      encodeURIComponent(
+        comment
+      ) +
+      "&callback=" +
+      callbackName;
+
+
+    script.onerror =
       function() {
 
         button.disabled =
@@ -1256,45 +1255,22 @@
 
 
         status.textContent =
-          "✅ Comment sent.";
+          "❌ Unable to send comment.";
 
 
-        document
-          .getElementById(
-            "commentText"
-          )
-          .value =
-          "";
+        delete window[callbackName];
 
-      },
-      800
+
+        script.remove();
+
+      };
+
+
+    document.body.appendChild(
+      script
     );
 
   }
-
-
-
-  // ==========================================
-  // HIDDEN IFRAME
-  // ==========================================
-
-  const commentFrame =
-    document.createElement(
-      "iframe"
-    );
-
-
-  commentFrame.name =
-    "commentFrame";
-
-
-  commentFrame.style.display =
-    "none";
-
-
-  document.body.appendChild(
-    commentFrame
-  );
 
 
 

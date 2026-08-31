@@ -1499,48 +1499,94 @@
        LOGIN
     ===================================================== */
     async function login() {
-      const emailInput = document.getElementById("loginEmail");
-      const passwordInput = document.getElementById("loginPassword");
-      const button = document.getElementById("loginButton");
-      const message = document.getElementById("loginMessage");
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-      if (!email) { message.textContent = "Please enter your email."; return; }
-      if (!password) { message.textContent = "Please enter your password."; return; }
-      if (loginInProgress) return;
-      loginInProgress = true; button.disabled = true; button.textContent = "Signing in..."; message.textContent = "Checking access...";
-      const callbackName = "loginResponse_" + Date.now();
-      const script = document.createElement("script");
-      window[callbackName] = async function(response) {
-        try {
-          if (response && response.success) {
-            localStorage.setItem("jayro_token", response.token || "");
-            localStorage.setItem("jayro_email", response.email || email);
-            localStorage.setItem("jayro_name", response.name || "");
-            localStorage.setItem("jayro_role", response.role || "User");
-            message.textContent = "";
-            showHome();
-            await loadSongs();
-          } else {
-            message.textContent = response && response.message ? response.message : "Unable to log in.";
-          }
-        } catch (error) {
-          console.error("Login error:", error);
-          message.textContent = error.message || "Unable to log in.";
-        } finally {
-          loginInProgress = false; button.disabled = false; button.textContent = "Login";
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-        }
-      };
-      script.src = API_URL + "?action=login" + "&email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password) + "&callback=" + encodeURIComponent(callbackName);
-      script.onerror = function() {
-        loginInProgress = false; button.disabled = false; button.textContent = "Login";
-        message.textContent = "Unable to connect to the server. Please try again.";
-        delete window[callbackName]; if (script.parentNode) script.parentNode.removeChild(script);
-      };
-      document.body.appendChild(script);
+  const emailInput = document.getElementById("loginEmail");
+  const passwordInput = document.getElementById("loginPassword");
+  const button = document.getElementById("loginButton");
+  const message = document.getElementById("loginMessage");
+
+  const email = emailInput.value.trim().toLowerCase();
+  const password = passwordInput.value;
+
+  if (!email) {
+    message.textContent = "Please enter your email.";
+    return;
+  }
+
+  if (!password) {
+    message.textContent = "Please enter your password.";
+    return;
+  }
+
+  if (loginInProgress) {
+    return;
+  }
+
+  loginInProgress = true;
+
+  button.disabled = true;
+  button.textContent = "Signing in...";
+  message.textContent = "Signing in...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify({
+        action: "login",
+        email: email,
+        password: password
+      })
+    });
+
+    const result = await response.json();
+
+    console.log("Login response:", result);
+
+    if (!result.success) {
+      message.textContent =
+        result.message || "Unable to log in.";
+
+      return;
     }
+
+    // Save Apps Script session
+    sessionStorage.setItem(
+      "jayroSessionToken",
+      result.token
+    );
+
+    sessionStorage.setItem(
+      "jayroUser",
+      JSON.stringify({
+        email: result.email,
+        name: result.name,
+        role: result.role
+      })
+    );
+
+    // Login successful
+    message.textContent = "";
+
+    showHome();
+
+    // Load songs using the new session
+    await loadSongs();
+
+  } catch (error) {
+    console.error("Login error:", error);
+
+    message.textContent =
+      "Unable to connect to the server.";
+
+  } finally {
+    loginInProgress = false;
+
+    button.disabled = false;
+    button.textContent = "Login";
+  }
+}
 
 
     /* =====================================================

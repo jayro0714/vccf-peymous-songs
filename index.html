@@ -71,7 +71,10 @@
       color: #94a3b8;
     }
 
-    /* SONG PAGE */
+
+    /* ==========================
+       SONG PAGE
+    ========================== */
 
     #songPage {
       display: none;
@@ -99,7 +102,10 @@
       margin-bottom: 20px;
     }
 
-    /* TRANSPOSE */
+
+    /* ==========================
+       TRANSPOSE
+    ========================== */
 
     .transpose {
       display: flex;
@@ -138,7 +144,10 @@
       font-weight: bold;
     }
 
-    /* CHORDS */
+
+    /* ==========================
+       CHORDS
+    ========================== */
 
     #chords {
       background: #111827;
@@ -151,56 +160,47 @@
       overflow-x: auto;
     }
 
-    /* FEEDBACK */
 
-    .feedback-section {
+    /* ==========================
+       COMMENTS
+    ========================== */
+
+    .comments {
       margin-top: 35px;
       padding: 22px;
       background: #1e293b;
       border-radius: 12px;
     }
 
-    .feedback-section h2 {
-      margin: 0 0 8px;
+    .comments h2 {
+      margin: 0 0 18px;
       font-size: 21px;
     }
 
-    .feedback-description {
-      margin: 0 0 18px;
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .feedback-input,
-    .feedback-textarea {
+    #commentText {
       width: 100%;
+      min-height: 120px;
+      padding: 14px;
+      resize: vertical;
       border: none;
       outline: none;
       border-radius: 8px;
-      padding: 13px;
-      font-size: 15px;
-      font-family: Arial, sans-serif;
       background: #0f172a;
       color: white;
-      margin-bottom: 12px;
+      font-size: 15px;
+      font-family: Arial, sans-serif;
     }
 
-    .feedback-input::placeholder,
-    .feedback-textarea::placeholder {
+    #commentText::placeholder {
       color: #64748b;
     }
 
-    .feedback-textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .feedback-button {
+    #sendComment {
       width: 100%;
+      margin-top: 12px;
+      padding: 13px;
       border: none;
       border-radius: 8px;
-      padding: 13px;
       background: #3b82f6;
       color: white;
       font-size: 15px;
@@ -208,23 +208,26 @@
       cursor: pointer;
     }
 
-    .feedback-button:hover {
+    #sendComment:hover {
       background: #2563eb;
     }
 
-    .feedback-button:disabled {
+    #sendComment:disabled {
       opacity: 0.6;
       cursor: not-allowed;
     }
 
-    #feedbackStatus {
-      margin-top: 12px;
+    #commentStatus {
       text-align: center;
+      margin-top: 12px;
       font-size: 14px;
       color: #94a3b8;
     }
 
-    /* MOBILE */
+
+    /* ==========================
+       MOBILE
+    ========================== */
 
     @media (max-width: 600px) {
 
@@ -245,7 +248,7 @@
         gap: 10px;
       }
 
-      .feedback-section {
+      .comments {
         padding: 18px;
       }
 
@@ -260,8 +263,8 @@
 
 
   <!-- ==========================
-       HOME / SONG LIST
-  =========================== -->
+       HOME PAGE
+  ========================== -->
 
   <div id="homePage">
 
@@ -294,7 +297,7 @@
 
   <!-- ==========================
        SONG PAGE
-  =========================== -->
+  ========================== -->
 
   <div id="songPage">
 
@@ -348,50 +351,31 @@
 
 
 
-    <!-- ==========================
-         CHORD FEEDBACK
-    =========================== -->
+    <!-- COMMENTS -->
 
-    <div class="feedback-section">
+    <div class="comments">
 
       <h2>
-        🎸 Chord Feedback
+        💬 Comments
       </h2>
 
 
-      <p class="feedback-description">
-        Found an incorrect chord or have a suggestion?
-        Let me know.
-      </p>
-
-
-      <input
-        type="text"
-        id="feedbackName"
-        class="feedback-input"
-        placeholder="Your name (optional)"
-        maxlength="100"
-      >
-
-
       <textarea
-        id="feedbackText"
-        class="feedback-textarea"
-        placeholder="Write your feedback, correction, or question..."
+        id="commentText"
+        placeholder="Write a comment"
         maxlength="2000"
       ></textarea>
 
 
       <button
-        id="feedbackButton"
-        class="feedback-button"
-        onclick="submitFeedback()"
+        id="sendComment"
+        onclick="submitComment()"
       >
-        Send Feedback
+        Send Comment
       </button>
 
 
-      <div id="feedbackStatus"></div>
+      <div id="commentStatus"></div>
 
     </div>
 
@@ -660,7 +644,7 @@
 
     document
       .getElementById(
-        "feedbackName"
+        "commentText"
       )
       .value =
       "";
@@ -668,15 +652,7 @@
 
     document
       .getElementById(
-        "feedbackText"
-      )
-      .value =
-      "";
-
-
-    document
-      .getElementById(
-        "feedbackStatus"
+        "commentStatus"
       )
       .textContent =
       "";
@@ -695,7 +671,7 @@
 
 
   // ==========================================
-  // BACK TO HOME
+  // BACK TO SONGS
   // ==========================================
 
   function showHome() {
@@ -824,7 +800,7 @@
 
 
   // ==========================================
-  // NOTE MAP
+  // CHROMATIC NOTES
   // ==========================================
 
   const chromaticNotes = [
@@ -845,6 +821,10 @@
   ];
 
 
+
+  // ==========================================
+  // NOTE TO NUMBER
+  // ==========================================
 
   function noteToNumber(note) {
 
@@ -893,7 +873,7 @@
 
 
   // ==========================================
-  // TRANSPOSE CHORD
+  // TRANSPOSE SINGLE CHORD
   // ==========================================
 
   function transposeChord(
@@ -981,11 +961,6 @@
 
     }
 
-
-    /*
-     * Match chord symbols while
-     * avoiding normal words.
-     */
 
     return text.replace(
 
@@ -1101,29 +1076,20 @@
 
 
   // ==========================================
-  // SUBMIT CHORD FEEDBACK
+  // SUBMIT COMMENT
   // ==========================================
 
-  function submitFeedback() {
+  function submitComment() {
 
     if (!currentSong) {
       return;
     }
 
 
-    const name =
+    const comment =
       document
         .getElementById(
-          "feedbackName"
-        )
-        .value
-        .trim();
-
-
-    const feedback =
-      document
-        .getElementById(
-          "feedbackText"
+          "commentText"
         )
         .value
         .trim();
@@ -1132,21 +1098,21 @@
     const button =
       document
         .getElementById(
-          "feedbackButton"
+          "sendComment"
         );
 
 
     const status =
       document
         .getElementById(
-          "feedbackStatus"
+          "commentStatus"
         );
 
 
-    if (!feedback) {
+    if (!comment) {
 
       status.textContent =
-        "Please write some feedback first.";
+        "Please write a comment first.";
 
       return;
 
@@ -1166,11 +1132,8 @@
 
 
     /*
-     * Use a hidden form submission.
-     *
-     * This allows the Vercel website
-     * to send data to Google Apps Script
-     * without CORS problems.
+     * Create hidden form
+     * for Google Apps Script.
      */
 
     const form =
@@ -1188,98 +1151,81 @@
 
 
     form.target =
-      "feedbackFrame";
+      "commentFrame";
 
 
-    const actionInput =
+    // ACTION
+
+    const action =
       document.createElement(
         "input"
       );
 
 
-    actionInput.type =
+    action.type =
       "hidden";
 
 
-    actionInput.name =
+    action.name =
       "action";
 
 
-    actionInput.value =
+    action.value =
       "feedback";
 
 
     form.appendChild(
-      actionInput
+      action
     );
 
 
-    const songInput =
+    // SONG
+
+    const song =
       document.createElement(
         "input"
       );
 
 
-    songInput.type =
+    song.type =
       "hidden";
 
 
-    songInput.name =
+    song.name =
       "song";
 
 
-    songInput.value =
+    song.value =
       currentSong.name;
 
 
     form.appendChild(
-      songInput
+      song
     );
 
 
-    const nameInput =
+    // COMMENT
+
+    const feedback =
       document.createElement(
         "input"
       );
 
 
-    nameInput.type =
+    feedback.type =
       "hidden";
 
 
-    nameInput.name =
-      "name";
-
-
-    nameInput.value =
-      name || "Anonymous";
-
-
-    form.appendChild(
-      nameInput
-    );
-
-
-    const feedbackInput =
-      document.createElement(
-        "input"
-      );
-
-
-    feedbackInput.type =
-      "hidden";
-
-
-    feedbackInput.name =
+    feedback.name =
       "feedback";
 
 
-    feedbackInput.value =
-      feedback;
+    feedback.value =
+      comment;
 
 
     form.appendChild(
-      feedbackInput
+      feedback
     );
 
 
@@ -1295,7 +1241,7 @@
 
 
     /*
-     * Show success message.
+     * Confirmation message.
      */
 
     setTimeout(
@@ -1306,16 +1252,16 @@
 
 
         button.textContent =
-          "Send Feedback";
+          "Send Comment";
 
 
         status.textContent =
-          "✅ Thanks! Your feedback has been sent.";
+          "✅ Comment sent.";
 
 
         document
           .getElementById(
-            "feedbackText"
+            "commentText"
           )
           .value =
           "";
@@ -1329,31 +1275,31 @@
 
 
   // ==========================================
-  // HIDDEN FRAME FOR FEEDBACK
+  // HIDDEN IFRAME
   // ==========================================
 
-  const feedbackFrame =
+  const commentFrame =
     document.createElement(
       "iframe"
     );
 
 
-  feedbackFrame.name =
-    "feedbackFrame";
+  commentFrame.name =
+    "commentFrame";
 
 
-  feedbackFrame.style.display =
+  commentFrame.style.display =
     "none";
 
 
   document.body.appendChild(
-    feedbackFrame
+    commentFrame
   );
 
 
 
   // ==========================================
-  // START
+  // START APP
   // ==========================================
 
   loadSongs();
@@ -1363,4 +1309,5 @@
 
 
 </body>
+
 </html>

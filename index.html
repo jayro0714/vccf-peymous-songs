@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -9,9 +10,14 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>VCCF Peymous Songs List</title>
+  <title>Jayro Chords</title>
+
 
   <style>
+
+    /* =====================================================
+       GLOBAL
+    ===================================================== */
 
     * {
       box-sizing: border-box;
@@ -30,141 +36,374 @@
       font-family: Arial, sans-serif;
     }
 
-    /* =========================================
+
+    /* =====================================================
        HOME PAGE
-    ========================================= */
+    ===================================================== */
 
     #homePage {
       min-height: 100vh;
+
       display: flex;
       flex-direction: column;
     }
 
+
     header {
       text-align: center;
+
       padding: 30px 15px 20px;
     }
 
+
     header h1 {
       margin: 0 0 20px;
+
       font-size: 32px;
     }
+
 
     #search {
       width: 90%;
       max-width: 500px;
+
       padding: 14px 16px;
+
       border: none;
       border-radius: 10px;
+
       outline: none;
+
       font-size: 16px;
     }
+
 
     #songs {
       width: 90%;
       max-width: 700px;
+
       margin: 10px auto 40px;
+
       flex: 1;
     }
 
+
     .song {
       background: #1e293b;
+
       padding: 17px;
+
       margin-bottom: 10px;
+
       border-radius: 10px;
+
       cursor: pointer;
+
       font-weight: bold;
+
       transition: 0.2s;
     }
 
+
     .song:hover {
       background: #334155;
+
       transform: translateY(-1px);
     }
 
+
     #message {
       text-align: center;
+
       color: #94a3b8;
+
       margin: 30px;
     }
 
-    /* =========================================
+
+
+    /* =====================================================
        SONG PAGE
-    ========================================= */
+    ===================================================== */
 
     #songPage {
       display: none;
+
       width: 90%;
       max-width: 800px;
+
       margin: 30px auto 0;
+
       min-height: calc(100vh - 30px);
     }
 
-    .back {
-      display: inline-block;
+
+
+    /* =====================================================
+       SONG NAVIGATION
+    ===================================================== */
+
+    .song-navigation {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
       margin-bottom: 20px;
-      color: #60a5fa;
-      font-weight: bold;
-      cursor: pointer;
+
+      flex-wrap: wrap;
     }
 
+
+    .back {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 11px 15px;
+
+      background: #1e293b;
+
+      color: #60a5fa;
+
+      border-radius: 8px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      white-space: nowrap;
+
+      transition: 0.2s;
+    }
+
+
     .back:hover {
+
+      background: #334155;
+
       color: #93c5fd;
     }
 
+
+
+    /* =====================================================
+       SEARCH ANOTHER SONG
+    ===================================================== */
+
+    .song-search-container {
+
+      position: relative;
+
+      flex: 1;
+
+      min-width: 220px;
+    }
+
+
+    #songSearch {
+
+      width: 100%;
+
+      padding: 12px 15px;
+
+      background: #1e293b;
+
+      color: white;
+
+      border: 1px solid #334155;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 15px;
+    }
+
+
+    #songSearch::placeholder {
+
+      color: #94a3b8;
+    }
+
+
+    #songSearch:focus {
+
+      border-color: #60a5fa;
+    }
+
+
+
+    /* =====================================================
+       SONG SEARCH RESULTS
+    ===================================================== */
+
+    #songSearchResults {
+
+      position: absolute;
+
+      top: calc(100% + 6px);
+
+      left: 0;
+
+      right: 0;
+
+      z-index: 1000;
+
+      background: #1e293b;
+
+      border: 1px solid #334155;
+
+      border-radius: 8px;
+
+      overflow: hidden;
+
+      display: none;
+
+      max-height: 300px;
+
+      overflow-y: auto;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+
+    .song-search-result {
+
+      padding: 13px 15px;
+
+      cursor: pointer;
+
+      border-bottom: 1px solid #334155;
+
+      font-size: 14px;
+
+      color: white;
+
+    }
+
+
+    .song-search-result:last-child {
+
+      border-bottom: none;
+    }
+
+
+    .song-search-result:hover {
+
+      background: #334155;
+    }
+
+
+    .song-search-no-results {
+
+      padding: 13px 15px;
+
+      color: #94a3b8;
+
+      font-size: 14px;
+
+    }
+
+
+
+    /* =====================================================
+       SONG TITLE
+    ===================================================== */
+
     #songTitle {
+
       font-size: 34px;
+
       margin: 0 0 20px;
     }
 
-    /* =========================================
+
+
+    /* =====================================================
        TRANSPOSE
-    ========================================= */
+    ===================================================== */
 
     .transpose {
+
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       gap: 15px;
+
       padding: 15px;
+
       margin-bottom: 20px;
+
       background: #1e293b;
+
       border-radius: 10px;
     }
 
+
     .transpose span {
+
       font-weight: bold;
     }
 
+
     .transpose button {
+
       width: 45px;
+
       height: 40px;
+
       border: none;
+
       border-radius: 8px;
+
       background: #334155;
+
       color: white;
+
       font-size: 22px;
+
       font-weight: bold;
+
       cursor: pointer;
     }
 
+
     .transpose button:hover {
+
       background: #475569;
     }
 
+
     #keyDisplay {
+
       min-width: 80px;
+
       text-align: center;
+
       font-weight: bold;
     }
 
-    /* =========================================
+
+
+    /* =====================================================
        CHORDS
-    ========================================= */
+    ===================================================== */
 
     #chords {
+
       background: #111827;
+
       padding: 25px;
+
       border-radius: 10px;
 
       white-space: pre-wrap;
@@ -178,12 +417,16 @@
       overflow-x: auto;
     }
 
-    /* =========================================
+
+
+    /* =====================================================
        FOOTER
-    ========================================= */
+    ===================================================== */
 
     .site-footer {
+
       margin-top: 50px;
+
       padding: 30px 20px;
 
       text-align: center;
@@ -193,58 +436,112 @@
       color: #94a3b8;
     }
 
+
     .footer-brand {
+
       font-size: 18px;
+
       font-weight: bold;
 
-      color: #ffffff;
+      color: white;
 
       margin-bottom: 8px;
+
+      letter-spacing: 0.3px;
     }
 
+
     .footer-copyright {
+
       font-size: 13px;
+
       color: #64748b;
     }
 
-    /* =========================================
+
+
+    /* =====================================================
        MOBILE
-    ========================================= */
+    ===================================================== */
 
     @media (max-width: 600px) {
 
       header h1 {
+
         font-size: 25px;
       }
 
+
       #songTitle {
+
         font-size: 28px;
       }
 
-      #chords {
-        font-size: 16px;
-        padding: 18px;
+
+      .song-navigation {
+
+        align-items: stretch;
       }
 
+
+      .back {
+
+        width: 100%;
+      }
+
+
+      .song-search-container {
+
+        width: 100%;
+
+        min-width: 0;
+      }
+
+
+      #songSearch {
+
+        width: 100%;
+      }
+
+
       .transpose {
+
         gap: 10px;
       }
 
+
       .transpose button {
+
         width: 42px;
+
         height: 38px;
       }
 
+
+      #chords {
+
+        font-size: 16px;
+
+        padding: 18px;
+      }
+
+
       .site-footer {
+
         margin-top: 40px;
+
         padding: 25px 15px;
       }
 
+
       .footer-brand {
+
         font-size: 16px;
       }
 
+
       .footer-copyright {
+
         font-size: 12px;
       }
 
@@ -255,20 +552,23 @@
 </head>
 
 
+
 <body>
 
 
-  <!-- =======================================
+  <!-- =====================================================
        HOME PAGE
-  ======================================= -->
+  ===================================================== -->
 
   <div id="homePage">
+
 
     <header>
 
       <h1>
         🎵 VCCF Peymous Songs List
       </h1>
+
 
       <input
         id="search"
@@ -287,31 +587,68 @@
       Loading songs...
     </div>
 
+
   </div>
 
 
 
-  <!-- =======================================
+  <!-- =====================================================
        SONG PAGE
-  ======================================= -->
+  ===================================================== -->
 
   <div id="songPage">
 
 
-    <div
-      class="back"
-      onclick="showHome()"
-    >
-      ← Back to Songs
+    <!-- ===================================================
+         NAVIGATION + SEARCH
+    ==================================================== -->
+
+    <div class="song-navigation">
+
+
+      <div
+        class="back"
+        onclick="showHome()"
+      >
+        ← Back to Songs
+      </div>
+
+
+      <div class="song-search-container">
+
+
+        <input
+          id="songSearch"
+          type="text"
+          placeholder="🔍 Search another song..."
+          autocomplete="off"
+        >
+
+
+        <div id="songSearchResults"></div>
+
+
+      </div>
+
+
     </div>
 
+
+
+    <!-- ===================================================
+         SONG TITLE
+    ==================================================== -->
 
     <h1 id="songTitle"></h1>
 
 
-    <!-- TRANSPOSE -->
+
+    <!-- ===================================================
+         TRANSPOSE
+    ==================================================== -->
 
     <div class="transpose">
+
 
       <span>
         Transpose
@@ -338,25 +675,35 @@
         +
       </button>
 
+
     </div>
 
 
-    <!-- CHORDS -->
+
+    <!-- ===================================================
+         CHORDS
+    ==================================================== -->
 
     <div id="chords"></div>
 
 
-    <!-- FOOTER -->
+
+    <!-- ===================================================
+         FOOTER
+    ==================================================== -->
 
     <footer class="site-footer">
+
 
       <div class="footer-brand">
         🎵 jayrochords.com
       </div>
 
+
       <div class="footer-copyright">
         © 2026 Jayro
       </div>
+
 
     </footer>
 
@@ -369,11 +716,12 @@
 
 
   // =====================================================
-  // GOOGLE APPS SCRIPT
+  // GOOGLE APPS SCRIPT URL
   // =====================================================
 
   const API_URL =
     "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
+
 
 
   // =====================================================
@@ -387,31 +735,44 @@
   let transposeAmount = 0;
 
 
+
   // =====================================================
-  // CHROMATIC NOTES
+  // PREFERRED CHROMATIC NOTES
   //
-  // Preferred spelling:
+  // We use:
   //
-  // Ab -> G#
-  // A# -> Bb
+  // G# instead of Ab
+  // Bb instead of A#
   // =====================================================
 
   const chromaticNotes = [
 
     "C",
+
     "C#",
+
     "D",
+
     "Eb",
+
     "E",
+
     "F",
+
     "F#",
+
     "G",
+
     "G#",
+
     "A",
+
     "Bb",
+
     "B"
 
   ];
+
 
 
   // =====================================================
@@ -457,9 +818,11 @@
 
     };
 
+
     return map[note];
 
   }
+
 
 
   // =====================================================
@@ -507,21 +870,31 @@
   }
 
 
+
   // =====================================================
   // TRANSPOSE CHORDS
   //
-  // FIXED:
+  // Handles:
   //
-  // Slash chords now support:
+  // C
+  // Cm
+  // C7
+  // Cmaj7
+  // Csus4
   //
+  // Slash chords:
+  //
+  // C/F
   // C#/F#m
   // Eb/F#
   // D/F#
   // Cm/Bb
-  // G#/B
   // F#m/C#
   //
-  // The suffix after the bass note is preserved.
+  // Also handles chords inside:
+  //
+  // ( )
+  // [ ]
   // =====================================================
 
   function transposeChords(
@@ -540,6 +913,7 @@
 
 
     let result = text;
+
 
 
     // =================================================
@@ -572,25 +946,30 @@
       );
 
 
+
     // =================================================
     // STEP 2
-    // TRANSPOSE SLASH BASS NOTES
+    // TRANSPOSE SLASH CHORD BASS NOTES
     //
-    // THIS IS THE IMPORTANT FIX
+    // IMPORTANT:
+    //
+    // This supports:
+    //
+    // /F#
+    // /F#m
+    // /Bb
+    // /Bbm
+    // /C#
+    // /C#m
+    //
+    // Example:
+    //
+    // C#/F#m
+    //
+    // becomes:
+    //
+    // D/Gm
     // =================================================
-
-    /*
-      Previously this only worked when the bass note
-      was followed by a space or punctuation.
-
-      That failed on:
-
-        C#/F#m
-
-      because F# is followed by "m".
-
-      Now we allow chord suffixes after the bass note.
-    */
 
     const bassRegex =
       /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
@@ -621,8 +1000,9 @@
   }
 
 
+
   // =====================================================
-  // FIND ORIGINAL KEY
+  // GET ORIGINAL KEY
   // =====================================================
 
   function getOriginalKey(text) {
@@ -635,6 +1015,12 @@
 
 
     // Check key at beginning.
+    //
+    // Example:
+    //
+    // (Eb)
+    // (Ab)
+    // (F#)
 
     const keyAtStart =
       text.match(
@@ -667,6 +1053,7 @@
     return firstChord[1];
 
   }
+
 
 
   // =====================================================
@@ -720,6 +1107,7 @@
   }
 
 
+
   // =====================================================
   // LOAD SONGS
   // =====================================================
@@ -740,7 +1128,9 @@
             : [];
 
 
-        // Alphabetical A-Z
+        // =================================================
+        // SORT SONGS ALPHABETICALLY
+        // =================================================
 
         songs.sort(
           function(a, b) {
@@ -834,8 +1224,9 @@
   }
 
 
+
   // =====================================================
-  // DISPLAY SONGS
+  // DISPLAY HOME SONGS
   // =====================================================
 
   function displaySongs(
@@ -912,8 +1303,9 @@
   }
 
 
+
   // =====================================================
-  // SEARCH
+  // HOME SEARCH
   // =====================================================
 
   document
@@ -965,6 +1357,211 @@
     );
 
 
+
+  // =====================================================
+  // SEARCH ANOTHER SONG
+  // =====================================================
+
+  const songSearch =
+    document.getElementById(
+      "songSearch"
+    );
+
+
+  const songSearchResults =
+    document.getElementById(
+      "songSearchResults"
+    );
+
+
+
+  songSearch.addEventListener(
+    "input",
+    function() {
+
+      const searchText =
+        this.value
+          .trim()
+          .toLowerCase();
+
+
+      // Hide results if empty.
+
+      if (!searchText) {
+
+        songSearchResults.style.display =
+          "none";
+
+        songSearchResults.innerHTML =
+          "";
+
+        return;
+
+      }
+
+
+      // Find matching songs.
+
+      const matches =
+        songs.filter(
+          function(song) {
+
+            return String(
+              song.name || ""
+            )
+            .toLowerCase()
+            .includes(
+              searchText
+            );
+
+          }
+        );
+
+
+      songSearchResults.innerHTML =
+        "";
+
+
+      // No matches.
+
+      if (
+        matches.length === 0
+      ) {
+
+        const noResults =
+          document.createElement(
+            "div"
+          );
+
+
+        noResults.className =
+          "song-search-no-results";
+
+
+        noResults.textContent =
+          "No songs found.";
+
+
+        songSearchResults.appendChild(
+          noResults
+        );
+
+
+        songSearchResults.style.display =
+          "block";
+
+
+        return;
+
+      }
+
+
+      // Display matching songs.
+
+      matches
+        .slice(0, 15)
+        .forEach(
+          function(song) {
+
+            const result =
+              document.createElement(
+                "div"
+              );
+
+
+            result.className =
+              "song-search-result";
+
+
+            result.textContent =
+              song.name;
+
+
+            result.onclick =
+              function() {
+
+                openSongFromSearch(
+                  song
+                );
+
+              };
+
+
+            songSearchResults.appendChild(
+              result
+            );
+
+          }
+        );
+
+
+      songSearchResults.style.display =
+        "block";
+
+    }
+  );
+
+
+
+  // =====================================================
+  // OPEN SONG FROM SEARCH
+  // =====================================================
+
+  function openSongFromSearch(
+    song
+  ) {
+
+    songSearch.value =
+      "";
+
+
+    songSearchResults.innerHTML =
+      "";
+
+
+    songSearchResults.style.display =
+      "none";
+
+
+    openSong(
+      song
+    );
+
+  }
+
+
+
+  // =====================================================
+  // CLOSE SONG SEARCH WHEN CLICKING OUTSIDE
+  // =====================================================
+
+  document.addEventListener(
+    "click",
+    function(event) {
+
+      const container =
+        document.querySelector(
+          ".song-search-container"
+        );
+
+
+      if (
+        container &&
+        !container.contains(
+          event.target
+        )
+      ) {
+
+        songSearchResults.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+
   // =====================================================
   // OPEN SONG
   // =====================================================
@@ -1005,6 +1602,20 @@
       song.name;
 
 
+    // Clear another-song search.
+
+    songSearch.value =
+      "";
+
+
+    songSearchResults.innerHTML =
+      "";
+
+
+    songSearchResults.style.display =
+      "none";
+
+
     updateSong();
 
 
@@ -1014,6 +1625,7 @@
     );
 
   }
+
 
 
   // =====================================================
@@ -1028,6 +1640,18 @@
 
     transposeAmount =
       0;
+
+
+    songSearch.value =
+      "";
+
+
+    songSearchResults.innerHTML =
+      "";
+
+
+    songSearchResults.style.display =
+      "none";
 
 
     document
@@ -1054,6 +1678,7 @@
   }
 
 
+
   // =====================================================
   // TRANSPOSE UP
   // =====================================================
@@ -1075,6 +1700,7 @@
   }
 
 
+
   // =====================================================
   // TRANSPOSE DOWN
   // =====================================================
@@ -1094,6 +1720,7 @@
     updateSong();
 
   }
+
 
 
   // =====================================================
@@ -1144,11 +1771,13 @@
   }
 
 
+
   // =====================================================
-  // START APPLICATION
+  // START APP
   // =====================================================
 
   loadSongs();
+
 
 </script>
 

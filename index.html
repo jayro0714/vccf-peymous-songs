@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -23,6 +24,7 @@
       color: white;
       font-family: Arial, sans-serif;
     }
+
 
     /* =========================================
        HOME PAGE
@@ -159,15 +161,10 @@
       background: #111827;
       padding: 25px;
       border-radius: 10px;
-
       white-space: pre-wrap;
-
       font-family: "Courier New", monospace;
-
       font-size: 18px;
-
       line-height: 1.7;
-
       overflow-x: auto;
     }
 
@@ -255,10 +252,7 @@
     <h1 id="songTitle"></h1>
 
 
-
-    <!-- =====================================
-         TRANSPOSE
-    ====================================== -->
+    <!-- TRANSPOSE -->
 
     <div class="transpose">
 
@@ -290,10 +284,7 @@
     </div>
 
 
-
-    <!-- =====================================
-         CHORDS
-    ====================================== -->
+    <!-- CHORDS -->
 
     <div id="chords"></div>
 
@@ -310,7 +301,6 @@
 
   const API_URL =
     "https://script.google.com/macros/s/AKfycbyAbVFUV4zRmG9luRmr4sNeBB1H7OJZpIu5bghyfbZtvLaPr2sEm5Jo5W0qI8HkUdy9HQ/exec";
-
 
 
   // =====================================================
@@ -345,7 +335,30 @@
             : [];
 
 
-        delete window[callbackName];
+        // ==========================================
+        // SORT SONGS ALPHABETICALLY A-Z
+        // ==========================================
+
+        songs.sort(function(a, b) {
+
+          return String(
+            a.name || ""
+          ).localeCompare(
+            String(
+              b.name || ""
+            ),
+            undefined,
+            {
+              sensitivity: "base"
+            }
+          );
+
+        });
+
+
+        delete window[
+          callbackName
+        ];
 
 
         const oldScript =
@@ -365,7 +378,9 @@
 
 
     const script =
-      document.createElement("script");
+      document.createElement(
+        "script"
+      );
 
 
     script.id =
@@ -384,12 +399,16 @@
       function() {
 
         document
-          .getElementById("message")
+          .getElementById(
+            "message"
+          )
           .textContent =
           "Unable to load songs. Please try again.";
 
 
-        delete window[callbackName];
+        delete window[
+          callbackName
+        ];
 
 
         script.remove();
@@ -397,7 +416,11 @@
       };
 
 
-    document.body.appendChild(script);
+    document
+      .body
+      .appendChild(
+        script
+      );
 
   }
 
@@ -407,17 +430,24 @@
   // DISPLAY SONGS
   // =====================================================
 
-  function displaySongs(list) {
+  function displaySongs(
+    list
+  ) {
 
     const container =
-      document.getElementById("songs");
+      document.getElementById(
+        "songs"
+      );
 
 
     const message =
-      document.getElementById("message");
+      document.getElementById(
+        "message"
+      );
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+      "";
 
 
     if (
@@ -437,31 +467,39 @@
       "";
 
 
-    list.forEach(function(song) {
+    list.forEach(
+      function(song) {
 
-      const div =
-        document.createElement("div");
-
-
-      div.className =
-        "song";
-
-
-      div.textContent =
-        song.name;
+        const div =
+          document.createElement(
+            "div"
+          );
 
 
-      div.onclick =
-        function() {
-
-          openSong(song);
-
-        };
+        div.className =
+          "song";
 
 
-      container.appendChild(div);
+        div.textContent =
+          song.name;
 
-    });
+
+        div.onclick =
+          function() {
+
+            openSong(
+              song
+            );
+
+          };
+
+
+        container.appendChild(
+          div
+        );
+
+      }
+    );
 
   }
 
@@ -472,7 +510,9 @@
   // =====================================================
 
   document
-    .getElementById("search")
+    .getElementById(
+      "search"
+    )
     .addEventListener(
       "input",
       function() {
@@ -485,7 +525,9 @@
 
         if (!searchText) {
 
-          displaySongs(songs);
+          displaySongs(
+            songs
+          );
 
           return;
 
@@ -500,13 +542,17 @@
                 song.name || ""
               )
               .toLowerCase()
-              .includes(searchText);
+              .includes(
+                searchText
+              );
 
             }
           );
 
 
-        displaySongs(filtered);
+        displaySongs(
+          filtered
+        );
 
       }
     );
@@ -517,7 +563,9 @@
   // OPEN SONG
   // =====================================================
 
-  function openSong(song) {
+  function openSong(
+    song
+  ) {
 
     currentSong =
       song;
@@ -528,19 +576,25 @@
 
 
     document
-      .getElementById("homePage")
+      .getElementById(
+        "homePage"
+      )
       .style.display =
       "none";
 
 
     document
-      .getElementById("songPage")
+      .getElementById(
+        "songPage"
+      )
       .style.display =
       "block";
 
 
     document
-      .getElementById("songTitle")
+      .getElementById(
+        "songTitle"
+      )
       .textContent =
       song.name;
 
@@ -572,13 +626,17 @@
 
 
     document
-      .getElementById("songPage")
+      .getElementById(
+        "songPage"
+      )
       .style.display =
       "none";
 
 
     document
-      .getElementById("homePage")
+      .getElementById(
+        "homePage"
+      )
       .style.display =
       "block";
 
@@ -659,7 +717,9 @@
   // NOTE TO NUMBER
   // =====================================================
 
-  function noteToNumber(note) {
+  function noteToNumber(
+    note
+  ) {
 
     const map = {
 
@@ -734,7 +794,9 @@
 
 
     const rootNumber =
-      noteToNumber(root);
+      noteToNumber(
+        root
+      );
 
 
     if (
@@ -753,15 +815,20 @@
       ) % 12;
 
 
-    if (newNumber < 0) {
+    if (
+      newNumber < 0
+    ) {
 
-      newNumber += 12;
+      newNumber +=
+        12;
 
     }
 
 
     return (
-      chromaticNotes[newNumber] +
+      chromaticNotes[
+        newNumber
+      ] +
       suffix
     );
 
@@ -815,10 +882,12 @@
 
 
   // =====================================================
-  // FIND ORIGINAL KEY
+  // GET ORIGINAL KEY
   // =====================================================
 
-  function getOriginalKey(text) {
+  function getOriginalKey(
+    text
+  ) {
 
     if (!text) {
       return "-";
@@ -854,7 +923,9 @@
   ) {
 
     const originalKey =
-      getOriginalKey(text);
+      getOriginalKey(
+        text
+      );
 
 
     const number =
@@ -879,9 +950,12 @@
       ) % 12;
 
 
-    if (newNumber < 0) {
+    if (
+      newNumber < 0
+    ) {
 
-      newNumber += 12;
+      newNumber +=
+        12;
 
     }
 
@@ -919,13 +993,17 @@
 
 
     document
-      .getElementById("chords")
+      .getElementById(
+        "chords"
+      )
       .textContent =
       transposed;
 
 
     document
-      .getElementById("keyDisplay")
+      .getElementById(
+        "keyDisplay"
+      )
       .textContent =
       "Key: " +
       getDisplayedKey(

@@ -2396,25 +2396,35 @@
       return;
     }
 
+    // Hide login/request pages after successful authentication.
+    document
+      .getElementById(
+        "loginPage"
+      )
+      .style.display =
+      "none";
+
+    document
+      .getElementById(
+        "requestPage"
+      )
+      .style.display =
+      "none";
+
     currentSong =
       null;
-
 
     transposeAmount =
       0;
 
-
     songSearch.value =
       "";
-
 
     songSearchResults.innerHTML =
       "";
 
-
     songSearchResults.style.display =
       "none";
-
 
     document
       .getElementById(
@@ -2423,7 +2433,6 @@
       .style.display =
       "none";
 
-
     document
       .getElementById(
         "homePage"
@@ -2431,13 +2440,15 @@
       .style.display =
       "flex";
 
-
     window.scrollTo(
       0,
       0
     );
 
   }
+
+
+  
 
 
 

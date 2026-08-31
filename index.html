@@ -43,7 +43,6 @@
 
     #homePage {
       min-height: 100vh;
-
       display: flex;
       flex-direction: column;
     }
@@ -51,14 +50,12 @@
 
     header {
       text-align: center;
-
       padding: 30px 15px 20px;
     }
 
 
     header h1 {
       margin: 0 0 20px;
-
       font-size: 32px;
     }
 
@@ -66,8 +63,10 @@
     #search {
       width: 90%;
       max-width: 500px;
-
       padding: 14px 16px;
+
+      background: white;
+      color: #111827;
 
       border: none;
       border-radius: 10px;
@@ -75,6 +74,11 @@
       outline: none;
 
       font-size: 16px;
+    }
+
+
+    #search::placeholder {
+      color: #64748b;
     }
 
 
@@ -107,7 +111,6 @@
 
     .song:hover {
       background: #334155;
-
       transform: translateY(-1px);
     }
 
@@ -200,47 +203,49 @@
 
       position: relative;
 
-      flex: 1;
+      width: 240px;
 
-      min-width: 220px;
+      flex: none;
     }
 
 
     #songSearch {
 
-      width: 100%;
+      width: 240px;
 
-      padding: 12px 15px;
+      padding: 10px 14px;
 
-      background: #1e293b;
+      background: white;
 
-      color: white;
+      color: #111827;
 
-      border: 1px solid #334155;
+      border: none;
 
       border-radius: 8px;
 
       outline: none;
 
-      font-size: 15px;
+      font-size: 14px;
     }
 
 
     #songSearch::placeholder {
 
-      color: #94a3b8;
+      color: #64748b;
     }
 
 
     #songSearch:focus {
 
-      border-color: #60a5fa;
+      border: none;
+
+      outline: none;
     }
 
 
 
     /* =====================================================
-       SONG SEARCH RESULTS
+       SEARCH RESULTS
     ===================================================== */
 
     #songSearchResults {
@@ -251,7 +256,7 @@
 
       left: 0;
 
-      right: 0;
+      width: 240px;
 
       z-index: 1000;
 
@@ -275,7 +280,7 @@
 
     .song-search-result {
 
-      padding: 13px 15px;
+      padding: 12px 14px;
 
       cursor: pointer;
 
@@ -284,7 +289,6 @@
       font-size: 14px;
 
       color: white;
-
     }
 
 
@@ -302,12 +306,11 @@
 
     .song-search-no-results {
 
-      padding: 13px 15px;
+      padding: 12px 14px;
 
       color: #94a3b8;
 
       font-size: 14px;
-
     }
 
 
@@ -481,6 +484,8 @@
       .song-navigation {
 
         align-items: stretch;
+
+        flex-direction: column;
       }
 
 
@@ -493,12 +498,16 @@
       .song-search-container {
 
         width: 100%;
-
-        min-width: 0;
       }
 
 
       #songSearch {
+
+        width: 100%;
+      }
+
+
+      #songSearchResults {
 
         width: 100%;
       }
@@ -599,9 +608,7 @@
   <div id="songPage">
 
 
-    <!-- ===================================================
-         NAVIGATION + SEARCH
-    ==================================================== -->
+    <!-- NAVIGATION -->
 
     <div class="song-navigation">
 
@@ -620,7 +627,7 @@
         <input
           id="songSearch"
           type="text"
-          placeholder="🔍 Search another song..."
+          placeholder="Search another song..."
           autocomplete="off"
         >
 
@@ -635,17 +642,13 @@
 
 
 
-    <!-- ===================================================
-         SONG TITLE
-    ==================================================== -->
+    <!-- SONG TITLE -->
 
     <h1 id="songTitle"></h1>
 
 
 
-    <!-- ===================================================
-         TRANSPOSE
-    ==================================================== -->
+    <!-- TRANSPOSE -->
 
     <div class="transpose">
 
@@ -680,17 +683,13 @@
 
 
 
-    <!-- ===================================================
-         CHORDS
-    ==================================================== -->
+    <!-- CHORDS -->
 
     <div id="chords"></div>
 
 
 
-    <!-- ===================================================
-         FOOTER
-    ==================================================== -->
+    <!-- FOOTER -->
 
     <footer class="site-footer">
 
@@ -737,12 +736,10 @@
 
 
   // =====================================================
-  // PREFERRED CHROMATIC NOTES
+  // PREFERRED CHORD SPELLING
   //
-  // We use:
-  //
-  // G# instead of Ab
-  // Bb instead of A#
+  // Ab -> G#
+  // A# -> Bb
   // =====================================================
 
   const chromaticNotes = [
@@ -874,7 +871,7 @@
   // =====================================================
   // TRANSPOSE CHORDS
   //
-  // Handles:
+  // Supports:
   //
   // C
   // Cm
@@ -891,10 +888,7 @@
   // Cm/Bb
   // F#m/C#
   //
-  // Also handles chords inside:
-  //
-  // ( )
-  // [ ]
+  // Parentheses are supported.
   // =====================================================
 
   function transposeChords(
@@ -917,8 +911,7 @@
 
 
     // =================================================
-    // STEP 1
-    // TRANSPOSE NORMAL CHORD ROOTS
+    // TRANSPOSE MAIN CHORD ROOTS
     // =================================================
 
     const rootRegex =
@@ -948,12 +941,9 @@
 
 
     // =================================================
-    // STEP 2
-    // TRANSPOSE SLASH CHORD BASS NOTES
+    // TRANSPOSE SLASH-CHORD BASS NOTES
     //
-    // IMPORTANT:
-    //
-    // This supports:
+    // This handles:
     //
     // /F#
     // /F#m
@@ -961,14 +951,6 @@
     // /Bbm
     // /C#
     // /C#m
-    //
-    // Example:
-    //
-    // C#/F#m
-    //
-    // becomes:
-    //
-    // D/Gm
     // =================================================
 
     const bassRegex =
@@ -1014,14 +996,6 @@
     }
 
 
-    // Check key at beginning.
-    //
-    // Example:
-    //
-    // (Eb)
-    // (Ab)
-    // (F#)
-
     const keyAtStart =
       text.match(
         /^\s*\(?([A-G](?:#|b)?)\)?/
@@ -1034,8 +1008,6 @@
 
     }
 
-
-    // Otherwise find first chord.
 
     const firstChord =
       text.match(
@@ -1128,9 +1100,7 @@
             : [];
 
 
-        // =================================================
-        // SORT SONGS ALPHABETICALLY
-        // =================================================
+        // Alphabetical order
 
         songs.sort(
           function(a, b) {
@@ -1385,8 +1355,6 @@
           .toLowerCase();
 
 
-      // Hide results if empty.
-
       if (!searchText) {
 
         songSearchResults.style.display =
@@ -1399,8 +1367,6 @@
 
       }
 
-
-      // Find matching songs.
 
       const matches =
         songs.filter(
@@ -1421,8 +1387,6 @@
       songSearchResults.innerHTML =
         "";
 
-
-      // No matches.
 
       if (
         matches.length === 0
@@ -1455,8 +1419,6 @@
 
       }
 
-
-      // Display matching songs.
 
       matches
         .slice(0, 15)
@@ -1532,7 +1494,7 @@
 
 
   // =====================================================
-  // CLOSE SONG SEARCH WHEN CLICKING OUTSIDE
+  // CLOSE SEARCH WHEN CLICKING OUTSIDE
   // =====================================================
 
   document.addEventListener(
@@ -1601,8 +1563,6 @@
       .textContent =
       song.name;
 
-
-    // Clear another-song search.
 
     songSearch.value =
       "";
@@ -1777,7 +1737,6 @@
   // =====================================================
 
   loadSongs();
-
 
 </script>
 

@@ -2029,30 +2029,160 @@
     /* =====================================================
        REQUEST ACCESS
     ===================================================== */
-    function submitAccessRequest() {
-      const name = document.getElementById("requestName").value.trim();
-      const email = document.getElementById("requestEmail").value.trim();
-      const password = document.getElementById("requestPassword").value;
-      const reason = document.getElementById("requestReason").value.trim();
-      const message = document.getElementById("requestMessage");
-      if (!name) { message.textContent="Please enter your name."; return; }
-      if (!email) { message.textContent="Please enter your email."; return; }
-      if (!password) { message.textContent="Please create a password."; return; }
-      if (password.length < 6) { message.textContent="Password must be at least 6 characters."; return; }
-      if (!reason) { message.textContent="Please tell us why you need access."; return; }
-      message.textContent="Sending request...";
-      const callbackName="accessRequest_"+Date.now(); const script=document.createElement("script");
-      window[callbackName]=function(response){
-        message.textContent=response.message||"Request submitted.";
-        if(response.success){ document.getElementById("requestName").value=""; document.getElementById("requestEmail").value=""; document.getElementById("requestPassword").value=""; document.getElementById("requestReason").value=""; }
-        delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script);
-      };
-      script.src=API_URL+"?action=requestAccess"+"&name="+encodeURIComponent(name)+"&email="+encodeURIComponent(email)+"&password="+encodeURIComponent(password)+"&reason="+encodeURIComponent(reason)+"&callback="+encodeURIComponent(callbackName);
-      script.onerror = function() {
-  message.textContent = "Your access request has been sent successfully!";
-}; delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script); };
-      document.body.appendChild(script);
+    /* =====================================================
+   REQUEST ACCESS
+===================================================== */
+
+function submitAccessRequest() {
+
+  const name =
+    document.getElementById("requestName").value.trim();
+
+  const email =
+    document.getElementById("requestEmail").value.trim();
+
+  const password =
+    document.getElementById("requestPassword").value;
+
+  const reason =
+    document.getElementById("requestReason").value.trim();
+
+  const message =
+    document.getElementById("requestMessage");
+
+
+  // -----------------------------------------------------
+  // VALIDATION
+  // -----------------------------------------------------
+
+  if (!name) {
+    message.textContent = "Please enter your name.";
+    return;
+  }
+
+  if (!email) {
+    message.textContent = "Please enter your email.";
+    return;
+  }
+
+  if (!password) {
+    message.textContent = "Please create a password.";
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent =
+      "Password must be at least 6 characters.";
+    return;
+  }
+
+  if (!reason) {
+    message.textContent =
+      "Please tell us why you need access.";
+    return;
+  }
+
+
+  // -----------------------------------------------------
+  // SHOW SENDING
+  // -----------------------------------------------------
+
+  message.textContent = "Sending request...";
+
+
+  // -----------------------------------------------------
+  // JSONP CALLBACK
+  // -----------------------------------------------------
+
+  const callbackName =
+    "accessRequest_" + Date.now();
+
+  const script =
+    document.createElement("script");
+
+
+  // -----------------------------------------------------
+  // SUCCESS RESPONSE
+  // -----------------------------------------------------
+
+  window[callbackName] = function(response) {
+
+    console.log("Access request response:", response);
+
+    message.textContent =
+      response.message ||
+      "Request submitted.";
+
+
+    // Clear form only when successful
+    if (response.success === true) {
+
+      document.getElementById("requestName").value = "";
+      document.getElementById("requestEmail").value = "";
+      document.getElementById("requestPassword").value = "";
+      document.getElementById("requestReason").value = "";
+
     }
+
+
+    // Cleanup AFTER response
+    delete window[callbackName];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+  };
+
+
+  // -----------------------------------------------------
+  // BUILD REQUEST URL
+  // -----------------------------------------------------
+
+  script.src =
+    API_URL +
+    "?action=requestAccess" +
+    "&name=" +
+    encodeURIComponent(name) +
+    "&email=" +
+    encodeURIComponent(email) +
+    "&password=" +
+    encodeURIComponent(password) +
+    "&reason=" +
+    encodeURIComponent(reason) +
+    "&callback=" +
+    encodeURIComponent(callbackName);
+
+
+  // -----------------------------------------------------
+  // REAL ERROR HANDLER
+  // -----------------------------------------------------
+
+  script.onerror = function() {
+
+    console.error(
+      "Access request script failed."
+    );
+
+    message.textContent =
+      "Unable to connect to the server.";
+
+    delete window[callbackName];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+  };
+
+
+  // -----------------------------------------------------
+  // SEND REQUEST
+  // -----------------------------------------------------
+
+  document.body.appendChild(script);
+
+}
 
 
     /* =====================================================

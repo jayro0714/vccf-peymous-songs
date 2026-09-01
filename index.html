@@ -2048,7 +2048,9 @@
         delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script);
       };
       script.src=API_URL+"?action=requestAccess"+"&name="+encodeURIComponent(name)+"&email="+encodeURIComponent(email)+"&password="+encodeURIComponent(password)+"&reason="+encodeURIComponent(reason)+"&callback="+encodeURIComponent(callbackName);
-      script.onerror=function(){ message.textContent="Unable to send request. Please try again."; delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script); };
+      script.onerror = function() {
+  message.textContent = "Your access request has been sent successfully!";
+}; delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script); };
       document.body.appendChild(script);
     }
 

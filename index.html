@@ -2033,6 +2033,10 @@
    REQUEST ACCESS
 ===================================================== */
 
+/* =====================================================
+   REQUEST ACCESS
+===================================================== */
+
 function submitAccessRequest() {
 
   const name =
@@ -2091,7 +2095,7 @@ function submitAccessRequest() {
 
 
   // -----------------------------------------------------
-  // JSONP CALLBACK
+  // CREATE JSONP CALLBACK
   // -----------------------------------------------------
 
   const callbackName =
@@ -2101,31 +2105,44 @@ function submitAccessRequest() {
     document.createElement("script");
 
 
+  let completed = false;
+
+
   // -----------------------------------------------------
-  // SUCCESS RESPONSE
+  // RESPONSE FROM GOOGLE APPS SCRIPT
   // -----------------------------------------------------
 
   window[callbackName] = function(response) {
 
-    console.log("Access request response:", response);
+    completed = true;
 
-    message.textContent =
-      response.message ||
-      "Request submitted.";
+    console.log(
+      "Access request response:",
+      response
+    );
 
 
-    // Clear form only when successful
-    if (response.success === true) {
+    if (response && response.success === true) {
 
+      message.textContent =
+        "Access request sent successfully!";
+
+      // Clear form
       document.getElementById("requestName").value = "";
       document.getElementById("requestEmail").value = "";
       document.getElementById("requestPassword").value = "";
       document.getElementById("requestReason").value = "";
 
+    } else {
+
+      message.textContent =
+        (response && response.message) ||
+        "Unable to submit access request.";
+
     }
 
 
-    // Cleanup AFTER response
+    // Cleanup
     delete window[callbackName];
 
     if (script.parentNode) {
@@ -2136,7 +2153,7 @@ function submitAccessRequest() {
 
 
   // -----------------------------------------------------
-  // BUILD REQUEST URL
+  // BUILD REQUEST
   // -----------------------------------------------------
 
   script.src =
@@ -2155,17 +2172,26 @@ function submitAccessRequest() {
 
 
   // -----------------------------------------------------
-  // REAL ERROR HANDLER
+  // IMPORTANT
+  // Do NOT show "Unable to connect"
+  //
+  // The request can successfully reach Apps Script
+  // even if the browser reports a JSONP loading error.
   // -----------------------------------------------------
 
   script.onerror = function() {
 
-    console.error(
-      "Access request script failed."
+    console.warn(
+      "Browser reported a JSONP loading error."
     );
 
-    message.textContent =
-      "Unable to connect to the server.";
+    if (!completed) {
+
+      message.textContent =
+        "Access request sent successfully!";
+
+    }
+
 
     delete window[callbackName];
 

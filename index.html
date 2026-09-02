@@ -789,20 +789,16 @@
   <!-- =====================================================
        REQUEST ACCESS PAGE
   ===================================================== -->
+    <div id="requestPage">
 
-  <div id="requestPage">
+  <div class="request-box">
 
-    <div class="request-box">
+    <h1>🎸 Request Access</h1>
 
-      <h1>
-        Request Access
-      </h1>
-
-      <div class="request-subtitle">
-        Request access to the Jayro Chords library.
-      </div>
-
-      <label
+    <div class="request-subtitle">
+      Request access to the Jayro Chords library
+    </div>
+        <label
         class="request-label"
         for="requestName"
       >
@@ -830,7 +826,12 @@
         placeholder="you@example.com"
       >
 
-      <label class="request-label" for="requestPassword">Password</label>
+      <label
+        class="request-label"
+        for="requestPassword"
+      >
+        Password
+      </label>
 
       <input
         id="requestPassword"
@@ -838,6 +839,20 @@
         type="password"
         placeholder="Create a password"
         autocomplete="new-password"
+      >
+
+      <label
+        class="request-label"
+        for="requestChurch"
+      >
+        Church / Ministry
+      </label>
+
+      <input
+        id="requestChurch"
+        class="request-input"
+        type="text"
+        placeholder="Your church name and ministry"
       >
 
       <label
@@ -850,7 +865,7 @@
       <textarea
         id="requestReason"
         class="request-textarea"
-        placeholder="Tell us a little about why you need access..."
+        placeholder="Why do you need this?"
       ></textarea>
 
       <button
@@ -873,9 +888,9 @@
         ← Back to Login
       </div>
 
-    </div>
+      </div>
 
-  </div>
+</div>
 
 
 
@@ -2048,6 +2063,9 @@ function submitAccessRequest() {
   const password =
     document.getElementById("requestPassword").value;
 
+  const church =
+    document.getElementById("requestChurch").value.trim();
+
   const reason =
     document.getElementById("requestReason").value.trim();
 
@@ -2080,6 +2098,12 @@ function submitAccessRequest() {
     return;
   }
 
+  if (!church) {
+    message.textContent =
+      "Please enter your church or ministry.";
+    return;
+  }
+
   if (!reason) {
     message.textContent =
       "Please tell us why you need access.";
@@ -2103,7 +2127,6 @@ function submitAccessRequest() {
 
   const script =
     document.createElement("script");
-
 
   let completed = false;
 
@@ -2131,6 +2154,7 @@ function submitAccessRequest() {
       document.getElementById("requestName").value = "";
       document.getElementById("requestEmail").value = "";
       document.getElementById("requestPassword").value = "";
+      document.getElementById("requestChurch").value = "";
       document.getElementById("requestReason").value = "";
 
     } else {
@@ -2165,6 +2189,8 @@ function submitAccessRequest() {
     encodeURIComponent(email) +
     "&password=" +
     encodeURIComponent(password) +
+    "&church=" +
+    encodeURIComponent(church) +
     "&reason=" +
     encodeURIComponent(reason) +
     "&callback=" +
@@ -2211,7 +2237,8 @@ function submitAccessRequest() {
 }
 
 
-    /* =====================================================
+  // -----------------------------------------------------
+      /* =====================================================
        BUTTON EVENTS
     ===================================================== */
 

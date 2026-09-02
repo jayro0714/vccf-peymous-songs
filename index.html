@@ -1566,9 +1566,6 @@
         "flex";
 
 
-      maybeOpenMobileNote();
-
-
       currentSong =
         null;
 
@@ -1663,6 +1660,7 @@
 
           message.textContent = "";
           showHome();
+          maybeOpenMobileNote();
           loadSongs();
         } finally {
           cleanup();

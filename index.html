@@ -705,10 +705,6 @@
       color: #cbd5e1;
     }
 
-    .mobile-note-button {
-      display: none;
-    }
-
     .mobile-note-modal {
       display: none;
       position: fixed;
@@ -789,22 +785,6 @@
 
       .bandmate-note {
         display: none;
-      }
-
-      .mobile-note-button {
-        display: inline-block;
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        padding: 7px 10px;
-        border: 1px solid #475569;
-        border-radius: 8px;
-        background: rgba(15, 23, 42, 0.85);
-        color: #c4b5fd;
-        font-size: 12px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 10;
       }
 
       .song-navigation {
@@ -1043,15 +1023,6 @@
         ( - - - - ) — Quarter Note
       </div>
     </div>
-
-    <button
-      id="mobileNoteButton"
-      class="mobile-note-button"
-      type="button"
-      onclick="openMobileNote()"
-    >
-      📝 Note
-    </button>
 
     <div
       id="mobileNoteModal"
@@ -1483,6 +1454,15 @@
     }
 
 
+    function maybeOpenMobileNote() {
+      if (window.matchMedia("(max-width: 600px)").matches) {
+        setTimeout(function() {
+          openMobileNote();
+        }, 150);
+      }
+    }
+
+
     function closeMobileNote() {
       const modal = document.getElementById("mobileNoteModal");
       if (modal) {
@@ -1584,6 +1564,9 @@
         )
         .style.display =
         "flex";
+
+
+      maybeOpenMobileNote();
 
 
       currentSong =

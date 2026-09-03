@@ -679,6 +679,9 @@
     }
 
     .footer-facebook {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       color: #60a5fa;
       font-size: 14px;
       font-weight: bold;
@@ -688,6 +691,12 @@
     .footer-facebook:hover {
       color: #93c5fd;
       text-decoration: underline;
+    }
+
+    .facebook-logo {
+      width: 18px;
+      height: 18px;
+      display: block;
     }
 
     .footer-separator {
@@ -1212,7 +1221,12 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          f&nbsp;&nbsp;Follow us on Facebook · Jayro Chords
+          <img
+            class="facebook-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"
+            alt="Facebook"
+          >
+          Follow on Facebook
         </a>
       </div>
 

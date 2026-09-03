@@ -669,9 +669,16 @@
       color: #64748b;
     }
 
-    .footer-facebook {
-      display: inline-block;
+    .footer-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
       margin-bottom: 12px;
+    }
+
+    .footer-facebook {
       color: #60a5fa;
       font-size: 14px;
       font-weight: bold;
@@ -681,6 +688,11 @@
     .footer-facebook:hover {
       color: #93c5fd;
       text-decoration: underline;
+    }
+
+    .footer-separator {
+      color: #475569;
+      font-size: 14px;
     }
 
 
@@ -1187,18 +1199,22 @@
 
     <footer class="site-footer">
 
-      <div class="footer-brand">
-        🎸 chords.jayrotobias.com
-      </div>
+      <div class="footer-links">
+        <span class="footer-brand">
+          🎸 chords.jayrotobias.com
+        </span>
 
-      <a
-        class="footer-facebook"
-        href="https://www.facebook.com/jayrochords"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Facebook · @jayrochords
-      </a>
+        <span class="footer-separator">|</span>
+
+        <a
+          class="footer-facebook"
+          href="https://www.facebook.com/jayrochords"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          f&nbsp;&nbsp;Follow us on Facebook · Jayro Chords
+        </a>
+      </div>
 
       <div class="footer-copyright">
         © 2026 Jayro

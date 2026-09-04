@@ -168,6 +168,33 @@
       color: #2563eb;
     }
 
+    .login-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 2px 0 12px;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .remember-me {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #94a3b8;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .remember-me input {
+      width: 15px;
+      height: 15px;
+      margin: 0;
+      accent-color: #2563eb;
+      cursor: pointer;
+    }
+
     .login-button {
       width: 100%;
 
@@ -1006,6 +1033,17 @@
         >
           Show
         </button>
+      </div>
+
+      <div class="login-options">
+        <label class="remember-me">
+          <input
+            id="rememberMe"
+            type="checkbox"
+            checked
+          >
+          <span>Remember me</span>
+        </label>
       </div>
 
       <button
@@ -1847,12 +1885,22 @@
             return;
           }
 
-          // IMPORTANT: use localStorage because loadSongs(), logout(),
-          // and session restore all use the same storage.
-          localStorage.setItem("jayro_token", result.token);
-          localStorage.setItem("jayro_email", result.email || email);
-          localStorage.setItem("jayro_name", result.name || "");
-          localStorage.setItem("jayro_role", result.role || "User");
+          const rememberMe =
+            document.getElementById("rememberMe").checked;
+
+          const storage = rememberMe ? localStorage : sessionStorage;
+          const otherStorage = rememberMe ? sessionStorage : localStorage;
+
+          // Keep only one active client-side session storage.
+          otherStorage.removeItem("jayro_token");
+          otherStorage.removeItem("jayro_email");
+          otherStorage.removeItem("jayro_name");
+          otherStorage.removeItem("jayro_role");
+
+          storage.setItem("jayro_token", result.token);
+          storage.setItem("jayro_email", result.email || email);
+          storage.setItem("jayro_name", result.name || "");
+          storage.setItem("jayro_role", result.role || "User");
 
           message.textContent = "";
           showHome();
@@ -1887,7 +1935,9 @@
        LOGOUT
     ===================================================== */
     async function logout() {
-      const token = localStorage.getItem("jayro_token");
+      const token =
+        localStorage.getItem("jayro_token") ||
+        sessionStorage.getItem("jayro_token");
       try {
         if (token) {
           await new Promise(function(resolve) {
@@ -1908,7 +1958,14 @@
           });
         }
       } catch (error) { console.error("Logout error:", error); }
-      localStorage.removeItem("jayro_token"); localStorage.removeItem("jayro_email"); localStorage.removeItem("jayro_name"); localStorage.removeItem("jayro_role");
+      localStorage.removeItem("jayro_token");
+      localStorage.removeItem("jayro_email");
+      localStorage.removeItem("jayro_name");
+      localStorage.removeItem("jayro_role");
+      sessionStorage.removeItem("jayro_token");
+      sessionStorage.removeItem("jayro_email");
+      sessionStorage.removeItem("jayro_name");
+      sessionStorage.removeItem("jayro_role");
       songs = []; currentSong = null; transposeAmount = 0;
       document.getElementById("songs").innerHTML = "";
       document.getElementById("loginEmail").value = "";
@@ -1923,14 +1980,23 @@
     ===================================================== */
     function loadSongs() {
       return new Promise(function(resolve) {
-        const token = localStorage.getItem("jayro_token");
+        const token =
+          localStorage.getItem("jayro_token") ||
+          sessionStorage.getItem("jayro_token");
         if (!token) { document.getElementById("message").textContent = "Please log in first."; showLoginPage(); resolve(false); return; }
         const callbackName = "receiveSongs_" + Date.now();
         const script = document.createElement("script");
         window[callbackName] = function(data) {
           try {
             if (data && data.success === false) {
-              localStorage.removeItem("jayro_token"); localStorage.removeItem("jayro_email"); localStorage.removeItem("jayro_name"); localStorage.removeItem("jayro_role");
+              localStorage.removeItem("jayro_token");
+      localStorage.removeItem("jayro_email");
+      localStorage.removeItem("jayro_name");
+      localStorage.removeItem("jayro_role");
+      sessionStorage.removeItem("jayro_token");
+      sessionStorage.removeItem("jayro_email");
+      sessionStorage.removeItem("jayro_name");
+      sessionStorage.removeItem("jayro_role");
               songs = []; document.getElementById("songs").innerHTML = "";
               document.getElementById("message").textContent = data.message || "Session expired. Please log in again.";
               showLoginPage(); resolve(false); return;
@@ -2700,8 +2766,16 @@ function submitAccessRequest() {
       );
 
     (function restoreSession() {
-      const token = localStorage.getItem("jayro_token");
-      if (token) { showHome(); loadSongs(); } else { showLoginPage(); }
+      const token =
+        localStorage.getItem("jayro_token") ||
+        sessionStorage.getItem("jayro_token");
+
+      if (token) {
+        showHome();
+        loadSongs();
+      } else {
+        showLoginPage();
+      }
     })();
 
   </script>

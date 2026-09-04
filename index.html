@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Jayro Chords</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+
+    /* =====================================================
+       LOGIN
+    ===================================================== */
+
+    #loginPage {
+      min-height: 100vh;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
+
+      background:
+        radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.10), transparent 42%),
+        #0f172a;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 430px;
+
+      background: rgba(30, 41, 59, 0.96);
+
+      padding: 38px 36px 34px;
+
+      border: 1px solid #334155;
+      border-radius: 18px;
+
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.42);
+
+      text-align: center;
+    }
+
+    .login-logo {
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 18px;
+    }
+
+    .login-box h1 {
+      margin: 0 0 8px;
+
+      font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .login-subtitle {
+      color: #94a3b8;
+
+      font-size: 14px;
+      line-height: 1.5;
+
+      margin-bottom: 26px;
+    }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0 10px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #334155;
+    }
+
+    .login-input {
+      width: 100%;
+
+      padding: 14px 15px;
+
+      margin-bottom: 12px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 10px;
+
+      outline: none;
+
+      font-size: 15px;
+
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .login-input::placeholder {
+      color: #64748b;
+    }
+
+    .login-input:focus {
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.20);
+    }
+
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .password-wrapper .login-input {
+      margin-bottom: 0;
+      padding-right: 58px;
+    }
+
+    .show-password-button {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 6px 5px;
+    }
+
+    .show-password-button:hover {
+      color: #2563eb;
+    }
+
+    .login-button {
+      width: 100%;
+
+      padding: 13px;
+
+      margin-top: 5px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      background: #2563eb;
+
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .login-button:hover {
+      background: #1d4ed8;
+    }
+
+    .login-button:disabled {
+      opacity: 0.7;
+
+      cursor: not-allowed;
+    }
+
+    .request-button {
+      width: 100%;
+
+      padding: 12px;
+
+      margin-top: 10px;
+
+      border: 1px solid #475569;
+
+      border-radius: 8px;
+
+      background: transparent;
+
+      color: #60a5fa;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .request-button:hover {
+      background: #334155;
+    }
+
+    .login-message {
+      margin-top: 15px;
+
+      font-size: 14px;
+
+      color: #94a3b8;
+
+      min-height: 20px;
+    }
+
+
+    /* =====================================================
+       REQUEST ACCESS
+    ===================================================== */
+
+    #requestPage {
+      display: none;
+
+      min-height: 100vh;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+    .request-box {
+      width: 100%;
+
+      max-width: 450px;
+
+      background: #1e293b;
+
+      padding: 30px;
+
+      border-radius: 14px;
+
+      box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .request-box h1 {
+      margin: 0 0 8px;
+
+      text-align: center;
+
+      font-size: 28px;
+    }
+
+    .request-subtitle {
+      text-align: center;
+
+      color: #94a3b8;
+
+      font-size: 14px;
+
+      margin-bottom: 25px;
+    }
+
+    .request-label {
+      display: block;
+
+      margin-bottom: 6px;
+
+      font-size: 14px;
+
+      font-weight: bold;
+    }
+
+    .request-input,
+    .request-textarea {
+      width: 100%;
+
+      padding: 13px 14px;
+
+      margin-bottom: 15px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 15px;
+
+      font-family: Arial, sans-serif;
+    }
+
+    .request-textarea {
+      min-height: 100px;
+
+      resize: vertical;
+    }
+
+    .submit-request {
+      width: 100%;
+
+      padding: 13px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #2563eb;
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .back-login {
+      display: block;
+
+      text-align: center;
+
+      margin-top: 15px;
+
+      color: #60a5fa;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+
+    /* =====================================================
+       HOME
+    ===================================================== */
+
+    #homePage {
+      min-height: 100vh;
+
+      display: none;
+
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+
+      padding: 30px 15px 20px;
+    }
+
+    header h1 {
+      margin: 0 0 20px;
+
+      font-size: 32px;
+    }
+
+    #search {
+      width: 90%;
+
+      max-width: 500px;
+
+      padding: 14px 16px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 10px;
+
+      outline: none;
+
+      font-size: 16px;
+    }
+
+    #search::placeholder {
+      color: #64748b;
+    }
+
+    .home-toolbar {
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+    }
+
+    #songs {
+      width: 90%;
+
+      max-width: 700px;
+
+      margin: 10px auto 40px;
+
+      flex: 1;
+    }
+
+    .song {
+      background: #1e293b;
+
+      padding: 17px;
+
+      margin-bottom: 10px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      font-weight: bold;
+
+      transition: 0.2s;
+    }
+
+    .song:hover {
+      background: #334155;
+
+      transform: translateY(-1px);
+    }
+
+    #message {
+      text-align: center;
+
+      color: #94a3b8;
+
+      margin: 30px;
+    }
+
+    .logout-button {
+      padding: 12px 18px;
+
+      border: 1px solid #475569;
+
+      border-radius: 8px;
+
+      background: transparent;
+
+      color: #60a5fa;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      background: #334155;
+    }
+
+
+    /* =====================================================
+       SONG PAGE
+    ===================================================== */
+
+    #songPage {
+      display: none;
+
+      width: 90%;
+
+      max-width: 800px;
+
+      margin: 30px auto 0;
+
+      min-height: calc(100vh - 30px);
+    }
+
+    .song-navigation {
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      margin-bottom: 20px;
+
+      flex-wrap: wrap;
+    }
+
+    .back {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 11px 15px;
+
+      background: #1e293b;
+
+      color: #60a5fa;
+
+      border-radius: 8px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      white-space: nowrap;
+    }
+
+    .back:hover {
+      background: #334155;
+
+      color: #93c5fd;
+    }
+
+
+    /* =====================================================
+       SONG SEARCH
+    ===================================================== */
+
+    .song-search-container {
+      position: relative;
+
+      width: 240px;
+
+      flex: none;
+    }
+
+    #songSearch {
+      width: 240px;
+
+      padding: 10px 14px;
+
+      background: white;
+
+      color: #111827;
+
+      border: none;
+
+      border-radius: 8px;
+
+      outline: none;
+
+      font-size: 14px;
+    }
+
+    #songSearchResults {
+      position: absolute;
+
+      top: calc(100% + 6px);
+
+      left: 0;
+
+      width: 240px;
+
+      z-index: 1000;
+
+      background: #1e293b;
+
+      border: 1px solid #334155;
+
+      border-radius: 8px;
+
+      overflow: hidden;
+
+      display: none;
+
+      max-height: 300px;
+
+      overflow-y: auto;
+
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .song-search-result {
+      padding: 12px 14px;
+
+      cursor: pointer;
+
+      border-bottom: 1px solid #334155;
+
+      font-size: 14px;
+
+      color: white;
+    }
+
+    .song-search-result:hover {
+      background: #334155;
+    }
+
+    .song-search-no-results {
+      padding: 12px 14px;
+
+      color: #94a3b8;
+
+      font-size: 14px;
+    }
+
+
+    /* =====================================================
+       SONG TITLE
+    ===================================================== */
+
+    #songTitle {
+      font-size: 34px;
+
+      margin: 0 0 20px;
+    }
+
+
+    /* =====================================================
+       TRANSPOSE
+    ===================================================== */
+
+    .transpose {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 15px;
+
+      padding: 15px;
+
+      margin-bottom: 20px;
+
+      background: #1e293b;
+
+      border-radius: 10px;
+    }
+
+    .transpose span {
+      font-weight: bold;
+    }
+
+    .transpose button {
+      width: 45px;
+
+      height: 40px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #334155;
+
+      color: white;
+
+      font-size: 22px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .transpose button:hover {
+      background: #475569;
+    }
+
+    /* =====================================================
+       CHORDS
+    ===================================================== */
+
+    #chords {
+      background: #111827;
+
+      padding: 25px;
+
+      border-radius: 10px;
+
+      white-space: pre-wrap;
+
+      font-family: "Courier New", monospace;
+
+      font-size: 18px;
+
+      line-height: 1.7;
+
+      overflow-x: auto;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .site-footer {
+      margin-top: 50px;
+
+      padding: 30px 20px;
+
+      text-align: center;
+
+      border-top: 1px solid #334155;
+
+      color: #94a3b8;
+    }
+
+    .footer-brand {
+      font-size: 18px;
+
+      font-weight: bold;
+
+      color: white;
+
+      margin-bottom: 8px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+
+      color: #64748b;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .footer-facebook {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #60a5fa;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .footer-facebook:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
+    .facebook-logo {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+
+    .footer-separator {
+      color: #475569;
+      font-size: 14px;
+    }
+
+
+
+
+    /* =====================================================
+       BANDMATE NOTE
+    ===================================================== */
+
+    .bandmate-note {
+      position: absolute;
+      top: 30px;
+      left: 28px;
+      width: 230px;
+      box-sizing: border-box;
+      padding: 14px 15px;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.72);
+      color: #e2e8f0;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .bandmate-note strong {
+      color: #c4b5fd;
+    }
+
+    .bandmate-note-divider {
+      height: 1px;
+      margin: 10px 0;
+      background: #334155;
+    }
+
+    .bandmate-note-symbols {
+      color: #cbd5e1;
+    }
+
+    .mobile-note-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.55);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .mobile-note-modal.show {
+      display: flex;
+    }
+
+    .mobile-note-modal-box {
+      width: 100%;
+      max-width: 360px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+      padding: 18px;
+      border: 1px solid #475569;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+      font-size: 13px;
+      line-height: 1.55;
+      position: relative;
+    }
+
+    .mobile-note-modal-title {
+      color: #c4b5fd;
+      font-size: 16px;
+      font-weight: bold;
+      padding-right: 28px;
+      margin-bottom: 10px;
+    }
+
+    .mobile-note-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
+
+    .mobile-note-modal-divider {
+      height: 1px;
+      margin: 12px 0;
+      background: #334155;
+    }
+
+    .mobile-note-modal-symbols {
+      color: #cbd5e1;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 600px) {
+
+      .login-box {
+        padding: 32px 22px 28px;
+        border-radius: 16px;
+      }
+
+      .login-logo {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 16px;
+      }
+
+      .login-box h1 {
+        font-size: 26px;
+      }
+
+      header h1 {
+        font-size: 25px;
+      }
+
+      #songTitle {
+        font-size: 28px;
+      }
+
+      .bandmate-note {
+        display: none;
+      }
+
+      .song-navigation {
+        flex-direction: column;
+
+        align-items: stretch;
+      }
+
+      .back {
+        width: 100%;
+      }
+
+      .song-search-container {
+        width: 100%;
+      }
+
+      #songSearch {
+        width: 100%;
+      }
+
+      #songSearchResults {
+        width: 100%;
+      }
+
+      #chords {
+        font-size: 16px;
+
+        padding: 18px;
+      }
+
+      .site-footer {
+        margin-top: 40px;
+
+        padding: 25px 15px;
+      }
+    }
+
+  </style>
+
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KK9EJCE6CY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KK9EJCE6CY');
+  </script>
+
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       LOGIN PAGE
+  ===================================================== -->
+
+  <div id="loginPage">
+
+    <div class="login-box">
+
+      <img
+        class="login-logo"
+        src="logo.png"
+        alt="Jayro Chords logo"
+      >
+
+      <h1>
+        Welcome to Jayro Chords
+      </h1>
+
+      <div class="login-subtitle">
+        Sign in to access the chord library.
+      </div>
+
+      <input
+        id="loginEmail"
+        class="login-input"
+        type="email"
+        placeholder="Email"
+        autocomplete="email"
+      >
+
+      <div class="password-wrapper">
+        <input
+          id="loginPassword"
+          class="login-input"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        >
+        <button
+          id="showPasswordButton"
+          class="show-password-button"
+          type="button"
+          aria-label="Show password"
+        >
+          Show
+        </button>
+      </div>
+
+      <button
+        id="loginButton"
+        class="login-button"
+        type="button"
+      >
+        Sign In
+      </button>
+
+      <div class="login-divider">OR</div>
+
+      <button
+        class="request-button"
+        type="button"
+        onclick="showRequestPage()"
+      >
+        Request Access
+      </button>
+
+      <div
+        id="loginMessage"
+        class="login-message"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       REQUEST ACCESS PAGE
+  ===================================================== -->
+    <div id="requestPage">
+
+  <div class="request-box">
+
+    <h1>🎸 Request Access</h1>
+
+    <div class="request-subtitle">
+      Request access to the Jayro Chords library
+    </div>
+        <label
+        class="request-label"
+        for="requestName"
+      >
+        Name
+      </label>
+
+      <input
+        id="requestName"
+        class="request-input"
+        type="text"
+        placeholder="Your name"
+      >
+
+      <label
+        class="request-label"
+        for="requestEmail"
+      >
+        Email
+      </label>
+
+      <input
+        id="requestEmail"
+        class="request-input"
+        type="email"
+        placeholder="you@example.com"
+      >
+
+      <label
+        class="request-label"
+        for="requestPassword"
+      >
+        Password
+      </label>
+
+      <input
+        id="requestPassword"
+        class="request-input"
+        type="password"
+        placeholder="Create a password"
+        autocomplete="new-password"
+      >
+
+      <label
+        class="request-label"
+        for="requestChurch"
+      >
+        Church / Ministry
+      </label>
+
+      <input
+        id="requestChurch"
+        class="request-input"
+        type="text"
+        placeholder="Your church name and ministry"
+      >
+
+      <label
+        class="request-label"
+        for="requestReason"
+      >
+        Why do you need access?
+      </label>
+
+      <textarea
+        id="requestReason"
+        class="request-textarea"
+        placeholder="Why do you need this?"
+      ></textarea>
+
+      <button
+        class="submit-request"
+        type="button"
+        onclick="submitAccessRequest()"
+      >
+        Send Request
+      </button>
+
+      <div
+        id="requestMessage"
+        class="login-message"
+      ></div>
+
+      <div
+        class="back-login"
+        onclick="showLoginPage()"
+      >
+        ← Back to Login
+      </div>
+
+      </div>
+
+</div>
+
+
+
+  <!-- =====================================================
+       HOME PAGE
+  ===================================================== -->
+
+  <div id="homePage">
+
+    <div class="bandmate-note">
+      🎸 <strong>Hi Bandmates!</strong><br>
+      Welcome sa Jayro Chords!
+
+      <div style="margin-top: 9px;">
+        📝 Yung mga chords po dito ay ayon sa years ng pagsisipra ko. So kung may iba kayong arrangement or artist/version, pwede natin isama o idagdag sa future revisions.
+      </div>
+
+      <div style="margin-top: 9px;">
+        🙏 Feel free to use this sa inyong mga tugtugan! Enjoy and God bless! 💜
+      </div>
+
+      <div class="bandmate-note-divider"></div>
+
+      <strong>🎵 Note Count Symbols</strong>
+      <div class="bandmate-note-symbols" style="margin-top: 6px;">
+        ( ) — Half Note<br>
+        ( - - - - ) — Quarter Note
+      </div>
+
+      <div class="bandmate-note-divider" style="margin-top: 10px;"></div>
+
+      <div style="margin-top: 10px; color:#cbd5e1;">
+        Pafollow nadin sa page <strong>"Jayro Chords"</strong> for more updates 😊
+      </div>
+    </div>
+
+    <div
+      id="mobileNoteModal"
+      class="mobile-note-modal"
+      onclick="closeMobileNoteFromBackdrop(event)"
+    >
+      <div class="mobile-note-modal-box">
+        <button
+          class="mobile-note-modal-close"
+          type="button"
+          aria-label="Close note"
+          onclick="closeMobileNote()"
+        >
+          ×
+        </button>
+
+        <div class="mobile-note-modal-title">
+          🎸 Hi Bandmates!<br>
+          <span style="color:#e2e8f0; font-size:13px;">Welcome sa Jayro Chords!</span>
+        </div>
+
+        <div>
+          📝 Yung mga chords po dito ay ayon sa years ng pagsisipra ko. So kung may iba kayong arrangement or artist/version, pwede natin isama o idagdag sa future revisions.
+        </div>
+
+        <div style="margin-top: 10px;">
+          🙏 Feel free to use this sa inyong mga tugtugan! Enjoy and God bless! 💜
+        </div>
+
+        <div class="mobile-note-modal-divider"></div>
+
+        <strong style="color:#c4b5fd;">🎵 Note Count Symbols</strong>
+        <div class="mobile-note-modal-symbols" style="margin-top: 6px;">
+          ( ) — Half Note<br>
+          ( - - - - ) — Quarter Note
+        </div>
+
+        <div class="mobile-note-modal-divider" style="margin-top: 10px;"></div>
+
+        <div style="margin-top: 10px; color:#cbd5e1;">
+          Pafollow nadin sa page <strong>"Jayro Chords"</strong> for more updates 😊
+        </div>
+      </div>
+    </div>
+
+    <header>
+
+      <h1>
+        🎵 Praise and Worship Songs List
+      </h1>
+
+      <div class="home-toolbar">
+
+        <input
+          id="search"
+          type="text"
+          placeholder="Search song..."
+          autocomplete="off"
+        >
+
+        <button
+          id="logoutButton"
+          class="logout-button"
+          type="button"
+        >
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <div id="songs"></div>
+
+    <div id="message">
+      Loading songs...
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       SONG PAGE
+  ===================================================== -->
+
+  <div id="songPage">
+
+    <div class="song-navigation">
+
+      <div
+        class="back"
+        onclick="showHome()"
+      >
+        ← Back to Songs
+      </div>
+
+
+      <div class="song-search-container">
+
+        <input
+          id="songSearch"
+          type="text"
+          placeholder="Search another song..."
+          autocomplete="off"
+        >
+
+        <div id="songSearchResults"></div>
+
+      </div>
+
+    </div>
+
+
+    <h1 id="songTitle"></h1>
+
+
+    <div class="transpose">
+
+      <span>
+        Transpose
+      </span>
+
+      <button
+        type="button"
+        onclick="transposeDown()"
+      >
+        −
+      </button>
+
+      <button
+        type="button"
+        onclick="transposeUp()"
+      >
+        +
+      </button>
+
+    </div>
+
+
+    <div id="chords"></div>
+
+
+    <footer class="site-footer">
+
+      <div class="footer-links">
+        <span class="footer-brand">
+          🎸 chords.jayrotobias.com
+        </span>
+
+        <span class="footer-separator">|</span>
+
+        <a
+          class="footer-facebook"
+          href="https://www.facebook.com/jayrochords"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            class="facebook-logo"
+            src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"
+            alt="Facebook"
+          >
+          Follow on Facebook
+        </a>
+      </div>
+
+      <div class="footer-copyright">
+        © 2026 Jayro
+      </div>
+
+    </footer>
+
+  </div>
+
+
+
+  <script>
+
+    /* =====================================================
+       GOOGLE APPS SCRIPT
+    ===================================================== */
+
+    const API_URL =
+  "https://script.google.com/macros/s/AKfycbzBa66P0S6V_UP_L7zutjkpad6B1LfETF87QEN8fWGK9Sg_52wAmUn5qdSH8A_25BGeNA/exec";
+
+
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
+    let songs = [];
+
+    let currentSong = null;
+
+    let transposeAmount = 0;
+
+    let loginInProgress = false;
+
+
+    /* =====================================================
+       CHROMATIC NOTES
+    ===================================================== */
+
+    const chromaticNotes = [
+
+      "C",
+      "C#",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "F#",
+      "G",
+      "G#",
+      "A",
+      "Bb",
+      "B"
+
+    ];
+
+
+    /* =====================================================
+       NOTE → NUMBER
+    ===================================================== */
+
+    function noteToNumber(note) {
+
+      const map = {
+
+        "C": 0,
+        "B#": 0,
+
+        "C#": 1,
+        "Db": 1,
+
+        "D": 2,
+
+        "D#": 3,
+        "Eb": 3,
+
+        "E": 4,
+        "Fb": 4,
+
+        "F": 5,
+        "E#": 5,
+
+        "F#": 6,
+        "Gb": 6,
+
+        "G": 7,
+
+        "G#": 8,
+        "Ab": 8,
+
+        "A": 9,
+
+        "A#": 10,
+        "Bb": 10,
+
+        "B": 11,
+        "Cb": 11
+
+      };
+
+      return map[note];
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE NOTE
+    ===================================================== */
+
+    function transposeNote(
+      note,
+      amount
+    ) {
+
+      const number =
+        noteToNumber(note);
+
+
+      if (
+        number === undefined
+      ) {
+
+        return note;
+
+      }
+
+
+      let newNumber =
+        (
+          number +
+          amount
+        ) % 12;
+
+
+      if (
+        newNumber < 0
+      ) {
+
+        newNumber += 12;
+
+      }
+
+
+      return chromaticNotes[
+        newNumber
+      ];
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE CHORDS
+    ===================================================== */
+
+    function transposeChords(
+      text,
+      amount
+    ) {
+
+      if (
+        !text ||
+        amount === 0
+      ) {
+
+        return text;
+
+      }
+
+
+      let result =
+        text;
+
+
+      /*
+        First transpose chord roots.
+      */
+
+      const rootRegex =
+        /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
+
+
+      result =
+        result.replace(
+          rootRegex,
+          function(
+            fullMatch,
+            separator,
+            root
+          ) {
+
+            return (
+              separator +
+              transposeNote(
+                root,
+                amount
+              )
+            );
+
+          }
+        );
+
+
+      /*
+        Then transpose slash-chord
+        bass notes.
+      */
+
+      const bassRegex =
+        /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
+
+
+      result =
+        result.replace(
+          bassRegex,
+          function(
+            fullMatch,
+            bassNote
+          ) {
+
+            return (
+              "/" +
+              transposeNote(
+                bassNote,
+                amount
+              )
+            );
+
+          }
+        );
+
+
+      return result;
+
+    }
+
+
+    /* =====================================================
+       SHOW LOGIN
+    ===================================================== */
+
+    function showLoginPage() {
+
+      document
+        .getElementById(
+          "loginPage"
+        )
+        .style.display =
+        "flex";
+
+
+      document
+        .getElementById(
+          "requestPage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "homePage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "songPage"
+        )
+        .style.display =
+        "none";
+
+    }
+
+
+    /* =====================================================
+       MOBILE NOTE POPUP
+    ===================================================== */
+
+    function openMobileNote() {
+      const modal = document.getElementById("mobileNoteModal");
+      if (modal) {
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+
+    function maybeOpenMobileNote() {
+      if (window.matchMedia("(max-width: 600px)").matches) {
+        setTimeout(function() {
+          openMobileNote();
+        }, 150);
+      }
+    }
+
+
+    function closeMobileNote() {
+      const modal = document.getElementById("mobileNoteModal");
+      if (modal) {
+        modal.classList.remove("show");
+        document.body.style.overflow = "";
+      }
+    }
+
+
+    function closeMobileNoteFromBackdrop(event) {
+      if (event.target === event.currentTarget) {
+        closeMobileNote();
+      }
+    }
+
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        closeMobileNote();
+      }
+    });
+
+
+    /* =====================================================
+       SHOW REQUEST PAGE
+    ===================================================== */
+
+    function showRequestPage() {
+
+      document
+        .getElementById(
+          "loginPage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "requestPage"
+        )
+        .style.display =
+        "flex";
+
+
+      document
+        .getElementById(
+          "requestMessage"
+        )
+        .textContent =
+        "";
+
+      document.getElementById("requestPassword").value = "";
+
+    }
+
+
+    /* =====================================================
+       SHOW HOME
+    ===================================================== */
+
+    function showHome() {
+
+      /*
+        Do NOT require currentUser here.
+
+        This is important because Firebase can
+        take a moment to update currentUser during
+        the sign-in operation.
+      */
+
+      document
+        .getElementById(
+          "loginPage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "requestPage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "songPage"
+        )
+        .style.display =
+        "none";
+
+
+      document
+        .getElementById(
+          "homePage"
+        )
+        .style.display =
+        "flex";
+
+
+      currentSong =
+        null;
+
+
+      transposeAmount =
+        0;
+
+
+      document
+        .getElementById(
+          "songSearch"
+        )
+        .value =
+        "";
+
+
+      document
+        .getElementById(
+          "songSearchResults"
+        )
+        .style.display =
+        "none";
+
+
+      window.scrollTo(
+        0,
+        0
+      );
+
+    }
+
+
+    /* =====================================================
+       LOGIN
+    ===================================================== */
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById("loginPassword");
+      const button = document.getElementById("showPasswordButton");
+
+      if (!passwordInput || !button) return;
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        button.textContent = "Hide";
+        button.setAttribute("aria-label", "Hide password");
+      } else {
+        passwordInput.type = "password";
+        button.textContent = "Show";
+        button.setAttribute("aria-label", "Show password");
+      }
+    }
+
+
+    function login() {
+      const emailInput = document.getElementById("loginEmail");
+      const passwordInput = document.getElementById("loginPassword");
+      const button = document.getElementById("loginButton");
+      const message = document.getElementById("loginMessage");
+
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      if (!email) {
+        message.textContent = "Please enter your email.";
+        return;
+      }
+
+      if (!password) {
+        message.textContent = "Please enter your password.";
+        return;
+      }
+
+      if (loginInProgress) return;
+
+      loginInProgress = true;
+      button.disabled = true;
+      button.textContent = "Signing in...";
+      message.textContent = "Signing in...";
+
+      const callbackName = "loginResponse_" + Date.now();
+      const script = document.createElement("script");
+      let finished = false;
+
+      function cleanup() {
+        if (finished) return;
+        finished = true;
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+        loginInProgress = false;
+        button.disabled = false;
+        button.textContent = "Sign In";
+      }
+
+      window[callbackName] = function(result) {
+        try {
+          console.log("Login response:", result);
+
+          if (!result || result.success !== true) {
+            message.textContent =
+              (result && result.message) || "Unable to log in.";
+            return;
+          }
+
+          // IMPORTANT: use localStorage because loadSongs(), logout(),
+          // and session restore all use the same storage.
+          localStorage.setItem("jayro_token", result.token);
+          localStorage.setItem("jayro_email", result.email || email);
+          localStorage.setItem("jayro_name", result.name || "");
+          localStorage.setItem("jayro_role", result.role || "User");
+
+          message.textContent = "";
+          showHome();
+          maybeOpenMobileNote();
+          loadSongs();
+        } finally {
+          cleanup();
+        }
+      };
+
+      script.onerror = function() {
+        console.error("Login request failed.");
+        message.textContent = "Unable to connect to the server.";
+        cleanup();
+      };
+
+      // Apps Script does not provide the CORS headers needed for a
+      // cross-origin fetch() from GitHub Pages. JSONP through doGet()
+      // avoids that browser CORS problem.
+      script.src =
+        API_URL +
+        "?action=login" +
+        "&email=" + encodeURIComponent(email) +
+        "&password=" + encodeURIComponent(password) +
+        "&callback=" + encodeURIComponent(callbackName);
+
+      document.body.appendChild(script);
+    }
+
+
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
+    async function logout() {
+      const token = localStorage.getItem("jayro_token");
+      try {
+        if (token) {
+          await new Promise(function(resolve) {
+            const callbackName = "logoutResponse_" + Date.now();
+            const script = document.createElement("script");
+            window[callbackName] = function() {
+              delete window[callbackName];
+              if (script.parentNode) script.parentNode.removeChild(script);
+              resolve();
+            };
+            script.src = API_URL + "?action=logout" + "&token=" + encodeURIComponent(token) + "&callback=" + encodeURIComponent(callbackName);
+            script.onerror = function() {
+              delete window[callbackName];
+              if (script.parentNode) script.parentNode.removeChild(script);
+              resolve();
+            };
+            document.body.appendChild(script);
+          });
+        }
+      } catch (error) { console.error("Logout error:", error); }
+      localStorage.removeItem("jayro_token"); localStorage.removeItem("jayro_email"); localStorage.removeItem("jayro_name"); localStorage.removeItem("jayro_role");
+      songs = []; currentSong = null; transposeAmount = 0;
+      document.getElementById("songs").innerHTML = "";
+      document.getElementById("loginEmail").value = "";
+      document.getElementById("loginPassword").value = "";
+      document.getElementById("loginMessage").textContent = "";
+      showLoginPage();
+    }
+
+
+    /* =====================================================
+       LOAD SONGS
+    ===================================================== */
+    function loadSongs() {
+      return new Promise(function(resolve) {
+        const token = localStorage.getItem("jayro_token");
+        if (!token) { document.getElementById("message").textContent = "Please log in first."; showLoginPage(); resolve(false); return; }
+        const callbackName = "receiveSongs_" + Date.now();
+        const script = document.createElement("script");
+        window[callbackName] = function(data) {
+          try {
+            if (data && data.success === false) {
+              localStorage.removeItem("jayro_token"); localStorage.removeItem("jayro_email"); localStorage.removeItem("jayro_name"); localStorage.removeItem("jayro_role");
+              songs = []; document.getElementById("songs").innerHTML = "";
+              document.getElementById("message").textContent = data.message || "Session expired. Please log in again.";
+              showLoginPage(); resolve(false); return;
+            }
+            songs = Array.isArray(data) ? data : [];
+            songs.sort(function(a,b){ return String(a.name||"").localeCompare(String(b.name||""), undefined, {sensitivity:"base"}); });
+            displaySongs(songs); resolve(true);
+          } finally { delete window[callbackName]; if (script.parentNode) script.parentNode.removeChild(script); }
+        };
+        script.src = API_URL + "?action=getSongs" + "&token=" + encodeURIComponent(token) + "&callback=" + encodeURIComponent(callbackName);
+        script.onerror = function(){ document.getElementById("message").textContent="Unable to load songs. Please try again."; delete window[callbackName]; if(script.parentNode)script.parentNode.removeChild(script); resolve(false); };
+        document.body.appendChild(script);
+      });
+    }
+
+
+    /* =====================================================
+       DISPLAY SONGS
+    ===================================================== */
+
+    function displaySongs(
+      list
+    ) {
+
+      const container =
+        document.getElementById(
+          "songs"
+        );
+
+
+      const message =
+        document.getElementById(
+          "message"
+        );
+
+
+      container.innerHTML =
+        "";
+
+
+      if (
+        !list ||
+        list.length === 0
+      ) {
+
+        message.textContent =
+          "No songs found.";
+
+        return;
+
+      }
+
+
+      message.textContent =
+        "";
+
+
+      list.forEach(
+        function(song) {
+
+          const div =
+            document.createElement(
+              "div"
+            );
+
+
+          div.className =
+            "song";
+
+
+          div.textContent =
+            song.name;
+
+
+          div.addEventListener(
+            "click",
+            function() {
+
+              openSong(
+                song
+              );
+
+            }
+          );
+
+
+          container.appendChild(
+            div
+          );
+
+        }
+      );
+
+    }
+
+
+    /* =====================================================
+       HOME SEARCH
+    ===================================================== */
+
+    document
+      .getElementById(
+        "search"
+      )
+      .addEventListener(
+        "input",
+        function() {
+
+          const searchText =
+            this.value
+              .trim()
+              .toLowerCase();
+
+
+          if (!searchText) {
+
+            displaySongs(
+              songs
+            );
+
+            return;
+
+          }
+
+
+          const filtered =
+            songs.filter(
+              function(song) {
+
+                return String(
+                  song.name || ""
+                )
+                  .toLowerCase()
+                  .includes(
+                    searchText
+                  );
+
+              }
+            );
+
+
+          displaySongs(
+            filtered
+          );
+
+        }
+      );
+
+
+    /* =====================================================
+       SONG SEARCH
+    ===================================================== */
+
+    const songSearch =
+      document.getElementById(
+        "songSearch"
+      );
+
+
+    const songSearchResults =
+      document.getElementById(
+        "songSearchResults"
+      );
+
+
+    songSearch.addEventListener(
+      "input",
+      function() {
+
+        const searchText =
+          this.value
+            .trim()
+            .toLowerCase();
+
+
+        if (!searchText) {
+
+          songSearchResults
+            .style
+            .display =
+            "none";
+
+
+          songSearchResults
+            .innerHTML =
+            "";
+
+
+          return;
+
+        }
+
+
+        const matches =
+          songs.filter(
+            function(song) {
+
+              return String(
+                song.name || ""
+              )
+                .toLowerCase()
+                .includes(
+                  searchText
+                );
+
+            }
+          );
+
+
+        songSearchResults
+          .innerHTML =
+          "";
+
+
+        if (
+          matches.length === 0
+        ) {
+
+          const noResults =
+            document.createElement(
+              "div"
+            );
+
+
+          noResults.className =
+            "song-search-no-results";
+
+
+          noResults.textContent =
+            "No songs found.";
+
+
+          songSearchResults
+            .appendChild(
+              noResults
+            );
+
+
+          songSearchResults
+            .style
+            .display =
+            "block";
+
+
+          return;
+
+        }
+
+
+        matches
+          .slice(0, 15)
+          .forEach(
+            function(song) {
+
+              const result =
+                document.createElement(
+                  "div"
+                );
+
+
+              result.className =
+                "song-search-result";
+
+
+              result.textContent =
+                song.name;
+
+
+              result.addEventListener(
+                "click",
+                function() {
+
+                  openSongFromSearch(
+                    song
+                  );
+
+                }
+              );
+
+
+              songSearchResults
+                .appendChild(
+                  result
+                );
+
+            }
+          );
+
+
+        songSearchResults
+          .style
+          .display =
+          "block";
+
+      }
+    );
+
+
+    /* =====================================================
+       OPEN SONG FROM SEARCH
+    ===================================================== */
+
+    function openSongFromSearch(
+      song
+    ) {
+
+      songSearch.value =
+        "";
+
+
+      songSearchResults
+        .innerHTML =
+        "";
+
+
+      songSearchResults
+        .style
+        .display =
+        "none";
+
+
+      openSong(
+        song
+      );
+
+    }
+
+
+    /* =====================================================
+       CLOSE SONG SEARCH
+    ===================================================== */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        const container =
+          document.querySelector(
+            ".song-search-container"
+          );
+
+
+        if (
+          container &&
+          !container.contains(
+            event.target
+          )
+        ) {
+
+          songSearchResults
+            .style
+            .display =
+            "none";
+
+        }
+
+      }
+    );
+
+
+    /* =====================================================
+       OPEN SONG
+    ===================================================== */
+
+    function openSong(
+      song
+    ) {
+
+      if (!song) {
+
+        return;
+
+      }
+
+
+      currentSong =
+        song;
+
+
+      transposeAmount =
+        0;
+
+
+      document
+        .getElementById(
+          "homePage"
+        )
+        .style
+        .display =
+        "none";
+
+
+      document
+        .getElementById(
+          "songPage"
+        )
+        .style
+        .display =
+        "block";
+
+
+      document
+        .getElementById(
+          "songTitle"
+        )
+        .textContent =
+        song.name;
+
+
+      songSearch.value =
+        "";
+
+
+      songSearchResults
+        .innerHTML =
+        "";
+
+
+      songSearchResults
+        .style
+        .display =
+        "none";
+
+
+      updateSong();
+
+
+      window.scrollTo(
+        0,
+        0
+      );
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE UP
+    ===================================================== */
+
+    function transposeUp() {
+
+      if (!currentSong) {
+
+        return;
+
+      }
+
+
+      transposeAmount++;
+
+
+      updateSong();
+
+    }
+
+
+    /* =====================================================
+       TRANSPOSE DOWN
+    ===================================================== */
+
+    function transposeDown() {
+
+      if (!currentSong) {
+
+        return;
+
+      }
+
+
+      transposeAmount--;
+
+
+      updateSong();
+
+    }
+
+
+    /* =====================================================
+       UPDATE SONG
+    ===================================================== */
+
+    function updateSong() {
+
+      if (!currentSong) {
+
+        return;
+
+      }
+
+
+      const original =
+        String(
+          currentSong.chords || ""
+        );
+
+
+      const transposed =
+        transposeChords(
+          original,
+          transposeAmount
+        );
+
+
+      document
+        .getElementById(
+          "chords"
+        )
+        .textContent =
+        transposed;
+
+
+    }
+
+
+    /* =====================================================
+       REQUEST ACCESS
+    ===================================================== */
+    /* =====================================================
+   REQUEST ACCESS
+===================================================== */
+
+/* =====================================================
+   REQUEST ACCESS
+===================================================== */
+
+function submitAccessRequest() {
+
+  const name =
+    document.getElementById("requestName").value.trim();
+
+  const email =
+    document.getElementById("requestEmail").value.trim();
+
+  const password =
+    document.getElementById("requestPassword").value;
+
+  const church =
+    document.getElementById("requestChurch").value.trim();
+
+  const reason =
+    document.getElementById("requestReason").value.trim();
+
+  const message =
+    document.getElementById("requestMessage");
+
+
+  // -----------------------------------------------------
+  // VALIDATION
+  // -----------------------------------------------------
+
+  if (!name) {
+    message.textContent = "Please enter your name.";
+    return;
+  }
+
+  if (!email) {
+    message.textContent = "Please enter your email.";
+    return;
+  }
+
+  if (!password) {
+    message.textContent = "Please create a password.";
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent =
+      "Password must be at least 6 characters.";
+    return;
+  }
+
+  if (!church) {
+    message.textContent =
+      "Please enter your church or ministry.";
+    return;
+  }
+
+  if (!reason) {
+    message.textContent =
+      "Please tell us why you need access.";
+    return;
+  }
+
+
+  // -----------------------------------------------------
+  // SHOW SENDING
+  // -----------------------------------------------------
+
+  message.textContent = "Sending request...";
+
+
+  // -----------------------------------------------------
+  // CREATE JSONP CALLBACK
+  // -----------------------------------------------------
+
+  const callbackName =
+    "accessRequest_" + Date.now();
+
+  const script =
+    document.createElement("script");
+
+  let completed = false;
+
+
+  // -----------------------------------------------------
+  // RESPONSE FROM GOOGLE APPS SCRIPT
+  // -----------------------------------------------------
+
+  window[callbackName] = function(response) {
+
+    completed = true;
+
+    console.log(
+      "Access request response:",
+      response
+    );
+
+
+    if (response && response.success === true) {
+
+      message.textContent =
+        "Access request sent successfully!";
+
+      // Clear form
+      document.getElementById("requestName").value = "";
+      document.getElementById("requestEmail").value = "";
+      document.getElementById("requestPassword").value = "";
+      document.getElementById("requestChurch").value = "";
+      document.getElementById("requestReason").value = "";
+
+    } else {
+
+      message.textContent =
+        (response && response.message) ||
+        "Unable to submit access request.";
+
+    }
+
+
+    // Cleanup
+    delete window[callbackName];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+  };
+
+
+  // -----------------------------------------------------
+  // BUILD REQUEST
+  // -----------------------------------------------------
+
+  script.src =
+    API_URL +
+    "?action=requestAccess" +
+    "&name=" +
+    encodeURIComponent(name) +
+    "&email=" +
+    encodeURIComponent(email) +
+    "&password=" +
+    encodeURIComponent(password) +
+    "&church=" +
+    encodeURIComponent(church) +
+    "&reason=" +
+    encodeURIComponent(reason) +
+    "&callback=" +
+    encodeURIComponent(callbackName);
+
+
+  // -----------------------------------------------------
+  // IMPORTANT
+  // Do NOT show "Unable to connect"
+  //
+  // The request can successfully reach Apps Script
+  // even if the browser reports a JSONP loading error.
+  // -----------------------------------------------------
+
+  script.onerror = function() {
+
+    console.warn(
+      "Browser reported a JSONP loading error."
+    );
+
+    if (!completed) {
+
+      message.textContent =
+        "Access request sent successfully!";
+
+    }
+
+
+    delete window[callbackName];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+  };
+
+
+  // -----------------------------------------------------
+  // SEND REQUEST
+  // -----------------------------------------------------
+
+  document.body.appendChild(script);
+
+}
+
+
+  // -----------------------------------------------------
+      /* =====================================================
+       BUTTON EVENTS
+    ===================================================== */
+
+    document
+      .getElementById(
+        "loginButton"
+      )
+      .addEventListener(
+        "click",
+        login
+      );
+
+
+    document
+      .getElementById(
+        "showPasswordButton"
+      )
+      .addEventListener(
+        "click",
+        togglePasswordVisibility
+      );
+
+
+    document
+      .getElementById(
+        "logoutButton"
+      )
+      .addEventListener(
+        "click",
+        logout
+      );
+
+
+    /*
+      Allow ENTER to log in.
+    */
+
+    document
+      .getElementById(
+        "loginPassword"
+      )
+      .addEventListener(
+        "keydown",
+        function(event) {
+
+          if (
+            event.key === "Enter"
+          ) {
+
+            login();
+
+          }
+
+        }
+      );
+
+    (function restoreSession() {
+      const token = localStorage.getItem("jayro_token");
+      if (token) { showHome(); loadSongs(); } else { showLoginPage(); }
+    })();
+
+  </script>
+
+
+</body>
+
+</html>

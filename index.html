@@ -43,43 +43,76 @@
       align-items: center;
       justify-content: center;
 
-      padding: 20px;
+      padding: 24px;
+
+      background:
+        radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.10), transparent 42%),
+        #0f172a;
     }
 
     .login-box {
       width: 100%;
-      max-width: 400px;
+      max-width: 430px;
 
-      background: #1e293b;
+      background: rgba(30, 41, 59, 0.96);
 
-      padding: 30px;
+      padding: 38px 36px 34px;
 
-      border-radius: 14px;
+      border: 1px solid #334155;
+      border-radius: 18px;
 
       box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.3);
+        0 24px 60px rgba(0, 0, 0, 0.42);
 
       text-align: center;
+    }
+
+    .login-logo {
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 18px;
     }
 
     .login-box h1 {
       margin: 0 0 8px;
 
       font-size: 30px;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
     }
 
     .login-subtitle {
       color: #94a3b8;
 
       font-size: 14px;
+      line-height: 1.5;
 
-      margin-bottom: 25px;
+      margin-bottom: 26px;
+    }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0 10px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #334155;
     }
 
     .login-input {
       width: 100%;
 
-      padding: 13px 14px;
+      padding: 14px 15px;
 
       margin-bottom: 12px;
 
@@ -89,15 +122,21 @@
 
       border: none;
 
-      border-radius: 8px;
+      border-radius: 10px;
 
       outline: none;
 
       font-size: 15px;
+
+      transition: box-shadow 0.2s, border-color 0.2s;
     }
 
     .login-input::placeholder {
       color: #64748b;
+    }
+
+    .login-input:focus {
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.20);
     }
 
     .password-wrapper {
@@ -162,9 +201,11 @@
 
       border: none;
 
-      border-radius: 8px;
+      border-radius: 10px;
 
       background: #2563eb;
+
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22);
 
       color: white;
 
@@ -863,6 +904,21 @@
 
     @media (max-width: 600px) {
 
+      .login-box {
+        padding: 32px 22px 28px;
+        border-radius: 16px;
+      }
+
+      .login-logo {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 16px;
+      }
+
+      .login-box h1 {
+        font-size: 26px;
+      }
+
       header h1 {
         font-size: 25px;
       }
@@ -936,12 +992,18 @@
 
     <div class="login-box">
 
+      <img
+        class="login-logo"
+        src="logo.png"
+        alt="Jayro Chords logo"
+      >
+
       <h1>
-        🎵 Jayro Chords
+        Welcome to Jayro Chords
       </h1>
 
       <div class="login-subtitle">
-        Sign in to access the chord library
+        Sign in to access the chord library.
       </div>
 
       <input
@@ -984,8 +1046,10 @@
         class="login-button"
         type="button"
       >
-        Login
+        Sign In
       </button>
+
+      <div class="login-divider">OR</div>
 
       <button
         class="request-button"
@@ -1766,13 +1830,13 @@
     }
 
 
-    // =====================================================
-    // REMEMBER ME STORAGE HELPERS
-    // Frontend-only change. Authentication/backend is untouched.
-    // =====================================================
+    /* =====================================================
+       REMEMBER ME STORAGE
+       Frontend-only. Backend/authentication request unchanged.
+    ===================================================== */
     function getActiveStorage() {
-      const rememberMe = document.getElementById("rememberMe");
-      return rememberMe && rememberMe.checked ? localStorage : sessionStorage;
+      const checkbox = document.getElementById("rememberMe");
+      return checkbox && checkbox.checked ? localStorage : sessionStorage;
     }
 
     function getStoredToken() {
@@ -1782,7 +1846,8 @@
 
     function setStoredValue(key, value) {
       const storage = getActiveStorage();
-      const otherStorage = storage === localStorage ? sessionStorage : localStorage;
+      const otherStorage =
+        storage === localStorage ? sessionStorage : localStorage;
 
       storage.setItem(key, value);
       otherStorage.removeItem(key);
@@ -1792,6 +1857,7 @@
       localStorage.removeItem(key);
       sessionStorage.removeItem(key);
     }
+
 
     function login() {
       const emailInput = document.getElementById("loginEmail");
@@ -1830,7 +1896,7 @@
         if (script.parentNode) script.parentNode.removeChild(script);
         loginInProgress = false;
         button.disabled = false;
-        button.textContent = "Login";
+        button.textContent = "Sign In";
       }
 
       window[callbackName] = function(result) {
@@ -1843,7 +1909,8 @@
             return;
           }
 
-          // Save the session according to Remember me.
+          // IMPORTANT: use localStorage because loadSongs(), logout(),
+          // and session restore all use the same storage.
           setStoredValue("jayro_token", result.token);
           setStoredValue("jayro_email", result.email || email);
           setStoredValue("jayro_name", result.name || "");
@@ -1882,7 +1949,7 @@
        LOGOUT
     ===================================================== */
     async function logout() {
-      const token = localStorage.getItem("jayro_token");
+      const token = getStoredToken();
       try {
         if (token) {
           await new Promise(function(resolve) {
@@ -1904,9 +1971,9 @@
         }
       } catch (error) { console.error("Logout error:", error); }
       removeStoredValue("jayro_token");
-      removeStoredValue("jayro_email");
-      removeStoredValue("jayro_name");
-      removeStoredValue("jayro_role");
+    removeStoredValue("jayro_email");
+    removeStoredValue("jayro_name");
+    removeStoredValue("jayro_role");
       songs = []; currentSong = null; transposeAmount = 0;
       document.getElementById("songs").innerHTML = "";
       document.getElementById("loginEmail").value = "";
@@ -1928,10 +1995,10 @@
         window[callbackName] = function(data) {
           try {
             if (data && data.success === false) {
-              removeStoredValue("jayro_token");
-      removeStoredValue("jayro_email");
-      removeStoredValue("jayro_name");
-      removeStoredValue("jayro_role");
+                        removeStoredValue("jayro_token");
+              removeStoredValue("jayro_email");
+              removeStoredValue("jayro_name");
+              removeStoredValue("jayro_role");
               songs = []; document.getElementById("songs").innerHTML = "";
               document.getElementById("message").textContent = data.message || "Session expired. Please log in again.";
               showLoginPage(); resolve(false); return;
@@ -2702,19 +2769,7 @@ function submitAccessRequest() {
 
     (function restoreSession() {
       const token = getStoredToken();
-
-      // If a persistent token already exists, keep Remember me checked.
-      const rememberMe = document.getElementById("rememberMe");
-      if (rememberMe && localStorage.getItem("jayro_token")) {
-        rememberMe.checked = true;
-      }
-
-      if (token) {
-        showHome();
-        loadSongs();
-      } else {
-        showLoginPage();
-      }
+      if (token) { showHome(); loadSongs(); } else { showLoginPage(); }
     })();
 
   </script>

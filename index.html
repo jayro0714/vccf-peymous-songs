@@ -1011,6 +1011,21 @@
     ===================================================== */
 
 
+
+    @media (max-width: 900px) {
+      .home-sidebar {
+        display: none !important;
+      }
+
+      .home-layout {
+        display: block;
+      }
+
+      .home-main {
+        width: 100%;
+      }
+    }
+
     @media (max-width: 900px) {
 
       .home-header {
@@ -1916,22 +1931,27 @@
 
 
     function maybeOpenMobileNote() {
-      if (window.matchMedia("(max-width: 600px)").matches) {
-        setTimeout(function() {
-          openMobileNote();
-        }, 150);
-      }
-    }
+      if (window.innerWidth > 900) return;
 
+      const seen = sessionStorage.getItem("jayro_mobile_note_seen");
+      if (seen === "1") return;
+
+      const modal = document.getElementById("mobileNoteModal");
+      if (!modal) return;
+
+      setTimeout(function() {
+        modal.classList.add("show");
+      }, 250);
+
+      sessionStorage.setItem("jayro_mobile_note_seen", "1");
+    }
 
     function closeMobileNote() {
       const modal = document.getElementById("mobileNoteModal");
       if (modal) {
         modal.classList.remove("show");
-        document.body.style.overflow = "";
       }
     }
-
 
     function closeMobileNoteFromBackdrop(event) {
       if (event.target === event.currentTarget) {
@@ -2209,7 +2229,8 @@
               delete window[callbackName];
               if (script.parentNode) script.parentNode.removeChild(script);
               resolve();
-            };
+              sessionStorage.removeItem("jayro_mobile_note_seen");
+    };
             script.src = API_URL + "?action=logout" + "&token=" + encodeURIComponent(token) + "&callback=" + encodeURIComponent(callbackName);
             script.onerror = function() {
               delete window[callbackName];

@@ -100,6 +100,35 @@
       color: #64748b;
     }
 
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .password-wrapper .login-input {
+      margin-bottom: 0;
+      padding-right: 58px;
+    }
+
+    .show-password-button {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 6px 5px;
+    }
+
+    .show-password-button:hover {
+      color: #2563eb;
+    }
+
     .login-button {
       width: 100%;
 
@@ -899,13 +928,23 @@
         autocomplete="email"
       >
 
-      <input
-        id="loginPassword"
-        class="login-input"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
+      <div class="password-wrapper">
+        <input
+          id="loginPassword"
+          class="login-input"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        >
+        <button
+          id="showPasswordButton"
+          class="show-password-button"
+          type="button"
+          aria-label="Show password"
+        >
+          Show
+        </button>
+      </div>
 
       <button
         id="loginButton"
@@ -1673,9 +1712,27 @@
     }
 
 
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById("loginPassword");
+      const button = document.getElementById("showPasswordButton");
+
+      if (!passwordInput || !button) return;
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        button.textContent = "Hide";
+        button.setAttribute("aria-label", "Hide password");
+      } else {
+        passwordInput.type = "password";
+        button.textContent = "Show";
+        button.setAttribute("aria-label", "Show password");
+      }
+    }
+
+
     /* =====================================================
        LOGIN
-    ===================================================== */
+    =====================================================
     function login() {
       const emailInput = document.getElementById("loginEmail");
       const passwordInput = document.getElementById("loginPassword");
@@ -2532,6 +2589,16 @@ function submitAccessRequest() {
       .addEventListener(
         "click",
         login
+      );
+
+
+    document
+      .getElementById(
+        "showPasswordButton"
+      )
+      .addEventListener(
+        "click",
+        togglePasswordVisibility
       );
 
 

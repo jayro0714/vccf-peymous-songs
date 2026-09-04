@@ -389,124 +389,232 @@
 
     /* =====================================================
        HOME
+       UI refresh only — existing functionality preserved.
     ===================================================== */
 
     #homePage {
       min-height: 100vh;
-
       display: none;
-
       flex-direction: column;
+      background:
+        radial-gradient(circle at 72% 12%, rgba(37, 99, 235, 0.10), transparent 28%),
+        #0b1730;
+      color: #f8fafc;
     }
 
-    header {
-      text-align: center;
-
-      padding: 30px 15px 20px;
-    }
-
-    header h1 {
-      margin: 0 0 20px;
-
-      font-size: 32px;
-    }
-
-    #search {
-      width: 90%;
-
-      max-width: 500px;
-
-      padding: 14px 16px;
-
-      background: white;
-
-      color: #111827;
-
-      border: none;
-
-      border-radius: 10px;
-
-      outline: none;
-
-      font-size: 16px;
-    }
-
-    #search::placeholder {
-      color: #64748b;
-    }
-
-    .home-toolbar {
+    .home-header {
+      width: 100%;
+      min-height: 86px;
       display: flex;
-
-      justify-content: center;
-
       align-items: center;
-
-      gap: 8px;
-
-      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 10px 48px;
+      border-bottom: 1px solid #1e3a5f;
+      background: rgba(9, 25, 50, 0.96);
     }
 
-    #songs {
-      width: 90%;
+    .home-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-      max-width: 700px;
+    .home-brand-logo {
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
 
-      margin: 10px auto 40px;
+    .home-brand-name {
+      font-size: 28px;
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
 
+    .home-brand-subtitle {
+      margin-top: 5px;
+      color: #60a5fa;
+      font-size: 14px;
+    }
+
+    .home-layout {
+      width: 100%;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 22px 30px 40px;
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      gap: 36px;
       flex: 1;
     }
 
-    .song {
-      background: #1e293b;
-
-      padding: 17px;
-
-      margin-bottom: 10px;
-
+    .home-sidebar {
+      align-self: start;
+      border: 1px solid #25466f;
       border-radius: 10px;
+      padding: 18px 16px;
+      background: rgba(11, 31, 58, 0.68);
+      color: #e2e8f0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
 
+    .home-sidebar-title {
+      color: #60a5fa;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .home-sidebar-divider {
+      height: 1px;
+      background: #25466f;
+      margin: 14px 0;
+    }
+
+    .home-sidebar-symbol-title {
+      color: #60a5fa;
+      font-weight: 700;
+    }
+
+    .home-main {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .home-main-heading {
+      text-align: center;
+      margin: 4px 0 20px;
+    }
+
+    .home-main-heading h1 {
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.15;
+      font-weight: 800;
+    }
+
+    .home-main-heading p {
+      margin: 8px 0 0;
+      color: #60a5fa;
+      font-size: 16px;
+    }
+
+    .home-search {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 5px;
+      border: 1px solid #3b6fa8;
+      border-radius: 10px;
+      background: rgba(23, 49, 82, 0.75);
+      margin-bottom: 14px;
+    }
+
+    #search {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 14px;
+      background: transparent;
+      color: #f8fafc;
+      border: none;
+      outline: none;
+      font-size: 15px;
+    }
+
+    #search::placeholder {
+      color: #94a3b8;
+    }
+
+    .home-search-button {
+      padding: 11px 28px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
       cursor: pointer;
+    }
 
-      font-weight: bold;
+    .home-search-button:hover {
+      background: #3b82f6;
+    }
 
-      transition: 0.2s;
+    #songs {
+      width: 100%;
+      margin: 0 auto 20px;
+    }
+
+    .song {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 54px;
+      padding: 10px 12px 10px 18px;
+      margin-bottom: 7px;
+      border: 1px solid rgba(49, 82, 120, 0.55);
+      border-radius: 9px;
+      background: rgba(24, 48, 79, 0.78);
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.18s ease, border-color 0.18s ease;
     }
 
     .song:hover {
-      background: #334155;
+      background: rgba(31, 61, 98, 0.95);
+      border-color: #3b6fa8;
+    }
 
-      transform: translateY(-1px);
+    .song-name {
+      min-width: 0;
+      color: #f8fafc;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .view-chords-button {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border: 1px solid #3269a8;
+      border-radius: 8px;
+      background: #173e78;
+      color: #e0edff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .view-chords-button:hover {
+      background: #1d4f96;
     }
 
     #message {
       text-align: center;
-
       color: #94a3b8;
-
-      margin: 30px;
+      margin: 24px;
     }
 
     .logout-button {
-      padding: 12px 18px;
-
-      border: 1px solid #475569;
-
+      padding: 11px 18px;
+      border: 1px solid #29496f;
       border-radius: 8px;
-
-      background: transparent;
-
-      color: #60a5fa;
-
-      font-weight: bold;
-
+      background: #132d50;
+      color: #bfdbfe;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .logout-button:hover {
-      background: #334155;
+      background: #1b3d69;
     }
-
 
     /* =====================================================
        SONG PAGE
@@ -902,6 +1010,121 @@
        MOBILE
     ===================================================== */
 
+
+    @media (max-width: 900px) {
+
+      .home-header {
+        padding: 10px 18px;
+      }
+
+      .home-brand-logo {
+        width: 56px;
+        height: 56px;
+      }
+
+      .home-brand-name {
+        font-size: 22px;
+      }
+
+      .home-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 18px 16px 30px;
+      }
+
+      .home-sidebar {
+        order: 2;
+      }
+
+      .home-main {
+        order: 1;
+      }
+
+      .home-main-heading h1 {
+        font-size: 27px;
+      }
+
+    }
+
+    @media (max-width: 600px) {
+
+      .home-header {
+        min-height: 76px;
+        padding: 8px 12px;
+      }
+
+      .home-brand {
+        gap: 9px;
+      }
+
+      .home-brand-logo {
+        width: 50px;
+        height: 50px;
+      }
+
+      .home-brand-name {
+        font-size: 18px;
+      }
+
+      .home-brand-subtitle {
+        font-size: 11px;
+      }
+
+      .logout-button {
+        padding: 9px 12px;
+        font-size: 12px;
+      }
+
+      .home-layout {
+        padding: 16px 12px 24px;
+      }
+
+      .home-main-heading {
+        margin-bottom: 14px;
+      }
+
+      .home-main-heading h1 {
+        font-size: 23px;
+      }
+
+      .home-main-heading p {
+        font-size: 14px;
+      }
+
+      .home-search {
+        gap: 5px;
+      }
+
+      #search {
+        padding: 11px 10px;
+        font-size: 14px;
+      }
+
+      .home-search-button {
+        padding: 10px 14px;
+      }
+
+      .song {
+        min-height: 52px;
+        padding: 9px 9px 9px 12px;
+        gap: 8px;
+      }
+
+      .song-name {
+        font-size: 14px;
+      }
+
+      .view-chords-button {
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+
+      .home-sidebar {
+        font-size: 13px;
+      }
+
+    }
+
     @media (max-width: 600px) {
 
       .login-box {
@@ -1184,31 +1407,93 @@
 
   <div id="homePage">
 
-    <div class="bandmate-note">
-      🎸 <strong>Hi Bandmates!</strong><br>
-      Welcome sa Jayro Chords!
-
-      <div style="margin-top: 9px;">
-        📝 Yung mga chords po dito ay ayon sa years ng pagsisipra ko. So kung may iba kayong arrangement or artist/version, pwede natin isama o idagdag sa future revisions.
+    <div class="home-header">
+      <div class="home-brand">
+        <img
+          class="home-brand-logo"
+          src="logo.png"
+          alt="Jayro Chords logo"
+        >
+        <div>
+          <div class="home-brand-name">JAYRO CHORDS</div>
+          <div class="home-brand-subtitle">Your Worship Chord Library</div>
+        </div>
       </div>
 
-      <div style="margin-top: 9px;">
-        🙏 Feel free to use this sa inyong mga tugtugan! Enjoy and God bless! 💜
-      </div>
+      <button
+        id="logoutButton"
+        class="logout-button"
+        type="button"
+      >
+        Logout
+      </button>
+    </div>
 
-      <div class="bandmate-note-divider"></div>
+    <div class="home-layout">
 
-      <strong>🎵 Note Count Symbols</strong>
-      <div class="bandmate-note-symbols" style="margin-top: 6px;">
-        ( ) — Half Note<br>
-        ( - - - - ) — Quarter Note
-      </div>
+      <aside class="home-sidebar">
+        <div class="home-sidebar-title">👋 Hi Bandmates!</div>
+        <div>Welcome sa Jayro Chords!</div>
 
-      <div class="bandmate-note-divider" style="margin-top: 10px;"></div>
+        <div style="margin-top: 9px;">
+          📝 Yung mga chords po dito ay ayon sa years ng pagsisipra ko.
+          So kung may iba kayong arrangement or artist/version, pwede natin
+          isama o idagdag sa future revisions.
+        </div>
 
-      <div style="margin-top: 10px; color:#cbd5e1;">
-        Pafollow nadin sa page <strong>"Jayro Chords"</strong> for more updates 😊
-      </div>
+        <div style="margin-top: 9px;">
+          🙏 Feel free to use this sa inyong mga tugtugan!
+          Enjoy and God bless! 💜
+        </div>
+
+        <div class="home-sidebar-divider"></div>
+
+        <div class="home-sidebar-symbol-title">🎵 Note Count Symbols</div>
+        <div style="margin-top: 6px;">
+          ( ) — Half Note<br>
+          ( - - - - ) — Quarter Note
+        </div>
+
+        <div class="home-sidebar-divider"></div>
+
+        <div style="color:#cbd5e1;">
+          Pafollow nadin sa page <strong>"Jayro Chords"</strong>
+          for more updates 😊
+        </div>
+      </aside>
+
+      <main class="home-main">
+
+        <div class="home-main-heading">
+          <h1>🎵 Praise and Worship Songs List</h1>
+          <p>Find and view chords for your preferred songs.</p>
+        </div>
+
+        <div class="home-search">
+          <input
+            id="search"
+            type="text"
+            placeholder="Search for a song, artist, or keyword..."
+            autocomplete="off"
+          >
+
+          <button
+            id="searchButton"
+            class="home-search-button"
+            type="button"
+          >
+            Search
+          </button>
+        </div>
+
+        <div id="songs"></div>
+
+        <div id="message">
+          Loading songs...
+        </div>
+
+      </main>
+
     </div>
 
     <div
@@ -1255,42 +1540,7 @@
       </div>
     </div>
 
-    <header>
-
-      <h1>
-        🎵 Praise and Worship Songs List
-      </h1>
-
-      <div class="home-toolbar">
-
-        <input
-          id="search"
-          type="text"
-          placeholder="Search song..."
-          autocomplete="off"
-        >
-
-        <button
-          id="logoutButton"
-          class="logout-button"
-          type="button"
-        >
-          Logout
-        </button>
-
-      </div>
-
-    </header>
-
-
-    <div id="songs"></div>
-
-    <div id="message">
-      Loading songs...
-    </div>
-
   </div>
-
 
 
   <!-- =====================================================
@@ -2028,16 +2278,13 @@
           "songs"
         );
 
-
       const message =
         document.getElementById(
           "message"
         );
 
-
       container.innerHTML =
         "";
-
 
       if (
         !list ||
@@ -2051,10 +2298,8 @@
 
       }
 
-
       message.textContent =
         "";
-
 
       list.forEach(
         function(song) {
@@ -2064,14 +2309,46 @@
               "div"
             );
 
-
           div.className =
             "song";
 
+          const songName =
+            document.createElement(
+              "div"
+            );
 
-          div.textContent =
+          songName.className =
+            "song-name";
+
+          songName.textContent =
             song.name;
 
+          const viewButton =
+            document.createElement(
+              "button"
+            );
+
+          viewButton.type =
+            "button";
+
+          viewButton.className =
+            "view-chords-button";
+
+          viewButton.innerHTML =
+            "📄 View Chords";
+
+          viewButton.addEventListener(
+            "click",
+            function(event) {
+
+              event.stopPropagation();
+
+              openSong(
+                song
+              );
+
+            }
+          );
 
           div.addEventListener(
             "click",
@@ -2084,6 +2361,13 @@
             }
           );
 
+          div.appendChild(
+            songName
+          );
+
+          div.appendChild(
+            viewButton
+          );
 
           container.appendChild(
             div
@@ -2146,6 +2430,24 @@
 
         }
       );
+
+
+
+    const searchButton =
+      document.getElementById(
+        "searchButton"
+      );
+
+    if (searchButton) {
+      searchButton.addEventListener(
+        "click",
+        function() {
+          document.getElementById("search").dispatchEvent(
+            new Event("input", { bubbles: true })
+          );
+        }
+      );
+    }
 
 
     /* =====================================================

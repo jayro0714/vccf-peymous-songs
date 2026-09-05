@@ -51,15 +51,15 @@
     }
 
     .login-box {
-      width: 100%;
-      max-width: 430px;
+      width: min(383px, calc(100vw - 32px));
+      max-width: 383px;
 
       background: rgba(30, 41, 59, 0.96);
 
-      padding: 38px 36px 34px;
+      padding: 30px 28px 28px;
 
       border: 1px solid #334155;
-      border-radius: 18px;
+      border-radius: 16px;
 
       box-shadow:
         0 24px 60px rgba(0, 0, 0, 0.42);
@@ -68,11 +68,11 @@
     }
 
     .login-logo {
-      width: 112px;
-      height: 112px;
+      width: 96px;
+      height: 96px;
       object-fit: contain;
       display: block;
-      margin: 0 auto 18px;
+      margin: 0 auto 16px;
     }
 
     .login-box h1 {
@@ -192,18 +192,26 @@
       user-select: none;
     }
 
+    .no-access-yet {
+      margin-top: 12px;
+      margin-bottom: 8px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
     .facebook-follow {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 9px;
-      margin: 8px auto 0;
-      padding: 8px 16px;
+      margin: 16px auto 0;
+      padding: 6px 13px;
       border: 1px solid #3b82f6;
       border-radius: 8px;
       background: linear-gradient(90deg, #2563eb, #173e78);
       color: #ffffff;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       text-decoration: none;
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
@@ -213,6 +221,26 @@
     .facebook-follow:hover {
       background: linear-gradient(90deg, #3b82f6, #1d4ed8);
       transform: translateY(-1px);
+    }
+
+    .facebook-follow-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      line-height: 1.15;
+    }
+
+    .facebook-follow-text strong {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .facebook-follow-text small {
+      margin-top: 3px;
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.9;
     }
 
     .facebook-follow-icon {
@@ -1050,6 +1078,17 @@
 
 
     @media (max-width: 600px) {
+      .no-access-yet {
+        margin-top: 10px;
+        margin-bottom: 7px;
+      }
+
+      .facebook-follow {
+        margin-top: 16px;
+      }
+    }
+
+    @media (max-width: 600px) {
       .facebook-follow {
         margin-top: 8px;
         padding: 7px 13px;
@@ -1199,7 +1238,9 @@
     @media (max-width: 600px) {
 
       .login-box {
-        padding: 32px 22px 28px;
+        width: calc(100vw - 32px);
+        max-width: 383px;
+        padding: 30px 28px 28px;
         border-radius: 16px;
       }
 
@@ -1345,6 +1386,8 @@
 
       <div class="login-divider">OR</div>
 
+      <div class="no-access-yet">No access yet?</div>
+
       <button
         class="request-button"
         type="button"
@@ -1353,21 +1396,24 @@
         Request Access
       </button>
 
-      <div
-        id="loginMessage"
-        class="login-message"
-      ></div>
-
       <a
         class="facebook-follow"
         href="https://www.facebook.com/share/1HVL1CoZWb/"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Follow @Jayro Chords on Facebook"
+        aria-label="Follow Jayro Chords on Facebook"
       >
         <span class="facebook-follow-icon">f</span>
-        <span>Follow @Jayro Chords</span>
+        <span class="facebook-follow-text">
+          <strong>Jayro Chords</strong>
+          <small>Click to Follow</small>
+        </span>
       </a>
+
+      <div
+        id="loginMessage"
+        class="login-message"
+      ></div>
 
     </div>
 

@@ -51,15 +51,15 @@
     }
 
     .login-box {
-      width: min(383px, calc(100vw - 32px));
-      max-width: 383px;
+      width: 100%;
+      max-width: 430px;
 
       background: rgba(30, 41, 59, 0.96);
 
-      padding: 30px 28px 28px;
+      padding: 38px 36px 34px;
 
       border: 1px solid #334155;
-      border-radius: 16px;
+      border-radius: 18px;
 
       box-shadow:
         0 24px 60px rgba(0, 0, 0, 0.42);
@@ -201,60 +201,66 @@
     }
 
     .facebook-follow {
+      width: 55%;
+      min-width: 170px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 9px;
-      margin: 16px auto 0;
-      padding: 6px 13px;
-      border: 1px solid #3b82f6;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #2563eb, #173e78);
+      gap: 10px;
+      margin: 26px auto 0;
+      padding: 7px 12px;
+      box-sizing: border-box;
+      border: 1px solid #4f8fe8;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #1877f2, #2458b8);
       color: #ffffff;
       font-size: 12px;
       font-weight: 700;
       text-decoration: none;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
-      transition: transform 0.15s ease, background 0.15s ease;
+      box-shadow: 0 5px 14px rgba(24, 119, 242, 0.22);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
     .facebook-follow:hover {
-      background: linear-gradient(90deg, #3b82f6, #1d4ed8);
       transform: translateY(-1px);
-    }
-
-    .facebook-follow-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      line-height: 1.15;
-    }
-
-    .facebook-follow-text strong {
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .facebook-follow-text small {
-      margin-top: 3px;
-      font-size: 11px;
-      font-weight: 500;
-      opacity: 0.9;
+      box-shadow: 0 7px 18px rgba(24, 119, 242, 0.30);
     }
 
     .facebook-follow-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 5px;
+      width: 27px;
+      height: 27px;
+      border-radius: 6px;
       background: #ffffff;
-      color: #2563eb;
-      font-size: 17px;
+      color: #1877f2;
+      font-family: Arial, sans-serif;
+      font-size: 21px;
       font-weight: 800;
       line-height: 1;
+      flex: 0 0 27px;
+    }
+
+    .facebook-follow-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.12;
+      min-width: 0;
+    }
+
+    .facebook-follow-text strong {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .facebook-follow-text small {
+      margin-top: 3px;
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.92;
     }
 
     .login-button {
@@ -1105,6 +1111,14 @@
       .view-chords-button {
         display: none !important;
       }
+
+      .facebook-follow {
+        width: 55%;
+        min-width: 155px;
+        margin-top: 20px;
+      }
+
+
     }
 
     @media (max-width: 900px) {

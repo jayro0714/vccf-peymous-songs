@@ -192,6 +192,43 @@
       user-select: none;
     }
 
+    .facebook-follow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin: 24px auto 0;
+      padding: 8px 16px;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #2563eb, #173e78);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .facebook-follow:hover {
+      background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+      transform: translateY(-1px);
+    }
+
+    .facebook-follow-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: #ffffff;
+      color: #2563eb;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
     .login-button {
       width: 100%;
 
@@ -1013,12 +1050,30 @@
 
 
     @media (max-width: 600px) {
-      .view-chords-button {
-        display: none !important;
+      .facebook-follow {
+        margin-top: 18px;
+        padding: 7px 13px;
+        font-size: 12px;
       }
 
-      .song {
-        cursor: pointer;
+      .facebook-follow-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 15px;
+      }
+
+
+      .view-chords-button {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+        font-size: 0;
+        gap: 0;
+      }
+
+      .view-chords-button::first-letter {
+        font-size: 18px;
       }
     }
 
@@ -1311,6 +1366,15 @@
         id="loginMessage"
         class="login-message"
       ></div>
+
+      <a
+        class="facebook-follow"
+        href="#"
+        aria-label="Follow @Jayro Chords on Facebook"
+      >
+        <span class="facebook-follow-icon">f</span>
+        <span>Follow @Jayro Chords</span>
+      </a>
 
     </div>
 

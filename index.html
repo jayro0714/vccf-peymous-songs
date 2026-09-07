@@ -335,189 +335,6 @@
 
 
     /* =====================================================
-       SONG FEEDBACK
-    ===================================================== */
-
-    function resetFeedbackForm() {
-      selectedFeedbackRating = 0;
-      document.querySelectorAll(".feedback-star").forEach(function(star) {
-        star.textContent = "☆";
-        star.classList.remove("active");
-      });
-      document.getElementById("feedbackComment").value = "";
-      document.getElementById("feedbackMessage").textContent = "";
-      document.getElementById("feedbackSummary").textContent = "Loading ratings...";
-      document.getElementById("feedbackComments").innerHTML = "";
-    }
-
-    function setFeedbackRating(rating) {
-      selectedFeedbackRating = Number(rating) || 0;
-      document.querySelectorAll(".feedback-star").forEach(function(star) {
-        const value = Number(star.getAttribute("data-rating"));
-        star.textContent = value <= selectedFeedbackRating ? "★" : "☆";
-        star.classList.toggle("active", value <= selectedFeedbackRating);
-      });
-    }
-
-    function renderFeedback(data) {
-      const summary = document.getElementById("feedbackSummary");
-      const comments = document.getElementById("feedbackComments");
-      const commentsHeading = document.getElementById("feedbackCommentsHeading");
-      const average = Number(data.average || 0);
-      const count = Number(data.count || 0);
-
-      if (count > 0) {
-        summary.textContent = average.toFixed(1) + " / 5 (" + count + " rating" + (count === 1 ? "" : "s") + ")";
-      } else {
-        summary.textContent = "No ratings yet.";
-      }
-
-      comments.innerHTML = "";
-      const list = Array.isArray(data.comments) ? data.comments : [];
-      if (commentsHeading) {
-        commentsHeading.textContent = "Comments" + (list.length ? " (" + list.length + ")" : "");
-      }
-
-      if (list.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "feedback-empty";
-        empty.textContent = "No comments yet. Be the first to leave one.";
-        comments.appendChild(empty);
-        return;
-      }
-
-      list.forEach(function(item) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "feedback-comment";
-
-        const header = document.createElement("div");
-        header.className = "feedback-comment-header";
-
-        const name = document.createElement("div");
-        name.className = "feedback-comment-name";
-        name.textContent = item.name || "Member";
-
-        const rating = document.createElement("div");
-        rating.className = "feedback-comment-rating";
-        const stars = Math.max(0, Math.min(5, Number(item.rating || 0)));
-        rating.textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
-
-        const text = document.createElement("div");
-        text.className = "feedback-comment-text";
-        text.textContent = item.comment || "";
-
-        header.appendChild(name);
-        header.appendChild(rating);
-        wrapper.appendChild(header);
-        if (item.comment) wrapper.appendChild(text);
-        comments.appendChild(wrapper);
-      });
-    }
-
-    function loadSongFeedback(song) {
-      const token = getStoredToken();
-      if (!token || !song) return;
-
-      const requestId = ++feedbackRequestId;
-      const callbackName = "feedbackResponse_" + Date.now();
-      const script = document.createElement("script");
-
-      window[callbackName] = function(data) {
-        try {
-          if (requestId !== feedbackRequestId) return;
-          if (data && data.success === false) {
-            document.getElementById("feedbackSummary").textContent = data.message || "Unable to load ratings.";
-            return;
-          }
-          renderFeedback(data || {});
-        } finally {
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-        }
-      };
-
-      script.onerror = function() {
-        if (requestId === feedbackRequestId) {
-          document.getElementById("feedbackSummary").textContent = "Unable to load ratings.";
-        }
-        delete window[callbackName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-      };
-
-      script.src = API_URL +
-        "?action=getSongFeedback" +
-        "&token=" + encodeURIComponent(token) +
-        "&song=" + encodeURIComponent(song.name || "") +
-        "&callback=" + encodeURIComponent(callbackName);
-
-      document.body.appendChild(script);
-    }
-
-    function submitSongFeedback() {
-      const token = getStoredToken();
-      const message = document.getElementById("feedbackMessage");
-      const button = document.getElementById("feedbackSubmit");
-      const comment = document.getElementById("feedbackComment").value.trim();
-
-      if (!currentSong || !token) {
-        message.textContent = "Please log in first.";
-        return;
-      }
-
-      if (!selectedFeedbackRating) {
-        message.textContent = "Please choose a rating.";
-        return;
-      }
-
-      button.disabled = true;
-      message.textContent = "Saving...";
-
-      const callbackName = "saveFeedbackResponse_" + Date.now();
-      const script = document.createElement("script");
-
-      window[callbackName] = function(data) {
-        try {
-          if (!data || data.success !== true) {
-            message.textContent = (data && data.message) || "Unable to save feedback.";
-            return;
-          }
-          message.textContent = "Thanks for your feedback!";
-          loadSongFeedback(currentSong);
-        } finally {
-          button.disabled = false;
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-        }
-      };
-
-      script.onerror = function() {
-        message.textContent = "Unable to connect to the server.";
-        button.disabled = false;
-        delete window[callbackName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-      };
-
-      script.src = API_URL +
-        "?action=saveSongFeedback" +
-        "&token=" + encodeURIComponent(token) +
-        "&song=" + encodeURIComponent(currentSong.name || "") +
-        "&rating=" + encodeURIComponent(selectedFeedbackRating) +
-        "&comment=" + encodeURIComponent(comment) +
-        "&callback=" + encodeURIComponent(callbackName);
-
-      document.body.appendChild(script);
-    }
-
-    document.querySelectorAll(".feedback-star").forEach(function(star) {
-      star.addEventListener("click", function() {
-        setFeedbackRating(this.getAttribute("data-rating"));
-      });
-    });
-
-    document.getElementById("feedbackSubmit").addEventListener("click", submitSongFeedback);
-
-
-    /* =====================================================
        REQUEST ACCESS
     ===================================================== */
 
@@ -2169,6 +1986,192 @@
     let loginInProgress = false;
     let selectedFeedbackRating = 0;
     let feedbackRequestId = 0;
+
+
+    /* =====================================================
+       SONG FEEDBACK
+    ===================================================== */
+
+    function resetFeedbackForm() {
+      selectedFeedbackRating = 0;
+      document.querySelectorAll(".feedback-star").forEach(function(star) {
+        star.textContent = "☆";
+        star.classList.remove("active");
+      });
+      document.getElementById("feedbackComment").value = "";
+      document.getElementById("feedbackMessage").textContent = "";
+      document.getElementById("feedbackSummary").textContent = "Loading ratings...";
+      document.getElementById("feedbackComments").innerHTML = "";
+    }
+
+    function setFeedbackRating(rating) {
+      selectedFeedbackRating = Number(rating) || 0;
+      document.querySelectorAll(".feedback-star").forEach(function(star) {
+        const value = Number(star.getAttribute("data-rating"));
+        star.textContent = value <= selectedFeedbackRating ? "★" : "☆";
+        star.classList.toggle("active", value <= selectedFeedbackRating);
+      });
+    }
+
+    function renderFeedback(data) {
+      const summary = document.getElementById("feedbackSummary");
+      const comments = document.getElementById("feedbackComments");
+      const commentsHeading = document.getElementById("feedbackCommentsHeading");
+      const average = Number(data.average || 0);
+      const count = Number(data.count || 0);
+
+      if (count > 0) {
+        summary.textContent = average.toFixed(1) + " / 5 (" + count + " rating" + (count === 1 ? "" : "s") + ")";
+      } else {
+        summary.textContent = "No ratings yet.";
+      }
+
+      comments.innerHTML = "";
+      const list = Array.isArray(data.comments) ? data.comments : [];
+      if (commentsHeading) {
+        commentsHeading.textContent = "Comments" + (list.length ? " (" + list.length + ")" : "");
+      }
+
+      if (list.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "feedback-empty";
+        empty.textContent = "No comments yet. Be the first to leave one.";
+        comments.appendChild(empty);
+        return;
+      }
+
+      list.forEach(function(item) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "feedback-comment";
+
+        const header = document.createElement("div");
+        header.className = "feedback-comment-header";
+
+        const name = document.createElement("div");
+        name.className = "feedback-comment-name";
+        name.textContent = item.name || "Member";
+
+        const rating = document.createElement("div");
+        rating.className = "feedback-comment-rating";
+        const stars = Math.max(0, Math.min(5, Number(item.rating || 0)));
+        rating.textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
+
+        const text = document.createElement("div");
+        text.className = "feedback-comment-text";
+        text.textContent = item.comment || "";
+
+        header.appendChild(name);
+        header.appendChild(rating);
+        wrapper.appendChild(header);
+        if (item.comment) wrapper.appendChild(text);
+        comments.appendChild(wrapper);
+      });
+    }
+
+    function loadSongFeedback(song) {
+      const token = getStoredToken();
+      if (!token || !song) return;
+
+      const requestId = ++feedbackRequestId;
+      const callbackName = "feedbackResponse_" + Date.now();
+      const script = document.createElement("script");
+
+      window[callbackName] = function(data) {
+        try {
+          if (requestId !== feedbackRequestId) return;
+          if (data && data.success === false) {
+            document.getElementById("feedbackSummary").textContent = data.message || "Unable to load ratings.";
+            return;
+          }
+          renderFeedback(data || {});
+        } finally {
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+      };
+
+      script.onerror = function() {
+        if (requestId === feedbackRequestId) {
+          document.getElementById("feedbackSummary").textContent = "Unable to load ratings.";
+        }
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      };
+
+      script.src = API_URL +
+        "?action=getSongFeedback" +
+        "&token=" + encodeURIComponent(token) +
+        "&song=" + encodeURIComponent(song.name || "") +
+        "&callback=" + encodeURIComponent(callbackName);
+
+      document.body.appendChild(script);
+    }
+
+    function submitSongFeedback() {
+      const token = getStoredToken();
+      const message = document.getElementById("feedbackMessage");
+      const button = document.getElementById("feedbackSubmit");
+      const comment = document.getElementById("feedbackComment").value.trim();
+
+      if (!currentSong || !token) {
+        message.textContent = "Please log in first.";
+        return;
+      }
+
+      if (!selectedFeedbackRating) {
+        message.textContent = "Please choose a rating.";
+        return;
+      }
+
+      button.disabled = true;
+      message.textContent = "Saving...";
+
+      const callbackName = "saveFeedbackResponse_" + Date.now();
+      const script = document.createElement("script");
+
+      window[callbackName] = function(data) {
+        try {
+          if (!data || data.success !== true) {
+            message.textContent = (data && data.message) || "Unable to save feedback.";
+            return;
+          }
+          message.textContent = "Thanks for your feedback!";
+          loadSongFeedback(currentSong);
+        } finally {
+          button.disabled = false;
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+      };
+
+      script.onerror = function() {
+        message.textContent = "Unable to connect to the server.";
+        button.disabled = false;
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      };
+
+      script.src = API_URL +
+        "?action=saveSongFeedback" +
+        "&token=" + encodeURIComponent(token) +
+        "&song=" + encodeURIComponent(currentSong.name || "") +
+        "&rating=" + encodeURIComponent(selectedFeedbackRating) +
+        "&comment=" + encodeURIComponent(comment) +
+        "&callback=" + encodeURIComponent(callbackName);
+
+      document.body.appendChild(script);
+    }
+
+    document.querySelectorAll(".feedback-star").forEach(function(star) {
+      star.addEventListener("click", function() {
+        setFeedbackRating(this.getAttribute("data-rating"));
+      });
+    });
+
+    document.getElementById("feedbackSubmit").addEventListener("click", submitSongFeedback);
+
+
+
 
 
     /* =====================================================

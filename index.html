@@ -805,6 +805,12 @@
       color: #f8fafc;
     }
 
+    .feedback-comment-date {
+      color: #64748b;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
     .feedback-comment-rating {
       color: #fbbf24;
       font-size: 14px;
@@ -2012,6 +2018,19 @@
       });
     }
 
+    function formatFeedbackDate(value) {
+      if (!value) return "";
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return String(value);
+
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+    }
+
     function renderFeedback(data) {
       const summary = document.getElementById("feedbackSummary");
       const comments = document.getElementById("feedbackComments");
@@ -2050,6 +2069,10 @@
         name.className = "feedback-comment-name";
         name.textContent = item.name || "Member";
 
+        const date = document.createElement("div");
+        date.className = "feedback-comment-date";
+        date.textContent = formatFeedbackDate(item.date);
+
         const rating = document.createElement("div");
         rating.className = "feedback-comment-rating";
         const stars = Math.max(0, Math.min(5, Number(item.rating || 0)));
@@ -2060,7 +2083,15 @@
         text.textContent = item.comment || "";
 
         header.appendChild(name);
-        header.appendChild(rating);
+
+        const headerRight = document.createElement("div");
+        headerRight.style.display = "flex";
+        headerRight.style.alignItems = "center";
+        headerRight.style.gap = "12px";
+        headerRight.appendChild(rating);
+        headerRight.appendChild(date);
+
+        header.appendChild(headerRight);
         wrapper.appendChild(header);
         if (item.comment) wrapper.appendChild(text);
         comments.appendChild(wrapper);

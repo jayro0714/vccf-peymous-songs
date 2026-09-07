@@ -693,38 +693,31 @@
 
     .song-feedback {
       margin-top: 34px;
-      padding: 24px;
-      border: 1px solid rgba(49, 82, 120, 0.55);
-      border-radius: 12px;
-      background: rgba(24, 48, 79, 0.55);
-    }
-
-    .feedback-title {
-      margin: 0 0 8px;
-      font-size: 21px;
-      font-weight: 800;
+      padding: 0;
+      border: none;
+      border-radius: 0;
+      background: transparent;
     }
 
     .feedback-summary {
-      color: #94a3b8;
-      font-size: 14px;
-      margin-bottom: 18px;
+      display: none;
     }
 
     .feedback-stars {
       display: flex;
-      gap: 4px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 18px;
     }
 
     .feedback-star {
       border: none;
       background: transparent;
-      color: #64748b;
-      font-size: 30px;
+      color: #94a3b8;
+      font-size: 32px;
       line-height: 1;
-      padding: 2px;
+      padding: 0;
       cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
     }
 
     .feedback-star.active,
@@ -732,27 +725,36 @@
       color: #fbbf24;
     }
 
+    .feedback-star:hover {
+      transform: scale(1.05);
+    }
+
     .feedback-comment-input {
       width: 100%;
-      min-height: 92px;
+      min-height: 120px;
       resize: vertical;
-      padding: 12px 14px;
-      border: 1px solid #3b6fa8;
-      border-radius: 9px;
-      background: #fff;
-      color: #111827;
+      padding: 14px 16px;
+      border: 1px solid #29476f;
+      border-radius: 10px;
+      background: transparent;
+      color: #e2e8f0;
       outline: none;
       font: inherit;
-      font-size: 14px;
+      font-size: 15px;
+    }
+
+    .feedback-comment-input::placeholder {
+      color: #94a3b8;
     }
 
     .feedback-comment-input:focus {
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.20);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
     }
 
     .feedback-submit {
-      margin-top: 10px;
-      padding: 10px 18px;
+      margin-top: 12px;
+      padding: 11px 22px;
       border: none;
       border-radius: 8px;
       background: #2563eb;
@@ -778,14 +780,16 @@
     }
 
     .feedback-comments-heading {
-      margin: 26px 0 12px;
-      font-size: 17px;
+      margin: 42px 0 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #29476f;
+      font-size: 22px;
       font-weight: 800;
     }
 
     .feedback-comment {
-      padding: 14px 0;
-      border-top: 1px solid #25466f;
+      padding: 18px 0;
+      border-bottom: 1px solid #29476f;
     }
 
     .feedback-comment-header {
@@ -793,7 +797,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
     }
 
     .feedback-comment-name {
@@ -809,8 +813,8 @@
 
     .feedback-comment-text {
       color: #cbd5e1;
-      font-size: 14px;
-      line-height: 1.55;
+      font-size: 15px;
+      line-height: 1.6;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
@@ -1218,12 +1222,8 @@
 
     @media (max-width: 600px) {
       .song-feedback {
-        padding: 18px;
+        padding: 0;
         margin-top: 26px;
-      }
-
-      .feedback-title {
-        font-size: 19px;
       }
 
       .feedback-star {
@@ -1904,10 +1904,9 @@
 
 
     <section class="song-feedback" aria-label="Song ratings and comments">
-      <h2 class="feedback-title">Please rate this song</h2>
       <div id="feedbackSummary" class="feedback-summary">No ratings yet.</div>
 
-      <div id="feedbackStars" class="feedback-stars" aria-label="Choose a rating">
+      <div id="feedbackStars" class="feedback-stars" aria-label="Optional rating">
         <button class="feedback-star" type="button" data-rating="1" aria-label="1 star">☆</button>
         <button class="feedback-star" type="button" data-rating="2" aria-label="2 stars">☆</button>
         <button class="feedback-star" type="button" data-rating="3" aria-label="3 stars">☆</button>
@@ -1918,7 +1917,7 @@
       <textarea
         id="feedbackComment"
         class="feedback-comment-input"
-        placeholder="What do you think about this song?"
+        placeholder="Share your thoughts..."
       ></textarea>
 
       <button id="feedbackSubmit" class="feedback-submit" type="button">Submit</button>
@@ -2118,8 +2117,8 @@
         return;
       }
 
-      if (!selectedFeedbackRating) {
-        message.textContent = "Please choose a rating.";
+      if (!selectedFeedbackRating && !comment) {
+        message.textContent = "Please choose a rating or write a comment.";
         return;
       }
 

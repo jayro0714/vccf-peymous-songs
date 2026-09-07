@@ -335,6 +335,189 @@
 
 
     /* =====================================================
+       SONG FEEDBACK
+    ===================================================== */
+
+    function resetFeedbackForm() {
+      selectedFeedbackRating = 0;
+      document.querySelectorAll(".feedback-star").forEach(function(star) {
+        star.textContent = "☆";
+        star.classList.remove("active");
+      });
+      document.getElementById("feedbackComment").value = "";
+      document.getElementById("feedbackMessage").textContent = "";
+      document.getElementById("feedbackSummary").textContent = "Loading ratings...";
+      document.getElementById("feedbackComments").innerHTML = "";
+    }
+
+    function setFeedbackRating(rating) {
+      selectedFeedbackRating = Number(rating) || 0;
+      document.querySelectorAll(".feedback-star").forEach(function(star) {
+        const value = Number(star.getAttribute("data-rating"));
+        star.textContent = value <= selectedFeedbackRating ? "★" : "☆";
+        star.classList.toggle("active", value <= selectedFeedbackRating);
+      });
+    }
+
+    function renderFeedback(data) {
+      const summary = document.getElementById("feedbackSummary");
+      const comments = document.getElementById("feedbackComments");
+      const commentsHeading = document.getElementById("feedbackCommentsHeading");
+      const average = Number(data.average || 0);
+      const count = Number(data.count || 0);
+
+      if (count > 0) {
+        summary.textContent = average.toFixed(1) + " / 5 (" + count + " rating" + (count === 1 ? "" : "s") + ")";
+      } else {
+        summary.textContent = "No ratings yet.";
+      }
+
+      comments.innerHTML = "";
+      const list = Array.isArray(data.comments) ? data.comments : [];
+      if (commentsHeading) {
+        commentsHeading.textContent = "Comments" + (list.length ? " (" + list.length + ")" : "");
+      }
+
+      if (list.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "feedback-empty";
+        empty.textContent = "No comments yet. Be the first to leave one.";
+        comments.appendChild(empty);
+        return;
+      }
+
+      list.forEach(function(item) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "feedback-comment";
+
+        const header = document.createElement("div");
+        header.className = "feedback-comment-header";
+
+        const name = document.createElement("div");
+        name.className = "feedback-comment-name";
+        name.textContent = item.name || "Member";
+
+        const rating = document.createElement("div");
+        rating.className = "feedback-comment-rating";
+        const stars = Math.max(0, Math.min(5, Number(item.rating || 0)));
+        rating.textContent = "★".repeat(stars) + "☆".repeat(5 - stars);
+
+        const text = document.createElement("div");
+        text.className = "feedback-comment-text";
+        text.textContent = item.comment || "";
+
+        header.appendChild(name);
+        header.appendChild(rating);
+        wrapper.appendChild(header);
+        if (item.comment) wrapper.appendChild(text);
+        comments.appendChild(wrapper);
+      });
+    }
+
+    function loadSongFeedback(song) {
+      const token = getStoredToken();
+      if (!token || !song) return;
+
+      const requestId = ++feedbackRequestId;
+      const callbackName = "feedbackResponse_" + Date.now();
+      const script = document.createElement("script");
+
+      window[callbackName] = function(data) {
+        try {
+          if (requestId !== feedbackRequestId) return;
+          if (data && data.success === false) {
+            document.getElementById("feedbackSummary").textContent = data.message || "Unable to load ratings.";
+            return;
+          }
+          renderFeedback(data || {});
+        } finally {
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+      };
+
+      script.onerror = function() {
+        if (requestId === feedbackRequestId) {
+          document.getElementById("feedbackSummary").textContent = "Unable to load ratings.";
+        }
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      };
+
+      script.src = API_URL +
+        "?action=getSongFeedback" +
+        "&token=" + encodeURIComponent(token) +
+        "&song=" + encodeURIComponent(song.name || "") +
+        "&callback=" + encodeURIComponent(callbackName);
+
+      document.body.appendChild(script);
+    }
+
+    function submitSongFeedback() {
+      const token = getStoredToken();
+      const message = document.getElementById("feedbackMessage");
+      const button = document.getElementById("feedbackSubmit");
+      const comment = document.getElementById("feedbackComment").value.trim();
+
+      if (!currentSong || !token) {
+        message.textContent = "Please log in first.";
+        return;
+      }
+
+      if (!selectedFeedbackRating) {
+        message.textContent = "Please choose a rating.";
+        return;
+      }
+
+      button.disabled = true;
+      message.textContent = "Saving...";
+
+      const callbackName = "saveFeedbackResponse_" + Date.now();
+      const script = document.createElement("script");
+
+      window[callbackName] = function(data) {
+        try {
+          if (!data || data.success !== true) {
+            message.textContent = (data && data.message) || "Unable to save feedback.";
+            return;
+          }
+          message.textContent = "Thanks for your feedback!";
+          loadSongFeedback(currentSong);
+        } finally {
+          button.disabled = false;
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+        }
+      };
+
+      script.onerror = function() {
+        message.textContent = "Unable to connect to the server.";
+        button.disabled = false;
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      };
+
+      script.src = API_URL +
+        "?action=saveSongFeedback" +
+        "&token=" + encodeURIComponent(token) +
+        "&song=" + encodeURIComponent(currentSong.name || "") +
+        "&rating=" + encodeURIComponent(selectedFeedbackRating) +
+        "&comment=" + encodeURIComponent(comment) +
+        "&callback=" + encodeURIComponent(callbackName);
+
+      document.body.appendChild(script);
+    }
+
+    document.querySelectorAll(".feedback-star").forEach(function(star) {
+      star.addEventListener("click", function() {
+        setFeedbackRating(this.getAttribute("data-rating"));
+      });
+    });
+
+    document.getElementById("feedbackSubmit").addEventListener("click", submitSongFeedback);
+
+
+    /* =====================================================
        REQUEST ACCESS
     ===================================================== */
 
@@ -685,6 +868,139 @@
 
     .logout-button:hover {
       background: #1b3d69;
+    }
+
+    /* =====================================================
+       SONG FEEDBACK
+    ===================================================== */
+
+    .song-feedback {
+      margin-top: 34px;
+      padding: 24px;
+      border: 1px solid rgba(49, 82, 120, 0.55);
+      border-radius: 12px;
+      background: rgba(24, 48, 79, 0.55);
+    }
+
+    .feedback-title {
+      margin: 0 0 8px;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .feedback-summary {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .feedback-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .feedback-star {
+      border: none;
+      background: transparent;
+      color: #64748b;
+      font-size: 30px;
+      line-height: 1;
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    .feedback-star.active,
+    .feedback-star:hover {
+      color: #fbbf24;
+    }
+
+    .feedback-comment-input {
+      width: 100%;
+      min-height: 92px;
+      resize: vertical;
+      padding: 12px 14px;
+      border: 1px solid #3b6fa8;
+      border-radius: 9px;
+      background: #fff;
+      color: #111827;
+      outline: none;
+      font: inherit;
+      font-size: 14px;
+    }
+
+    .feedback-comment-input:focus {
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.20);
+    }
+
+    .feedback-submit {
+      margin-top: 10px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .feedback-submit:hover {
+      background: #3b82f6;
+    }
+
+    .feedback-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .feedback-message {
+      min-height: 20px;
+      margin-top: 8px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    .feedback-comments-heading {
+      margin: 26px 0 12px;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .feedback-comment {
+      padding: 14px 0;
+      border-top: 1px solid #25466f;
+    }
+
+    .feedback-comment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .feedback-comment-name {
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .feedback-comment-rating {
+      color: #fbbf24;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .feedback-comment-text {
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .feedback-empty {
+      color: #64748b;
+      font-size: 14px;
     }
 
     /* =====================================================
@@ -1082,6 +1398,31 @@
     ===================================================== */
 
 
+
+    @media (max-width: 600px) {
+      .song-feedback {
+        padding: 18px;
+        margin-top: 26px;
+      }
+
+      .feedback-title {
+        font-size: 19px;
+      }
+
+      .feedback-star {
+        font-size: 27px;
+      }
+
+      .feedback-comment-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .feedback-comment-rating {
+        font-size: 13px;
+      }
+    }
 
     @media (max-width: 600px) {
       .no-access-yet {
@@ -1745,6 +2086,32 @@
     <div id="chords"></div>
 
 
+    <section class="song-feedback" aria-label="Song ratings and comments">
+      <h2 class="feedback-title">Please rate this song</h2>
+      <div id="feedbackSummary" class="feedback-summary">No ratings yet.</div>
+
+      <div id="feedbackStars" class="feedback-stars" aria-label="Choose a rating">
+        <button class="feedback-star" type="button" data-rating="1" aria-label="1 star">☆</button>
+        <button class="feedback-star" type="button" data-rating="2" aria-label="2 stars">☆</button>
+        <button class="feedback-star" type="button" data-rating="3" aria-label="3 stars">☆</button>
+        <button class="feedback-star" type="button" data-rating="4" aria-label="4 stars">☆</button>
+        <button class="feedback-star" type="button" data-rating="5" aria-label="5 stars">☆</button>
+      </div>
+
+      <textarea
+        id="feedbackComment"
+        class="feedback-comment-input"
+        placeholder="What do you think about this song?"
+      ></textarea>
+
+      <button id="feedbackSubmit" class="feedback-submit" type="button">Submit</button>
+      <div id="feedbackMessage" class="feedback-message"></div>
+
+      <h3 id="feedbackCommentsHeading" class="feedback-comments-heading">Comments</h3>
+      <div id="feedbackComments"></div>
+    </section>
+
+
     <footer class="site-footer">
 
       <div class="footer-links">
@@ -1800,6 +2167,8 @@
     let transposeAmount = 0;
 
     let loginInProgress = false;
+    let selectedFeedbackRating = 0;
+    let feedbackRequestId = 0;
 
 
     /* =====================================================
@@ -2873,6 +3242,8 @@
 
 
       updateSong();
+      resetFeedbackForm();
+      loadSongFeedback(song);
 
 
       window.scrollTo(

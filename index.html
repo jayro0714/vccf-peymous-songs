@@ -1479,6 +1479,283 @@
       }
     }
 
+
+    /* =====================================================
+       CHORD PAGE UI UPGRADE
+       UI/CSS ONLY — existing functionality preserved.
+    ===================================================== */
+
+    #songPage {
+      width: min(1000px, calc(100% - 48px));
+      max-width: 1000px;
+      margin: 0 auto;
+      min-height: calc(100vh - 30px);
+      padding: 0 0 30px;
+    }
+
+    .song-page-header {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 48px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid #1e3a5f;
+      background: rgba(9, 25, 50, 0.97);
+    }
+
+    .song-page-brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .song-page-brand-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .song-page-brand-name {
+      font-size: 25px;
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .song-page-brand-subtitle {
+      margin-top: 4px;
+      color: #60a5fa;
+      font-size: 13px;
+    }
+
+    .song-page-logout {
+      padding: 10px 17px;
+      border: 1px solid #29496f;
+      border-radius: 8px;
+      background: #132d50;
+      color: #bfdbfe;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .song-page-logout:hover {
+      background: #1b3d69;
+    }
+
+    .song-navigation {
+      display: grid;
+      grid-template-columns: auto minmax(260px, 380px);
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+      flex-wrap: nowrap;
+    }
+
+    .back {
+      padding: 10px 16px;
+      border: 1px solid #315f91;
+      border-radius: 9px;
+      background: #132d50;
+      color: #60a5fa;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+    }
+
+    .back:hover {
+      background: #183a65;
+      color: #93c5fd;
+    }
+
+    .song-search-container,
+    #songSearch,
+    #songSearchResults {
+      width: 100%;
+    }
+
+    #songSearch {
+      padding: 12px 16px;
+      border: 1px solid #315f91;
+      border-radius: 10px;
+      background: #172f50;
+      color: #f8fafc;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    #songSearch::placeholder {
+      color: #94a3b8;
+    }
+
+    #songSearch:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    #songSearchResults {
+      background: #142b49;
+      border-color: #315f91;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+    }
+
+    .song-search-result:hover {
+      background: #1d426b;
+    }
+
+    #songTitle {
+      margin: 0 0 22px;
+      font-size: 36px;
+      line-height: 1.15;
+      letter-spacing: -0.7px;
+      color: #f8fafc;
+    }
+
+    .transpose {
+      justify-content: flex-start;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 11px 14px;
+      border: 1px solid #294e79;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(23, 49, 82, 0.95), rgba(15, 35, 62, 0.95));
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .transpose span {
+      margin-right: 5px;
+      color: #e2e8f0;
+    }
+
+    .transpose button {
+      width: 42px;
+      height: 38px;
+      border: 1px solid #356da9;
+      border-radius: 8px;
+      background: #173e78;
+      color: #fff;
+      font-size: 21px;
+    }
+
+    .transpose button:hover {
+      background: #2563eb;
+    }
+
+    #chords {
+      min-height: 360px;
+      padding: 28px 30px;
+      border: 1px solid #315f91;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #101f35, #0f1c30);
+      color: #f1f5f9;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.16);
+      font-family: "Courier New", monospace;
+      font-size: 17px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .song-feedback {
+      margin-top: 20px;
+      padding: 20px 22px 22px;
+      border: 1px solid #294e79;
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(17, 34, 58, 0.96), rgba(13, 28, 48, 0.96));
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+    .feedback-stars {
+      margin-bottom: 14px;
+    }
+
+    .feedback-comment-input {
+      background: rgba(8, 22, 40, 0.35);
+      border-color: #315f91;
+    }
+
+    .feedback-submit {
+      background: #2563eb;
+      box-shadow: 0 6px 16px rgba(37,99,235,0.18);
+    }
+
+    .feedback-comments-heading {
+      margin-top: 30px;
+    }
+
+    .site-footer {
+      margin-top: 30px;
+      padding-top: 24px;
+      border-top-color: #294e79;
+    }
+
+    @media (max-width: 600px) {
+      #songPage {
+        width: calc(100% - 24px);
+        padding-bottom: 20px;
+      }
+
+      .song-page-header {
+        min-height: 72px;
+        padding: 8px 12px;
+        margin-bottom: 18px;
+      }
+
+      .song-page-brand-logo {
+        width: 50px;
+        height: 50px;
+      }
+
+      .song-page-brand {
+        gap: 9px;
+      }
+
+      .song-page-brand-name {
+        font-size: 18px;
+      }
+
+      .song-page-brand-subtitle {
+        font-size: 10px;
+      }
+
+      .song-page-logout {
+        padding: 8px 11px;
+        font-size: 12px;
+      }
+
+      .song-navigation {
+        grid-template-columns: 1fr;
+        gap: 9px;
+        margin-bottom: 18px;
+      }
+
+      .back {
+        width: 100%;
+      }
+
+      #songTitle {
+        font-size: 28px;
+        margin-bottom: 18px;
+      }
+
+      .transpose {
+        justify-content: center;
+        padding: 10px;
+      }
+
+      #chords {
+        min-height: 0;
+        padding: 20px 18px;
+        font-size: 16px;
+        line-height: 1.72;
+        border-radius: 10px;
+      }
+
+      .song-feedback {
+        padding: 16px;
+      }
+    }
+
   </style>
 
 
@@ -1853,6 +2130,27 @@
   ===================================================== -->
 
   <div id="songPage">
+
+    <div class="song-page-header">
+      <div class="song-page-brand">
+        <img
+          class="song-page-brand-logo"
+          src="logo.png"
+          alt="Jayro Chords logo"
+        >
+        <div>
+          <div class="song-page-brand-name">JAYRO CHORDS</div>
+          <div class="song-page-brand-subtitle">Your Worship Chord Library</div>
+        </div>
+      </div>
+      <button
+        class="song-page-logout"
+        type="button"
+        onclick="logout()"
+      >
+        Logout
+      </button>
+    </div>
 
     <div class="song-navigation">
 

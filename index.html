@@ -1054,6 +1054,60 @@
 
 
     /* =====================================================
+       CHORD ACCESS LOCK
+       Facebook follow requirement only.
+    ===================================================== */
+
+    #chordAccessLocked {
+      margin-top: 20px;
+      padding: 34px 28px;
+      border: 1px solid #29476f;
+      border-radius: 12px;
+      background: #111827;
+      text-align: center;
+    }
+
+    .chord-access-locked-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 12px;
+    }
+
+    .chord-access-locked-text {
+      max-width: 600px;
+      margin: 0 auto;
+      color: #cbd5e1;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .chord-access-facebook-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      padding: 11px 18px;
+      border-radius: 8px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .chord-access-facebook-button:hover {
+      background: #3b82f6;
+    }
+
+    .chord-access-locked-note {
+      margin-top: 14px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+
+    /* =====================================================
        FOOTER
     ===================================================== */
 
@@ -3572,16 +3626,107 @@
         "none";
 
 
-      updateSong();
-      resetFeedbackForm();
-      loadSongFeedback(song);
+      checkChordAccess().then(function(accessGranted) {
+
+        if (!accessGranted) {
+          showChordAccessLocked();
+          window.scrollTo(0, 0);
+          return;
+        }
+
+        hideChordAccessLocked();
+        updateSong();
+        resetFeedbackForm();
+        loadSongFeedback(song);
+
+        window.scrollTo(
+          0,
+          0
+        );
+
+      });
+
+    }
 
 
-      window.scrollTo(
-        0,
-        0
-      );
+    function checkChordAccess() {
+      return new Promise(function(resolve) {
+        const token = getStoredToken();
 
+        if (!token) {
+          resolve(false);
+          return;
+        }
+
+        const callbackName = "checkChordAccess_" + Date.now();
+        const script = document.createElement("script");
+
+        window[callbackName] = function(result) {
+          try {
+            if (!result || result.success !== true) {
+              resolve(false);
+              return;
+            }
+            resolve(result.access === true);
+          } finally {
+            delete window[callbackName];
+            if (script.parentNode) script.parentNode.removeChild(script);
+          }
+        };
+
+        script.src =
+          API_URL +
+          "?action=checkChordAccess" +
+          "&token=" + encodeURIComponent(token) +
+          "&callback=" + encodeURIComponent(callbackName);
+
+        script.onerror = function() {
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          resolve(false);
+        };
+
+        document.body.appendChild(script);
+      });
+    }
+
+
+    function showChordAccessLocked() {
+      const transpose = document.querySelector(".transpose");
+      const chords = document.getElementById("chords");
+      const feedback = document.querySelector(".song-feedback");
+
+      if (transpose) transpose.style.display = "none";
+      if (feedback) feedback.style.display = "none";
+
+      let locked = document.getElementById("chordAccessLocked");
+
+      if (!locked) {
+        locked = document.createElement("div");
+        locked.id = "chordAccessLocked";
+        locked.innerHTML =
+          '<div class="chord-access-locked-title">🔒 Chord Access Locked</div>' +
+          '<div class="chord-access-locked-text">Please follow <strong>Jayro Chords</strong> on Facebook to get access to the worship chord library.</div>' +
+          '<a class="chord-access-facebook-button" href="https://www.facebook.com/share/1HVL1CoZWb/" target="_blank" rel="noopener noreferrer">Follow Jayro Chords on Facebook</a>' +
+          '<div class="chord-access-locked-note">Already followed? Please wait for your follow to be verified.</div>';
+        if (chords) chords.parentNode.insertBefore(locked, chords);
+      }
+
+      locked.style.display = "block";
+      if (chords) chords.style.display = "none";
+    }
+
+
+    function hideChordAccessLocked() {
+      const transpose = document.querySelector(".transpose");
+      const chords = document.getElementById("chords");
+      const feedback = document.querySelector(".song-feedback");
+      const locked = document.getElementById("chordAccessLocked");
+
+      if (transpose) transpose.style.display = "";
+      if (feedback) feedback.style.display = "";
+      if (locked) locked.style.display = "none";
+      if (chords) chords.style.display = "";
     }
 
 

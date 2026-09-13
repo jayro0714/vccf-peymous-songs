@@ -4847,12 +4847,16 @@
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
     document.getElementById("adminSongSearch").addEventListener("input", loadAdminSongs);
     document.getElementById("adminSongFullscreenButton").addEventListener("click", openAdminChordEditorFullscreen);
-    document.getElementById("adminExitFullscreenButton").addEventListener("click", closeAdminChordEditorFullscreen);
-    document.getElementById("adminFullscreenDoneButton").addEventListener("click", closeAdminChordEditorFullscreen);
-    document.getElementById("adminFullscreenChordSheet").addEventListener("input", function(){
-      const source=document.getElementById("adminSongChords");
-      if(source) source.value=this.value;
+
+    window.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("adminExitFullscreenButton").addEventListener("click", closeAdminChordEditorFullscreen);
+      document.getElementById("adminFullscreenDoneButton").addEventListener("click", closeAdminChordEditorFullscreen);
+      document.getElementById("adminFullscreenChordSheet").addEventListener("input", function(){
+        const source=document.getElementById("adminSongChords");
+        if(source) source.value=this.value;
+      });
     });
+
     document.addEventListener("keydown", function(event){
       const overlay=document.getElementById("adminChordEditorFullscreen");
       if(event.key==="Escape" && overlay && overlay.classList.contains("active")){

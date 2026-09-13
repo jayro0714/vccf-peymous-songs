@@ -3066,7 +3066,7 @@
           message.textContent = "";
           showHome();
           maybeOpenMobileNote();
-          loadSongs();
+          loadSongList();
         } finally {
           cleanup();
         }
@@ -3123,6 +3123,11 @@
     removeStoredValue("jayro_name");
     removeStoredValue("jayro_role");
       songs = []; currentSong = null; transposeAmount = 0;
+      sessionStorage.removeItem("jayro_song_list_cache_v1");
+      Object.keys(sessionStorage).forEach(function(key) {
+        if (key.indexOf("jayro_song_cache_v1_") === 0) sessionStorage.removeItem(key);
+      });
+      sessionStorage.removeItem("jayroChordsFacebookVerifiedToken");
       document.getElementById("songs").innerHTML = "";
       document.getElementById("loginEmail").value = "";
       document.getElementById("loginPassword").value = "";
@@ -3132,7 +3137,85 @@
 
 
     /* =====================================================
-       LOAD SONGS
+       LOAD SONG LIST (FAST)
+       Only song names are loaded after login. Chords load on demand.
+    ===================================================== */
+    function loadSongList() {
+      return new Promise(function(resolve) {
+        const token = getStoredToken();
+        if (!token) {
+          document.getElementById("message").textContent = "Please log in first.";
+          showLoginPage();
+          resolve(false);
+          return;
+        }
+
+        const cachedList = sessionStorage.getItem("jayro_song_list_cache_v1");
+        if (cachedList) {
+          try {
+            songs = JSON.parse(cachedList);
+            songs.sort(function(a, b) {
+              return String(a.name || "").localeCompare(String(b.name || ""), undefined, {sensitivity:"base"});
+            });
+            displaySongs(songs);
+            resolve(true);
+            return;
+          } catch (cacheError) {
+            sessionStorage.removeItem("jayro_song_list_cache_v1");
+          }
+        }
+
+        const callbackName = "receiveSongList_" + Date.now();
+        const script = document.createElement("script");
+
+        window[callbackName] = function(data) {
+          try {
+            if (data && data.success === false) {
+              removeStoredValue("jayro_token");
+              removeStoredValue("jayro_email");
+              removeStoredValue("jayro_name");
+              removeStoredValue("jayro_role");
+              songs = [];
+              document.getElementById("songs").innerHTML = "";
+              document.getElementById("message").textContent = data.message || "Session expired. Please log in again.";
+              showLoginPage();
+              resolve(false);
+              return;
+            }
+
+            songs = Array.isArray(data) ? data : [];
+            songs.sort(function(a,b) {
+              return String(a.name || "").localeCompare(String(b.name || ""), undefined, {sensitivity:"base"});
+            });
+
+            try {
+              sessionStorage.setItem("jayro_song_list_cache_v1", JSON.stringify(songs));
+            } catch (cacheError) {}
+
+            displaySongs(songs);
+            resolve(true);
+          } finally {
+            delete window[callbackName];
+            if (script.parentNode) script.parentNode.removeChild(script);
+          }
+        };
+
+        script.src = API_URL + "?action=getSongList" + "&token=" + encodeURIComponent(token) + "&callback=" + encodeURIComponent(callbackName);
+        script.onerror = function() {
+          document.getElementById("message").textContent = "Unable to load songs. Please try again.";
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          resolve(false);
+        };
+
+        document.body.appendChild(script);
+      });
+    }
+
+
+    /* =====================================================
+       LEGACY LOAD SONGS
+       Kept untouched as a fallback while testing the fast path.
     ===================================================== */
     function loadSongs() {
       return new Promise(function(resolve) {
@@ -3143,7 +3226,7 @@
         window[callbackName] = function(data) {
           try {
             if (data && data.success === false) {
-                        removeStoredValue("jayro_token");
+              removeStoredValue("jayro_token");
               removeStoredValue("jayro_email");
               removeStoredValue("jayro_name");
               removeStoredValue("jayro_role");
@@ -3498,133 +3581,22 @@
 
 
     /* =====================================================
-       OPEN SONG FROM SEARCH
-    ===================================================== */
-
-    function openSongFromSearch(
-      song
-    ) {
-
-      songSearch.value =
-        "";
-
-
-      songSearchResults
-        .innerHTML =
-        "";
-
-
-      songSearchResults
-        .style
-        .display =
-        "none";
-
-
-      openSong(
-        song
-      );
-
-    }
-
-
-    /* =====================================================
-       CLOSE SONG SEARCH
-    ===================================================== */
-
-    document.addEventListener(
-      "click",
-      function(event) {
-
-        const container =
-          document.querySelector(
-            ".song-search-container"
-          );
-
-
-        if (
-          container &&
-          !container.contains(
-            event.target
-          )
-        ) {
-
-          songSearchResults
-            .style
-            .display =
-            "none";
-
-        }
-
-      }
-    );
-
-
-    /* =====================================================
        OPEN SONG
     ===================================================== */
+    function openSong(song) {
+      if (!song) return;
 
-    function openSong(
-      song
-    ) {
+      currentSong = { name: song.name, chords: "" };
+      transposeAmount = 0;
 
-      if (!song) {
-
-        return;
-
-      }
-
-
-      currentSong =
-        song;
-
-
-      transposeAmount =
-        0;
-
-
-      document
-        .getElementById(
-          "homePage"
-        )
-        .style
-        .display =
-        "none";
-
-
-      document
-        .getElementById(
-          "songPage"
-        )
-        .style
-        .display =
-        "block";
-
-
-      document
-        .getElementById(
-          "songTitle"
-        )
-        .textContent =
-        song.name;
-
-
-      songSearch.value =
-        "";
-
-
-      songSearchResults
-        .innerHTML =
-        "";
-
-
-      songSearchResults
-        .style
-        .display =
-        "none";
-
+      document.getElementById("homePage").style.display = "none";
+      document.getElementById("songPage").style.display = "block";
+      document.getElementById("songTitle").textContent = song.name;
+      songSearch.value = "";
+      songSearchResults.innerHTML = "";
+      songSearchResults.style.display = "none";
 
       checkChordAccess().then(function(accessGranted) {
-
         if (!accessGranted) {
           showChordAccessLocked();
           window.scrollTo(0, 0);
@@ -3632,17 +3604,82 @@
         }
 
         hideChordAccessLocked();
-        updateSong();
-        resetFeedbackForm();
-        loadSongFeedback(song);
-
-        window.scrollTo(
-          0,
-          0
-        );
-
+        loadSingleSong(song.name).then(function(loaded) {
+          if (!loaded) return;
+          updateSong();
+          resetFeedbackForm();
+          loadSongFeedback(currentSong);
+          window.scrollTo(0, 0);
+        });
       });
+    }
 
+
+    /* =====================================================
+       LOAD ONE SONG
+    ===================================================== */
+    function loadSingleSong(songName) {
+      return new Promise(function(resolve) {
+        const token = getStoredToken();
+        if (!token) {
+          showLoginPage();
+          resolve(false);
+          return;
+        }
+
+        const cacheKey = "jayro_song_cache_v1_" + encodeURIComponent(songName);
+        const cachedSong = sessionStorage.getItem(cacheKey);
+        if (cachedSong) {
+          try {
+            currentSong = JSON.parse(cachedSong);
+            resolve(true);
+            return;
+          } catch (cacheError) {
+            sessionStorage.removeItem(cacheKey);
+          }
+        }
+
+        const callbackName = "receiveSong_" + Date.now();
+        const script = document.createElement("script");
+
+        window[callbackName] = function(result) {
+          try {
+            if (!result || result.success !== true || result.access !== true) {
+              showChordAccessLocked();
+              resolve(false);
+              return;
+            }
+
+            currentSong = {
+              name: result.name || songName,
+              chords: String(result.chords || "")
+            };
+
+            try {
+              sessionStorage.setItem(cacheKey, JSON.stringify(currentSong));
+            } catch (cacheError) {}
+
+            resolve(true);
+          } finally {
+            delete window[callbackName];
+            if (script.parentNode) script.parentNode.removeChild(script);
+          }
+        };
+
+        script.src = API_URL + "?action=getSong" +
+          "&token=" + encodeURIComponent(token) +
+          "&name=" + encodeURIComponent(songName) +
+          "&callback=" + encodeURIComponent(callbackName);
+
+        script.onerror = function() {
+          delete window[callbackName];
+          if (script.parentNode) script.parentNode.removeChild(script);
+          document.getElementById("message").textContent = "Unable to load song. Please try again.";
+          resolve(false);
+        };
+
+        document.body.appendChild(script);
+      });
     }
 
 

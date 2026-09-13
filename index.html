@@ -2,8 +2,6 @@
 <html lang="en">
 
 <head>
-  <link rel="preconnect" href="https://script.google.com">
-  <link rel="preconnect" href="https://script.googleusercontent.com">
   <meta charset="UTF-8">
 
   <meta
@@ -3133,11 +3131,12 @@
 
     /* =====================================================
        SONG LIST / SONG LOADING
-       The list contains names only. Chords are loaded on demand.
+       Song names + chords are now served by the backend from Supabase.
+       The frontend never contains the Supabase secret key.
     ===================================================== */
 
-    const SONG_LIST_CACHE_KEY = "jayro_song_list_cache_v1";
-    const SONG_CACHE_PREFIX = "jayro_song_cache_v1_";
+    const SONG_LIST_CACHE_KEY = "jayro_song_list_cache_v2";
+    const SONG_CACHE_PREFIX = "jayro_song_cache_v2_";
 
     function clearSongCaches() {
       sessionStorage.removeItem(SONG_LIST_CACHE_KEY);

@@ -3129,9 +3129,9 @@
           return;
         }
 
-        const profileResponse = await fetch(
-          SUPABASE_URL + "/rest/v1/profiles?select=email,name,role,status&id=eq." +
-          encodeURIComponent(userId),
+        const accessResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/access_requests?select=name,email,status&email=ilike." +
+          encodeURIComponent(email) + "&order=created_at.desc&limit=1",
           {
             headers: {
               "apikey": SUPABASE_PUBLISHABLE_KEY,
@@ -3140,31 +3140,31 @@
           }
         );
 
-        const profiles = await profileResponse.json();
+        const accessRequests = await accessResponse.json();
 
-        if (!profileResponse.ok) {
-          message.textContent = "Unable to load your profile. Please try again.";
+        if (!accessResponse.ok) {
+          message.textContent = "Unable to verify your access request. Please try again.";
           return;
         }
 
-        if (!profiles.length) {
-          message.textContent = "Your account profile was not found.";
+        if (!accessRequests.length) {
+          message.textContent = "No access request was found for this account.";
           return;
         }
 
-        const profile = profiles[0];
-        const status = String(profile.status || "").trim().toLowerCase();
+        const accessRequest = accessRequests[0];
+        const status = String(accessRequest.status || "").trim().toLowerCase();
 
         if (status !== "approved") {
-          message.textContent = "Your account is not approved yet.";
+          message.textContent = "Your access request is still pending approval.";
           return;
         }
 
         setStoredValue("jayro_token", accessToken);
         setStoredValue("jayro_refresh_token", refreshToken);
-        setStoredValue("jayro_email", profile.email || email);
-        setStoredValue("jayro_name", profile.name || "");
-        setStoredValue("jayro_role", profile.role || "User");
+        setStoredValue("jayro_email", accessRequest.email || email);
+        setStoredValue("jayro_name", accessRequest.name || "");
+        setStoredValue("jayro_role", "User");
         setStoredValue("jayro_auth_provider", "supabase");
 
         message.textContent = "";

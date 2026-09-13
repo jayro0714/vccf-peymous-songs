@@ -2320,11 +2320,8 @@
   <script>
 
     /* =====================================================
-       GOOGLE APPS SCRIPT
+       SUPABASE
     ===================================================== */
-
-    const API_URL =
-  "https://script.google.com/macros/s/AKfycbzBa66P0S6V_UP_L7zutjkpad6B1LfETF87QEN8fWGK9Sg_52wAmUn5qdSH8A_25BGeNA/exec";
 
     const SUPABASE_URL =
       "https://ojnoipoqyajkbqmxwvls.supabase.co";
@@ -2453,46 +2450,80 @@
       });
     }
 
-    function loadSongFeedback(song) {
+    async function loadSongFeedback(song) {
       const token = getStoredToken();
       if (!token || !song) return;
 
       const requestId = ++feedbackRequestId;
-      const callbackName = "feedbackResponse_" + Date.now();
-      const script = document.createElement("script");
+      const summary = document.getElementById("feedbackSummary");
+      const comments = document.getElementById("feedbackComments");
+      const commentsHeading = document.getElementById("feedbackCommentsHeading");
 
-      window[callbackName] = function(data) {
-        try {
-          if (requestId !== feedbackRequestId) return;
-          if (data && data.success === false) {
-            document.getElementById("feedbackSummary").textContent = data.message || "Unable to load ratings.";
-            return;
+      try {
+        const url =
+          SUPABASE_URL +
+          "/rest/v1/feedback?select=email,name,comment,rating,created_at" +
+          "&song=eq." + encodeURIComponent(song.name || "") +
+          "&order=created_at.desc";
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + token
           }
-          renderFeedback(data || {});
-        } finally {
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
-        }
-      };
+        });
 
-      script.onerror = function() {
+        if (!response.ok) {
+          throw new Error(await response.text());
+        }
+
+        const rows = await response.json();
+
+        if (requestId !== feedbackRequestId) return;
+
+        const ratings = rows
+          .map(function(row) {
+            return Number(row.rating || 0);
+          })
+          .filter(function(rating) {
+            return rating >= 1 && rating <= 5;
+          });
+
+        const average = ratings.length
+          ? ratings.reduce(function(total, rating) {
+              return total + rating;
+            }, 0) / ratings.length
+          : 0;
+
+        const data = {
+          average: average,
+          count: ratings.length,
+          comments: rows.map(function(row) {
+            return {
+              name: row.name || "Member",
+              comment: row.comment || "",
+              rating: Number(row.rating || 0),
+              date: row.created_at || ""
+            };
+          })
+        };
+
+        renderFeedback(data);
+      } catch (error) {
+        console.error("Supabase feedback load error:", error);
+
         if (requestId === feedbackRequestId) {
-          document.getElementById("feedbackSummary").textContent = "Unable to load ratings.";
+          summary.textContent = "Unable to load ratings.";
+          comments.innerHTML = "";
+          if (commentsHeading) {
+            commentsHeading.textContent = "Comments";
+          }
         }
-        delete window[callbackName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-      };
-
-      script.src = API_URL +
-        "?action=getSongFeedback" +
-        "&token=" + encodeURIComponent(token) +
-        "&song=" + encodeURIComponent(song.name || "") +
-        "&callback=" + encodeURIComponent(callbackName);
-
-      document.body.appendChild(script);
+      }
     }
 
-    function submitSongFeedback() {
+    async function submitSongFeedback() {
       const token = getStoredToken();
       const message = document.getElementById("feedbackMessage");
       const button = document.getElementById("feedbackSubmit");
@@ -2511,40 +2542,66 @@
       button.disabled = true;
       message.textContent = "Saving...";
 
-      const callbackName = "saveFeedbackResponse_" + Date.now();
-      const script = document.createElement("script");
-
-      window[callbackName] = function(data) {
-        try {
-          if (!data || data.success !== true) {
-            message.textContent = (data && data.message) || "Unable to save feedback.";
-            return;
+      try {
+        const userResponse = await fetch(
+          SUPABASE_URL + "/auth/v1/user",
+          {
+            method: "GET",
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
           }
-          message.textContent = "Thanks for your feedback!";
-          loadSongFeedback(currentSong);
-        } finally {
-          button.disabled = false;
-          delete window[callbackName];
-          if (script.parentNode) script.parentNode.removeChild(script);
+        );
+
+        if (!userResponse.ok) {
+          throw new Error(await userResponse.text());
         }
-      };
 
-      script.onerror = function() {
-        message.textContent = "Unable to connect to the server.";
+        const user = await userResponse.json();
+
+        const feedbackResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/feedback",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              song: currentSong.name || "",
+              user_id: user.id,
+              email:
+                localStorage.getItem("jayro_email") ||
+                sessionStorage.getItem("jayro_email") ||
+                user.email ||
+                "",
+              name:
+                localStorage.getItem("jayro_name") ||
+                sessionStorage.getItem("jayro_name") ||
+                "",
+              comment: comment,
+              rating: Number(selectedFeedbackRating || 0)
+            })
+          }
+        );
+
+        if (!feedbackResponse.ok) {
+          throw new Error(await feedbackResponse.text());
+        }
+
+        message.textContent = "Thanks for your feedback!";
+        resetFeedbackForm();
+        message.textContent = "Thanks for your feedback!";
+        await loadSongFeedback(currentSong);
+      } catch (error) {
+        console.error("Supabase feedback save error:", error);
+        message.textContent = "Unable to save feedback.";
+      } finally {
         button.disabled = false;
-        delete window[callbackName];
-        if (script.parentNode) script.parentNode.removeChild(script);
-      };
-
-      script.src = API_URL +
-        "?action=saveSongFeedback" +
-        "&token=" + encodeURIComponent(token) +
-        "&song=" + encodeURIComponent(currentSong.name || "") +
-        "&rating=" + encodeURIComponent(selectedFeedbackRating) +
-        "&comment=" + encodeURIComponent(comment) +
-        "&callback=" + encodeURIComponent(callbackName);
-
-      document.body.appendChild(script);
+      }
     }
 
     document.querySelectorAll(".feedback-star").forEach(function(star) {
@@ -3882,187 +3939,202 @@
        REQUEST ACCESS
     ===================================================== */
 
-    function submitAccessRequest() {
+    async function submitAccessRequest() {
 
-  const name =
-    document.getElementById("requestName").value.trim();
+      const name =
+        document.getElementById("requestName").value.trim();
 
-  const email =
-    document.getElementById("requestEmail").value.trim();
+      const email =
+        document.getElementById("requestEmail").value.trim().toLowerCase();
 
-  const password =
-    document.getElementById("requestPassword").value;
+      const password =
+        document.getElementById("requestPassword").value;
 
-  const church =
-    document.getElementById("requestChurch").value.trim();
+      const church =
+        document.getElementById("requestChurch").value.trim();
 
-  const reason =
-    document.getElementById("requestReason").value.trim();
+      const reason =
+        document.getElementById("requestReason").value.trim();
 
-  const message =
-    document.getElementById("requestMessage");
-
-
-  // -----------------------------------------------------
-  // VALIDATION
-  // -----------------------------------------------------
-
-  if (!name) {
-    message.textContent = "Please enter your name.";
-    return;
-  }
-
-  if (!email) {
-    message.textContent = "Please enter your email.";
-    return;
-  }
-
-  if (!password) {
-    message.textContent = "Please create a password.";
-    return;
-  }
-
-  if (password.length < 6) {
-    message.textContent =
-      "Password must be at least 6 characters.";
-    return;
-  }
-
-  if (!church) {
-    message.textContent =
-      "Please enter your church or ministry.";
-    return;
-  }
-
-  if (!reason) {
-    message.textContent =
-      "Please tell us why you need access.";
-    return;
-  }
+      const message =
+        document.getElementById("requestMessage");
 
 
-  // -----------------------------------------------------
-  // SHOW SENDING
-  // -----------------------------------------------------
+      // -----------------------------------------------------
+      // VALIDATION
+      // -----------------------------------------------------
 
-  message.textContent = "Sending request...";
+      if (!name) {
+        message.textContent = "Please enter your name.";
+        return;
+      }
+
+      if (!email) {
+        message.textContent = "Please enter your email.";
+        return;
+      }
+
+      if (!password) {
+        message.textContent = "Please create a password.";
+        return;
+      }
+
+      if (password.length < 6) {
+        message.textContent =
+          "Password must be at least 6 characters.";
+        return;
+      }
+
+      if (!church) {
+        message.textContent =
+          "Please enter your church or ministry.";
+        return;
+      }
+
+      if (!reason) {
+        message.textContent =
+          "Please tell us why you need access.";
+        return;
+      }
 
 
-  // -----------------------------------------------------
-  // CREATE JSONP CALLBACK
-  // -----------------------------------------------------
+      // -----------------------------------------------------
+      // SHOW SENDING
+      // -----------------------------------------------------
 
-  const callbackName =
-    "accessRequest_" + Date.now();
-
-  const script =
-    document.createElement("script");
-
-  let completed = false;
+      message.textContent = "Creating your account and sending request...";
 
 
-  // -----------------------------------------------------
-  // RESPONSE FROM GOOGLE APPS SCRIPT
-  // -----------------------------------------------------
+      try {
+        // ---------------------------------------------------
+        // CREATE SUPABASE AUTH ACCOUNT
+        // The password is handled securely by Supabase Auth.
+        // It is NOT stored in access_requests.
+        // ---------------------------------------------------
 
-  window[callbackName] = function(response) {
+        const authResponse = await fetch(
+          SUPABASE_URL + "/auth/v1/signup",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password,
+              data: {
+                name: name
+              }
+            })
+          }
+        );
 
-    completed = true;
+        const authData = await authResponse.json();
 
-    console.log(
-      "Access request response:",
-      response
-    );
+        if (!authResponse.ok) {
+          message.textContent =
+            authData.error_description ||
+            authData.msg ||
+            authData.message ||
+            "Unable to create your account.";
+          return;
+        }
 
 
-    if (response && response.success === true) {
+        // ---------------------------------------------------
+        // CREATE ACCESS REQUEST
+        // Only request information is stored here.
+        // Status starts as Pending.
+        // ---------------------------------------------------
 
-      message.textContent =
-        "Access request sent successfully!";
+        const requestResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/access_requests",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              name: name,
+              email: email,
+              church: church,
+              reason: reason,
+              status: "Pending",
+              approval_email_sent: false
+            })
+          }
+        );
 
-      // Clear form
-      document.getElementById("requestName").value = "";
-      document.getElementById("requestEmail").value = "";
-      document.getElementById("requestPassword").value = "";
-      document.getElementById("requestChurch").value = "";
-      document.getElementById("requestReason").value = "";
+        if (!requestResponse.ok) {
+          const requestError = await requestResponse.text();
 
-    } else {
+          console.error(
+            "Access request creation failed:",
+            requestError
+          );
 
-      message.textContent =
-        (response && response.message) ||
-        "Unable to submit access request.";
+          message.textContent =
+            "Your account was created, but we could not submit the access request. Please contact the administrator.";
+          return;
+        }
 
+
+        // ---------------------------------------------------
+        // IMPORTANT
+        // If signup returned a session, immediately sign out.
+        // The user must still be approved before logging in.
+        // ---------------------------------------------------
+
+        if (authData && authData.access_token) {
+          try {
+            await fetch(
+              SUPABASE_URL + "/auth/v1/logout",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "apikey": SUPABASE_PUBLISHABLE_KEY,
+                  "Authorization": "Bearer " + authData.access_token
+                }
+              }
+            );
+          } catch (logoutError) {
+            console.warn(
+              "Automatic logout after signup failed:",
+              logoutError
+            );
+          }
+        }
+
+
+        // ---------------------------------------------------
+        // SUCCESS
+        // ---------------------------------------------------
+
+        message.textContent =
+          "Access request sent successfully! Please wait for approval.";
+
+        // Clear form
+        document.getElementById("requestName").value = "";
+        document.getElementById("requestEmail").value = "";
+        document.getElementById("requestPassword").value = "";
+        document.getElementById("requestChurch").value = "";
+        document.getElementById("requestReason").value = "";
+
+      } catch (error) {
+
+        console.error(
+          "Access request error:",
+          error
+        );
+
+        message.textContent =
+          "Unable to submit the access request. Please try again.";
+      }
     }
-
-
-    // Cleanup
-    delete window[callbackName];
-
-    if (script.parentNode) {
-      script.parentNode.removeChild(script);
-    }
-
-  };
-
-
-  // -----------------------------------------------------
-  // BUILD REQUEST
-  // -----------------------------------------------------
-
-  script.src =
-    API_URL +
-    "?action=requestAccess" +
-    "&name=" +
-    encodeURIComponent(name) +
-    "&email=" +
-    encodeURIComponent(email) +
-    "&password=" +
-    encodeURIComponent(password) +
-    "&church=" +
-    encodeURIComponent(church) +
-    "&reason=" +
-    encodeURIComponent(reason) +
-    "&callback=" +
-    encodeURIComponent(callbackName);
-
-
-  // -----------------------------------------------------
-  // IMPORTANT
-  // Do NOT show "Unable to connect"
-  //
-  // The request can successfully reach Apps Script
-  // even if the browser reports a JSONP loading error.
-  // -----------------------------------------------------
-
-  script.onerror = function() {
-
-    console.warn(
-      "Browser reported a JSONP loading error."
-    );
-
-    if (!completed) {
-      message.textContent =
-        "Unable to submit the access request. Please try again.";
-    }
-
-
-    delete window[callbackName];
-
-    if (script.parentNode) {
-      script.parentNode.removeChild(script);
-    }
-
-  };
-
-
-  // -----------------------------------------------------
-  // SEND REQUEST
-  // -----------------------------------------------------
-
-  document.body.appendChild(script);
-
-}
 
 
   // -----------------------------------------------------

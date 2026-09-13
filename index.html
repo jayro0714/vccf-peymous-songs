@@ -2064,7 +2064,7 @@
           type="button"
           style="display:none;"
         >
-          🎵 Manage Songs
+          ⚙️ Manage
         </button>
         <button
           id="logoutButton"
@@ -2078,18 +2078,39 @@
 
     <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
-        <h2 style="margin:0;font-size:22px;">🎵 Song Manager</h2>
+        <h2 style="margin:0;font-size:22px;">⚙️ Manage</h2>
         <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
       </div>
-      <input id="adminSongName" class="request-input" type="text" placeholder="Song name" style="margin-bottom:12px;">
-      <textarea id="adminSongChords" class="request-textarea" placeholder="Chord sheet" style="min-height:260px;margin-bottom:12px;font-family:'Courier New',monospace;"></textarea>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <button id="adminSaveSongButton" type="button" class="submit-request">Add Song</button>
-        <button id="adminCancelEditButton" type="button" class="logout-button" style="display:none;">Cancel Edit</button>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+        <button id="adminManageSongsTab" type="button" class="submit-request">🎵 Songs</button>
+        <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
+        <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
       </div>
-      <div id="adminSongMessage" class="login-message"></div>
-      <input id="adminSongSearch" class="request-input" type="text" placeholder="Search songs to edit or delete..." style="margin-top:12px;">
-      <div id="adminSongList" style="margin-top:10px;"></div>
+
+      <div id="adminManageSongsSection">
+        <input id="adminSongName" class="request-input" type="text" placeholder="Song name" style="margin-bottom:12px;">
+        <textarea id="adminSongChords" class="request-textarea" placeholder="Chord sheet" style="min-height:260px;margin-bottom:12px;font-family:'Courier New',monospace;"></textarea>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="adminSaveSongButton" type="button" class="submit-request">Add Song</button>
+          <button id="adminCancelEditButton" type="button" class="logout-button" style="display:none;">Cancel Edit</button>
+        </div>
+        <div id="adminSongMessage" class="login-message"></div>
+        <input id="adminSongSearch" class="request-input" type="text" placeholder="Search songs to edit or delete..." style="margin-top:12px;">
+        <div id="adminSongList" style="margin-top:10px;"></div>
+      </div>
+
+      <div id="adminManageAccessSection" style="display:none;">
+        <div id="adminAccessMessage" class="login-message"></div>
+        <input id="adminAccessSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
+        <div id="adminAccessList" style="margin-top:10px;"></div>
+      </div>
+
+      <div id="adminManageFacebookSection" style="display:none;">
+        <div id="adminFacebookMessage" class="login-message"></div>
+        <input id="adminFacebookSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
+        <div id="adminFacebookList" style="margin-top:10px;"></div>
+      </div>
     </div>
 
     <div class="home-layout">
@@ -3314,6 +3335,7 @@
       const panel = document.getElementById("adminSongsPanel");
       if (!panel) return;
       panel.style.display = "block";
+      setAdminManageSection("songs");
       loadAdminSongs();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -3488,6 +3510,273 @@
         console.error("Admin delete song error:", error);
         message.textContent = "Unable to delete song. Please try again.";
       }
+    }
+
+    /* =====================================================
+       ADMIN ACCESS APPROVAL + FACEBOOK MANAGEMENT
+       Admin-only management for public.access_requests and
+       public.facebook_followers.
+    ===================================================== */
+
+    function setAdminManageSection(section) {
+      if (!isAdminUser()) return;
+
+      const sections = {
+        songs: document.getElementById("adminManageSongsSection"),
+        access: document.getElementById("adminManageAccessSection"),
+        facebook: document.getElementById("adminManageFacebookSection")
+      };
+      const tabs = {
+        songs: document.getElementById("adminManageSongsTab"),
+        access: document.getElementById("adminManageAccessTab"),
+        facebook: document.getElementById("adminManageFacebookTab")
+      };
+
+      Object.keys(sections).forEach(function(key) {
+        sections[key].style.display = key === section ? "block" : "none";
+        tabs[key].className = key === section ? "submit-request" : "logout-button";
+      });
+
+      if (section === "access") loadAdminAccessRequests();
+      if (section === "facebook") loadAdminFacebookFollowers();
+    }
+
+    async function loadAdminAccessRequests() {
+      if (!isAdminUser()) return;
+      const token = getStoredToken();
+      const list = document.getElementById("adminAccessList");
+      if (!token || !list) return;
+
+      list.innerHTML = "Loading access requests...";
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/access_requests?select=id,name,email,church,reason,status,created_at&order=id.desc",
+          {
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+        if (!response.ok) throw new Error(await response.text());
+
+        const data = await response.json();
+        renderAdminAccessRequests(data);
+      } catch (error) {
+        console.error("Admin access request error:", error);
+        list.innerHTML = "Unable to load access requests.";
+      }
+    }
+
+    function renderAdminAccessRequests(data) {
+      const list = document.getElementById("adminAccessList");
+      const query = (document.getElementById("adminAccessSearch").value || "").trim().toLowerCase();
+
+      const filtered = (data || []).filter(function(item) {
+        return !query ||
+          String(item.name || "").toLowerCase().includes(query) ||
+          String(item.email || "").toLowerCase().includes(query);
+      });
+
+      if (!filtered.length) {
+        list.innerHTML = '<div style="color:#94a3b8;padding:10px 0;">No access requests found.</div>';
+        return;
+      }
+
+      list.innerHTML = "";
+
+      filtered.forEach(function(item) {
+        const status = String(item.status || "").trim();
+        const row = document.createElement("div");
+        row.style.cssText = "padding:14px 0;border-bottom:1px solid #294e79;";
+
+        const info = document.createElement("div");
+        info.style.cssText = "margin-bottom:10px;overflow-wrap:anywhere;";
+        info.innerHTML =
+          "<strong>" + escapeHtml(item.name || "Unnamed") + "</strong><br>" +
+          "<span style='color:#cbd5e1;'>" + escapeHtml(item.email || "") + "</span>" +
+          (item.church ? "<br><span style='color:#94a3b8;'>Church/Ministry: " + escapeHtml(item.church) + "</span>" : "") +
+          (item.reason ? "<br><span style='color:#94a3b8;'>Reason: " + escapeHtml(item.reason) + "</span>" : "") +
+          "<br><span style='color:#cbd5e1;'>Status: <strong>" + escapeHtml(status || "Pending") + "</strong></span>";
+
+        const actions = document.createElement("div");
+        actions.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;";
+
+        if (status.toLowerCase() === "pending") {
+          const approve = document.createElement("button");
+          approve.type = "button";
+          approve.className = "submit-request";
+          approve.textContent = "Approve";
+          approve.onclick = function() { updateAccessRequestStatus(item.id, "Approved"); };
+
+          const reject = document.createElement("button");
+          reject.type = "button";
+          reject.className = "logout-button";
+          reject.textContent = "Reject";
+          reject.onclick = function() { updateAccessRequestStatus(item.id, "Rejected"); };
+
+          actions.appendChild(approve);
+          actions.appendChild(reject);
+        }
+
+        row.appendChild(info);
+        row.appendChild(actions);
+        list.appendChild(row);
+      });
+    }
+
+    async function updateAccessRequestStatus(id, status) {
+      if (!isAdminUser()) return;
+      if (!confirm(status === "Approved" ? "Approve this access request?" : "Reject this access request?")) return;
+
+      const token = getStoredToken();
+      const message = document.getElementById("adminAccessMessage");
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/access_requests?id=eq." + encodeURIComponent(id),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ status: status })
+          }
+        );
+
+        if (!response.ok) throw new Error(await response.text());
+
+        message.textContent = "Access request updated to " + status + ".";
+        await loadAdminAccessRequests();
+      } catch (error) {
+        console.error("Admin access status error:", error);
+        message.textContent = "Unable to update access request.";
+      }
+    }
+
+    async function loadAdminFacebookFollowers() {
+      if (!isAdminUser()) return;
+      const token = getStoredToken();
+      const list = document.getElementById("adminFacebookList");
+      if (!token || !list) return;
+
+      list.innerHTML = "Loading Facebook access...";
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/facebook_followers?select=id,email,name,status,updated_at&order=name.asc",
+          {
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+        if (!response.ok) throw new Error(await response.text());
+
+        const data = await response.json();
+        renderAdminFacebookFollowers(data);
+      } catch (error) {
+        console.error("Admin Facebook list error:", error);
+        list.innerHTML = "Unable to load Facebook access.";
+      }
+    }
+
+    function renderAdminFacebookFollowers(data) {
+      const list = document.getElementById("adminFacebookList");
+      const query = (document.getElementById("adminFacebookSearch").value || "").trim().toLowerCase();
+
+      const filtered = (data || []).filter(function(item) {
+        return !query ||
+          String(item.name || "").toLowerCase().includes(query) ||
+          String(item.email || "").toLowerCase().includes(query);
+      });
+
+      if (!filtered.length) {
+        list.innerHTML = '<div style="color:#94a3b8;padding:10px 0;">No Facebook records found.</div>';
+        return;
+      }
+
+      list.innerHTML = "";
+
+      filtered.forEach(function(item) {
+        const status = String(item.status || "").trim();
+        const row = document.createElement("div");
+        row.style.cssText = "padding:14px 0;border-bottom:1px solid #294e79;";
+
+        const info = document.createElement("div");
+        info.style.cssText = "margin-bottom:10px;overflow-wrap:anywhere;";
+        info.innerHTML =
+          "<strong>" + escapeHtml(item.name || "Unnamed") + "</strong><br>" +
+          "<span style='color:#cbd5e1;'>" + escapeHtml(item.email || "") + "</span>" +
+          "<br><span style='color:#cbd5e1;'>Status: <strong>" + escapeHtml(status || "Unfollowed") + "</strong></span>";
+
+        const actions = document.createElement("div");
+        actions.style.cssText = "display:flex;gap:8px;flex-wrap:wrap;";
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = status.toLowerCase() === "followed" ? "logout-button" : "submit-request";
+        toggle.textContent = status.toLowerCase() === "followed" ? "Mark Unfollowed" : "Mark Followed";
+        toggle.onclick = function() {
+          updateFacebookFollowerStatus(
+            item.id,
+            status.toLowerCase() === "followed" ? "Unfollowed" : "Followed"
+          );
+        };
+
+        actions.appendChild(toggle);
+        row.appendChild(info);
+        row.appendChild(actions);
+        list.appendChild(row);
+      });
+    }
+
+    async function updateFacebookFollowerStatus(id, status) {
+      if (!isAdminUser()) return;
+      if (!confirm("Change Facebook status to " + status + "?")) return;
+
+      const token = getStoredToken();
+      const message = document.getElementById("adminFacebookMessage");
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/facebook_followers?id=eq." + encodeURIComponent(id),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ status: status, updated_at: new Date().toISOString() })
+          }
+        );
+
+        if (!response.ok) throw new Error(await response.text());
+
+        message.textContent = "Facebook status updated to " + status + ".";
+        await loadAdminFacebookFollowers();
+      } catch (error) {
+        console.error("Admin Facebook update error:", error);
+        message.textContent = "Unable to update Facebook status.";
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     /* =====================================================
@@ -4479,6 +4768,18 @@
     document.getElementById("adminCancelEditButton").addEventListener("click", cancelAdminEdit);
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
     document.getElementById("adminSongSearch").addEventListener("input", loadAdminSongs);
+
+    document.getElementById("adminManageSongsTab").addEventListener("click", function() {
+      setAdminManageSection("songs");
+    });
+    document.getElementById("adminManageAccessTab").addEventListener("click", function() {
+      setAdminManageSection("access");
+    });
+    document.getElementById("adminManageFacebookTab").addEventListener("click", function() {
+      setAdminManageSection("facebook");
+    });
+    document.getElementById("adminAccessSearch").addEventListener("input", loadAdminAccessRequests);
+    document.getElementById("adminFacebookSearch").addEventListener("input", loadAdminFacebookFollowers);
 </script>
 
 

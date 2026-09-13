@@ -3669,7 +3669,7 @@
 
       try {
         const response = await fetch(
-          SUPABASE_URL + "/rest/v1/facebook_followers?select=id,email,name,status,updated_at&order=name.asc",
+          SUPABASE_URL + "/rest/v1/facebook_followers?select=id,email,name,status,updated_at&order=id.desc",
           {
             headers: {
               "apikey": SUPABASE_PUBLISHABLE_KEY,
@@ -4630,6 +4630,36 @@
           message.textContent =
             "Your account was created, but we could not submit the access request. Please contact the administrator.";
           return;
+        }
+
+
+        // ---------------------------------------------------
+        // CREATE FACEBOOK ACCESS RECORD
+        // New registered users start as Unfollowed.
+        // Admin can later change this to Followed.
+        // ---------------------------------------------------
+        const facebookResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/facebook_followers",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              email: email,
+              name: name,
+              status: "Unfollowed"
+            })
+          }
+        );
+
+        if (!facebookResponse.ok) {
+          console.error(
+            "Facebook access record creation failed:",
+            await facebookResponse.text()
+          );
         }
 
 

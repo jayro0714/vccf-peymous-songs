@@ -1810,7 +1810,28 @@
       }
     }
 
-  </style>
+  
+/* ADMIN SONG EDITOR - DARK + FULLSCREEN */
+#adminSongChords,#adminSongName{background:#0b1424!important;color:#e6edf7!important;border:1px solid #294e79!important;color-scheme:dark}
+#adminSongChords::placeholder,#adminSongName::placeholder{color:#8fa5c4!important;opacity:1}
+#adminSongFullscreenButton{margin-top:8px;width:100%}
+#adminChordEditorFullscreen{display:none;position:fixed;inset:0;z-index:99999;background:#071225;padding:12px;box-sizing:border-box;flex-direction:column}
+#adminChordEditorFullscreen.active{display:flex}
+#adminChordEditorFullscreen .admin-fullscreen-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0 12px}
+#adminChordEditorFullscreen .admin-fullscreen-title{color:#f1f5f9;font-size:20px;font-weight:700}
+#adminChordEditorFullscreen .admin-fullscreen-subtitle{color:#8fa5c4;font-size:13px;margin-top:3px}
+#adminChordEditorFullscreen .admin-fullscreen-close{padding:10px 15px;border:1px solid #315986;border-radius:8px;background:#102746;color:#e6edf7;font-weight:700}
+#adminChordEditorFullscreen .admin-fullscreen-textarea{flex:1;width:100%;min-height:0;resize:none;box-sizing:border-box;border:1px solid #294e79;border-radius:10px;outline:none;padding:16px;background:#08111f;color:#edf4ff;caret-color:#fff;font-family:"Courier New",monospace;font-size:16px;line-height:1.55;color-scheme:dark}
+#adminChordEditorFullscreen .admin-fullscreen-footer{display:flex;justify-content:space-between;gap:10px;color:#8fa5c4;font-size:13px;padding:10px 2px 0}
+#adminChordEditorFullscreen .admin-fullscreen-save{border:0;border-radius:8px;padding:10px 18px;background:#2563eb;color:#fff;font-weight:700}
+@media(max-width:600px){
+#adminSongChords{min-height:300px!important;font-size:15px!important}
+#adminChordEditorFullscreen{padding:9px}
+#adminChordEditorFullscreen .admin-fullscreen-title{font-size:17px}
+#adminChordEditorFullscreen .admin-fullscreen-textarea{padding:13px;font-size:15px;line-height:1.5}
+}
+
+</style>
 
 
   <!-- Google Analytics -->
@@ -2091,6 +2112,7 @@
       <div id="adminManageSongsSection">
         <input id="adminSongName" class="request-input" type="text" placeholder="Song name" style="margin-bottom:12px;">
         <textarea id="adminSongChords" class="request-textarea" placeholder="Chord sheet" style="min-height:260px;margin-bottom:12px;font-family:'Courier New',monospace;"></textarea>
+        <button id="adminSongFullscreenButton" type="button" class="logout-button">⛶ Full Screen Editor</button>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <button id="adminSaveSongButton" type="button" class="submit-request">Add Song</button>
           <button id="adminCancelEditButton" type="button" class="logout-button" style="display:none;">Cancel Edit</button>
@@ -4793,11 +4815,51 @@
     })();
 
   
+
+    function openAdminChordEditorFullscreen() {
+      if (!isAdminUser()) return;
+      const source = document.getElementById("adminSongChords");
+      const overlay = document.getElementById("adminChordEditorFullscreen");
+      const editor = document.getElementById("adminFullscreenChordSheet");
+      const title = document.getElementById("adminFullscreenSongName");
+      if (!source || !overlay || !editor) return;
+      editor.value = source.value || "";
+      title.textContent = (document.getElementById("adminSongName").value || "").trim() ||
+        (adminEditingSongId ? "Editing Song" : "New Song");
+      overlay.classList.add("active");
+      overlay.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+      setTimeout(function(){ editor.focus(); editor.selectionStart=editor.selectionEnd=editor.value.length; },50);
+    }
+
+    function closeAdminChordEditorFullscreen() {
+      const source = document.getElementById("adminSongChords");
+      const overlay = document.getElementById("adminChordEditorFullscreen");
+      const editor = document.getElementById("adminFullscreenChordSheet");
+      if (source && editor) source.value = editor.value;
+      if (overlay) { overlay.classList.remove("active"); overlay.setAttribute("aria-hidden","true"); }
+      document.body.style.overflow = "";
+    }
+
     document.getElementById("adminSongsButton").addEventListener("click", openAdminSongManager);
     document.getElementById("adminCloseSongsButton").addEventListener("click", closeAdminSongManager);
     document.getElementById("adminCancelEditButton").addEventListener("click", cancelAdminEdit);
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
     document.getElementById("adminSongSearch").addEventListener("input", loadAdminSongs);
+    document.getElementById("adminSongFullscreenButton").addEventListener("click", openAdminChordEditorFullscreen);
+    document.getElementById("adminExitFullscreenButton").addEventListener("click", closeAdminChordEditorFullscreen);
+    document.getElementById("adminFullscreenDoneButton").addEventListener("click", closeAdminChordEditorFullscreen);
+    document.getElementById("adminFullscreenChordSheet").addEventListener("input", function(){
+      const source=document.getElementById("adminSongChords");
+      if(source) source.value=this.value;
+    });
+    document.addEventListener("keydown", function(event){
+      const overlay=document.getElementById("adminChordEditorFullscreen");
+      if(event.key==="Escape" && overlay && overlay.classList.contains("active")){
+        event.preventDefault(); closeAdminChordEditorFullscreen();
+      }
+    });
+
 
     document.getElementById("adminManageSongsTab").addEventListener("click", function() {
       setAdminManageSection("songs");
@@ -4813,6 +4875,21 @@
 </script>
 
 
+
+    <div id="adminChordEditorFullscreen" aria-hidden="true">
+      <div class="admin-fullscreen-header">
+        <div>
+          <div class="admin-fullscreen-title">🎵 Chord Sheet Editor</div>
+          <div id="adminFullscreenSongName" class="admin-fullscreen-subtitle">New Song</div>
+        </div>
+        <button id="adminExitFullscreenButton" type="button" class="admin-fullscreen-close">✕ Exit</button>
+      </div>
+      <textarea id="adminFullscreenChordSheet" class="admin-fullscreen-textarea" spellcheck="false" placeholder="Paste or edit the chords and lyrics here..."></textarea>
+      <div class="admin-fullscreen-footer">
+        <span>Large editing area • Press ESC to exit</span>
+        <button id="adminFullscreenDoneButton" type="button" class="admin-fullscreen-save">Done</button>
+      </div>
+    </div>
 </body>
 
 </html>

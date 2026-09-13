@@ -3655,6 +3655,14 @@
           return;
         }
 
+        // Once this account is verified as Followed, remember it for this login session.
+        // This prevents another FacebookFollowers request every time a song is opened.
+        const verifiedToken = sessionStorage.getItem("jayroChordsFacebookVerifiedToken");
+        if (verifiedToken === token) {
+          resolve(true);
+          return;
+        }
+
         const callbackName = "checkChordAccess_" + Date.now();
         const script = document.createElement("script");
 
@@ -3664,7 +3672,13 @@
               resolve(false);
               return;
             }
-            resolve(result.access === true);
+            const accessGranted = result.access === true;
+            if (accessGranted) {
+              sessionStorage.setItem("jayroChordsFacebookVerifiedToken", token);
+            } else {
+              sessionStorage.removeItem("jayroChordsFacebookVerifiedToken");
+            }
+            resolve(accessGranted);
           } finally {
             delete window[callbackName];
             if (script.parentNode) script.parentNode.removeChild(script);

@@ -1923,6 +1923,13 @@
       }
     }
 
+
+    @media (max-width: 520px) {
+      #adminManageDashboardSection > div[style*="display:grid"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
 </style>
 
 
@@ -2211,11 +2218,39 @@
       </div>
 
       <div id="adminManageTabs">
-        <button id="adminManageSongsTab" type="button" class="submit-request">🎵 Songs</button>
+        <button id="adminManageDashboardTab" type="button" class="submit-request">📊 Dashboard</button>
+        <button id="adminManageSongsTab" type="button" class="logout-button">🎵 Songs</button>
         <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
         <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
         <button id="adminManageNoteTab" type="button" class="logout-button">📢 Site Note</button>
+      </div>
+
+      <div id="adminManageDashboardSection">
+        <div style="font-size:20px;font-weight:700;margin-bottom:14px;">📊 Dashboard</div>
+        <div id="adminDashboardMessage" class="login-message"></div>
+
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+          <div style="padding:16px;border:1px solid #294e79;border-radius:10px;background:#0f2038;">
+            <div style="font-size:28px;font-weight:700;" id="dashboardSongCount">—</div>
+            <div style="color:#94a3b8;margin-top:4px;">🎵 Total Songs</div>
+          </div>
+
+          <div style="padding:16px;border:1px solid #294e79;border-radius:10px;background:#0f2038;">
+            <div style="font-size:28px;font-weight:700;" id="dashboardPendingCount">—</div>
+            <div style="color:#94a3b8;margin-top:4px;">👤 Pending Requests</div>
+          </div>
+
+          <div style="padding:16px;border:1px solid #294e79;border-radius:10px;background:#0f2038;">
+            <div style="font-size:28px;font-weight:700;" id="dashboardLoginTodayCount">—</div>
+            <div style="color:#94a3b8;margin-top:4px;">🟢 Logged In Today</div>
+          </div>
+
+          <div style="padding:16px;border:1px solid #294e79;border-radius:10px;background:#0f2038;">
+            <div style="font-size:28px;font-weight:700;" id="dashboardFeedbackCount">—</div>
+            <div style="color:#94a3b8;margin-top:4px;">💬 Feedback</div>
+          </div>
+        </div>
       </div>
 
       <div id="adminManageSongsSection">
@@ -3450,7 +3485,7 @@
       document.body.classList.add("manage-open");
       selectedAdminSongLetter = "ALL";
       refreshAdminSongAlphabet();
-      setAdminManageSection("songs");
+      setAdminManageSection("dashboard");
       loadAdminSongs();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -3754,10 +3789,79 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
 
+    async function loadAdminDashboard() {
+      if (!isAdminUser()) return;
+
+      const token = getStoredToken();
+      if (!token) return;
+
+      const message = document.getElementById("adminDashboardMessage");
+      try {
+        const headers = {
+          "apikey": SUPABASE_PUBLISHABLE_KEY,
+          "Authorization": "Bearer " + token
+        };
+
+        const songResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/songs?select=id&limit=1000",
+          { headers: headers }
+        );
+        if (!songResponse.ok) throw new Error(await songResponse.text());
+        const songsData = await songResponse.json();
+
+        const pendingResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/access_requests?select=id&status=eq.Pending&limit=1000",
+          { headers: headers }
+        );
+        if (!pendingResponse.ok) throw new Error(await pendingResponse.text());
+        const pendingData = await pendingResponse.json();
+
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
+
+        const loginResponse = await fetch(
+          SUPABASE_URL +
+          "/rest/v1/login_activity?select=user_id,email&logged_in_at=gte." +
+          encodeURIComponent(startOfDay) +
+          "&logged_in_at=lt." +
+          encodeURIComponent(endOfDay) +
+          "&limit=1000",
+          { headers: headers }
+        );
+        if (!loginResponse.ok) throw new Error(await loginResponse.text());
+        const loginData = await loginResponse.json();
+
+        const uniqueLogins = new Set(
+          loginData.map(function(row) {
+            return row.user_id || String(row.email || "").toLowerCase();
+          })
+        );
+
+        const feedbackResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/feedback?select=id&limit=1000",
+          { headers: headers }
+        );
+        if (!feedbackResponse.ok) throw new Error(await feedbackResponse.text());
+        const feedbackData = await feedbackResponse.json();
+
+        document.getElementById("dashboardSongCount").textContent = songsData.length;
+        document.getElementById("dashboardPendingCount").textContent = pendingData.length;
+        document.getElementById("dashboardLoginTodayCount").textContent = uniqueLogins.size;
+        document.getElementById("dashboardFeedbackCount").textContent = feedbackData.length;
+
+        if (message) message.textContent = "";
+      } catch (error) {
+        console.error("Admin dashboard error:", error);
+        if (message) message.textContent = "Unable to load dashboard.";
+      }
+    }
+
     function setAdminManageSection(section) {
       if (!isAdminUser()) return;
 
       const sections = {
+        dashboard: document.getElementById("adminManageDashboardSection"),
         songs: document.getElementById("adminManageSongsSection"),
         access: document.getElementById("adminManageAccessSection"),
         facebook: document.getElementById("adminManageFacebookSection"),
@@ -3765,6 +3869,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         note: document.getElementById("adminManageNoteSection")
       };
       const tabs = {
+        dashboard: document.getElementById("adminManageDashboardTab"),
         songs: document.getElementById("adminManageSongsTab"),
         access: document.getElementById("adminManageAccessTab"),
         facebook: document.getElementById("adminManageFacebookTab"),
@@ -3777,6 +3882,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         tabs[key].className = key === section ? "submit-request" : "logout-button";
       });
 
+      if (section === "dashboard") loadAdminDashboard();
       if (section === "access") loadAdminAccessRequests();
       if (section === "facebook") loadAdminFacebookFollowers();
       if (section === "login") loadAdminLoginActivity();
@@ -5263,6 +5369,10 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       }
     });
 
+
+    document.getElementById("adminManageDashboardTab").addEventListener("click", function() {
+      setAdminManageSection("dashboard");
+    });
 
     document.getElementById("adminManageSongsTab").addEventListener("click", function() {
       setAdminManageSection("songs");

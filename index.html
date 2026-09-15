@@ -703,6 +703,49 @@
       white-space: nowrap;
     }
 
+    .song-alphabet {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+      padding: 8px;
+      border: 1px solid #294e79;
+      border-radius: 9px;
+      background: #0f2038;
+    }
+
+    .song-alphabet button {
+      min-width: 31px;
+      padding: 7px 8px;
+      border: 1px solid #294e79;
+      border-radius: 7px;
+      background: #162d4c;
+      color: #dbeafe;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .song-alphabet button:hover {
+      background: #1e4776;
+    }
+
+    .song-alphabet button.active {
+      background: #2563eb;
+      border-color: #3b82f6;
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      .song-alphabet {
+        gap: 5px;
+      }
+      .song-alphabet button {
+        min-width: 29px;
+        padding: 6px 7px;
+      }
+    }
+
     /* =====================================================
        SONG FEEDBACK
     ===================================================== */
@@ -2152,6 +2195,7 @@
         </div>
         <div id="adminSongMessage" class="login-message"></div>
         <input id="adminSongSearch" class="request-input" type="text" placeholder="Search songs to edit or delete..." style="margin-top:12px;">
+        <div id="adminSongAlphabet" class="song-alphabet" aria-label="Filter songs by first letter"></div>
         <div id="adminSongList" style="margin-top:10px;"></div>
       </div>
 
@@ -2215,6 +2259,8 @@
             Search
           </button>
         </div>
+
+        <div id="homeSongAlphabet" class="song-alphabet" aria-label="Filter songs by first letter"></div>
 
         <div id="songs"></div>
 
@@ -3365,6 +3411,8 @@
       const panel = document.getElementById("adminSongsPanel");
       if (!panel) return;
       panel.style.display = "block";
+      selectedAdminSongLetter = "ALL";
+      refreshAdminSongAlphabet();
       setAdminManageSection("songs");
       loadAdminSongs();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3408,9 +3456,12 @@
     function renderAdminSongList(data) {
       const list = document.getElementById("adminSongList");
       const query = (document.getElementById("adminSongSearch").value || "").trim().toLowerCase();
-      const filtered = (data || []).filter(function(song) {
-        return !query || String(song.name || "").toLowerCase().includes(query);
-      });
+      const filtered = filterSongsByLetter(
+        (data || []).filter(function(song) {
+          return !query || String(song.name || "").toLowerCase().includes(query);
+        }),
+        selectedAdminSongLetter
+      );
       if (!filtered.length) {
         list.innerHTML = '<div style="color:#94a3b8;padding:10px 0;">No songs found.</div>';
         return;
@@ -4051,6 +4102,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         songs = Array.isArray(data) ? data : [];
         songs.sort(sortSongsByName);
         sessionStorage.setItem(SONG_LIST_CACHE_KEY, JSON.stringify(songs));
+        refreshHomeAlphabet();
         displaySongs(songs);
         return true;
       }).catch(function(error) {
@@ -4130,6 +4182,49 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       });
     }
 
+    let selectedHomeLetter = "ALL";
+    let selectedAdminSongLetter = "ALL";
+
+    function buildSongAlphabet(containerId, activeLetter, onSelect) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      container.innerHTML = "";
+      ["ALL"].concat("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")).forEach(function(letter) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = letter === "ALL" ? "All" : letter;
+        button.className = letter === activeLetter ? "active" : "";
+        button.addEventListener("click", function() {
+          onSelect(letter);
+        });
+        container.appendChild(button);
+      });
+    }
+
+    function filterSongsByLetter(list, letter) {
+      if (letter === "ALL") return list || [];
+      return (list || []).filter(function(song) {
+        return String(song && song.name || "").trim().charAt(0).toUpperCase() === letter;
+      });
+    }
+
+    function refreshHomeAlphabet() {
+      buildSongAlphabet("homeSongAlphabet", selectedHomeLetter, function(letter) {
+        selectedHomeLetter = letter;
+        const searchInput = document.getElementById("search");
+        if (searchInput) searchInput.value = "";
+        displaySongs(songs);
+      });
+    }
+
+    function refreshAdminSongAlphabet() {
+      buildSongAlphabet("adminSongAlphabet", selectedAdminSongLetter, function(letter) {
+        selectedAdminSongLetter = letter;
+        loadAdminSongs();
+      });
+    }
+
     /* =====================================================
        DISPLAY SONGS
     ===================================================== */
@@ -4148,6 +4243,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
           "message"
         );
 
+      list = filterSongsByLetter(list || [], selectedHomeLetter);
       container.innerHTML =
         "";
 
@@ -5044,6 +5140,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     document.getElementById("adminCloseSongsButton").addEventListener("click", closeAdminSongManager);
     document.getElementById("adminCancelEditButton").addEventListener("click", cancelAdminEdit);
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
+    refreshHomeAlphabet();
+    refreshAdminSongAlphabet();
     document.getElementById("adminSongSearch").addEventListener("input", loadAdminSongs);
     document.getElementById("adminSongFullscreenButton").addEventListener("click", openAdminChordEditorFullscreen);
     document.getElementById("adminExitFullscreenButton").addEventListener("click", closeAdminChordEditorFullscreen);

@@ -1895,6 +1895,34 @@
 #adminChordEditorFullscreen .admin-fullscreen-textarea{padding:13px;font-size:15px;line-height:1.5}
 }
 
+
+    body.manage-open::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 18, 38, 0.96);
+      z-index: 9998;
+    }
+
+    body.manage-open #adminSongsPanel {
+      position: fixed !important;
+      z-index: 9999 !important;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0 !important;
+      max-height: calc(100vh - 44px);
+      overflow-y: auto;
+    }
+
+    @media (max-width: 700px) {
+      body.manage-open #adminSongsPanel {
+        top: 10px;
+        width: calc(100% - 20px) !important;
+        max-height: calc(100vh - 20px);
+      }
+    }
+
 </style>
 
 
@@ -3397,6 +3425,7 @@
       const adminPanel = document.getElementById("adminSongsPanel");
       const adminButton = document.getElementById("adminSongsButton");
       if (adminPanel) adminPanel.style.display = "none";
+      document.body.classList.remove("manage-open");
       if (adminButton) adminButton.style.display = "none";
       showLoginPage();
     }
@@ -3418,6 +3447,7 @@
       const panel = document.getElementById("adminSongsPanel");
       if (!panel) return;
       panel.style.display = "block";
+      document.body.classList.add("manage-open");
       selectedAdminSongLetter = "ALL";
       refreshAdminSongAlphabet();
       setAdminManageSection("songs");
@@ -3428,6 +3458,7 @@
     function closeAdminSongManager() {
       const panel = document.getElementById("adminSongsPanel");
       if (panel) panel.style.display = "none";
+      document.body.classList.remove("manage-open");
       cancelAdminEdit();
     }
 

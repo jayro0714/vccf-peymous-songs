@@ -2139,6 +2139,7 @@
         <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
         <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
+        <button id="adminManageNoteTab" type="button" class="logout-button">📢 Site Note</button>
       </div>
 
       <div id="adminManageSongsSection">
@@ -2170,36 +2171,26 @@
         <input id="adminLoginSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
         <div id="adminLoginList" style="margin-top:10px;"></div>
       </div>
+
+      <div id="adminManageNoteSection" style="display:none;">
+        <div id="adminNoteMessage" class="login-message"></div>
+        <div style="color:#cbd5e1;margin:8px 0 10px;">
+          Write one note here. It will replace the note shown on the website and the mobile popup.
+        </div>
+        <textarea
+          id="adminSiteNote"
+          class="request-textarea"
+          placeholder="Write your site note here..."
+          style="min-height:260px;margin-bottom:12px;"
+        ></textarea>
+        <button id="adminSaveSiteNoteButton" type="button" class="submit-request">Save Note</button>
+      </div>
     </div>
 
     <div class="home-layout">
 
       <aside class="home-sidebar">
-        <div class="home-sidebar-title">👋 Hi Bandmates!</div>
-        <div>Welcome sa Jayro Chords!</div>
-
-        <div style="margin-top: 9px;">
-          Please follow the Page to access the Chord library
-        </div>
-
-        <div style="margin-top: 9px;">
-          🙏 Feel free to use this sa inyong mga tugtugan! Enjoy and God bless! 💜
-        </div>
-
-        <div class="home-sidebar-divider"></div>
-
-        <div class="home-sidebar-symbol-title">🎵 Note Count Symbols</div>
-        <div style="margin-top: 6px;">
-          ( ) — Half Note<br>
-          ( - - - - ) — Quarter Note
-        </div>
-
-        <div class="home-sidebar-divider"></div>
-
-        <div style="color:#cbd5e1;">
-          Pafollow nadin sa page <strong>"Jayro Chords"</strong>
-          for more updates 😊
-        </div>
+        <div id="siteNoteDisplay" style="white-space:pre-wrap;"></div>
       </aside>
 
       <main class="home-main">
@@ -2250,32 +2241,7 @@
           ×
         </button>
 
-        <div class="mobile-note-modal-title">
-          🎸 Hi Bandmates!<br>
-          <span style="color:#e2e8f0; font-size:13px;">Welcome sa Jayro Chords!</span>
-        </div>
-
-        <div>
-          Please follow the Page to access the Chord library
-        </div>
-
-        <div style="margin-top: 10px;">
-          🙏 Feel free to use this sa inyong mga tugtugan! Enjoy and God bless! 💜
-        </div>
-
-        <div class="mobile-note-modal-divider"></div>
-
-        <strong style="color:#c4b5fd;">🎵 Note Count Symbols</strong>
-        <div class="mobile-note-modal-symbols" style="margin-top: 6px;">
-          ( ) — Half Note<br>
-          ( - - - - ) — Quarter Note
-        </div>
-
-        <div class="mobile-note-modal-divider" style="margin-top: 10px;"></div>
-
-        <div style="margin-top: 10px; color:#cbd5e1;">
-          Pafollow nadin sa page <strong>"Jayro Chords"</strong> for more updates 😊
-        </div>
+        <div id="mobileSiteNoteDisplay" style="white-space:pre-wrap;"></div>
       </div>
     </div>
 
@@ -3128,6 +3094,8 @@
         0
       );
 
+      loadSiteNote();
+
     }
 
 
@@ -3580,6 +3548,123 @@
        public.facebook_followers.
     ===================================================== */
 
+    const DEFAULT_SITE_NOTE = `👋 Hi Bandmates!
+
+Welcome sa Jayro Chords!
+
+Please follow the Page to access the Chord library
+
+🙏 Feel free to use this sa inyong mga tugtugan! Enjoy and God bless! 💜
+
+━━━━━━━━━━━━━━━━━━
+🎵 Note Count Symbols
+━━━━━━━━━━━━━━━━━━
+( ) — Half Note
+( - - - - ) — Quarter Note
+
+━━━━━━━━━━━━━━━━━━
+Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
+
+    function renderSiteNote(note) {
+      const text = String(note || DEFAULT_SITE_NOTE);
+
+      const desktop = document.getElementById("siteNoteDisplay");
+      if (desktop) desktop.textContent = text;
+
+      const mobile = document.getElementById("mobileSiteNoteDisplay");
+      if (mobile) mobile.textContent = text;
+
+      const editor = document.getElementById("adminSiteNote");
+      if (editor && document.activeElement !== editor) editor.value = text;
+    }
+
+    async function loadSiteNote() {
+      const token = getStoredToken();
+      if (!token) {
+        renderSiteNote(DEFAULT_SITE_NOTE);
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/site_note?select=content&id=eq.1&limit=1",
+          {
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+        if (!response.ok) throw new Error(await response.text());
+
+        const data = await response.json();
+        renderSiteNote(data.length ? data[0].content : DEFAULT_SITE_NOTE);
+      } catch (error) {
+        console.error("Site note load error:", error);
+        renderSiteNote(DEFAULT_SITE_NOTE);
+      }
+    }
+
+    async function loadAdminSiteNote() {
+      if (!isAdminUser()) return;
+      await loadSiteNote();
+
+      const editor = document.getElementById("adminSiteNote");
+      const message = document.getElementById("adminNoteMessage");
+      if (editor) editor.value = document.getElementById("siteNoteDisplay")?.textContent || DEFAULT_SITE_NOTE;
+      if (message) message.textContent = "";
+    }
+
+    async function saveAdminSiteNote() {
+      if (!isAdminUser()) return;
+
+      const token = getStoredToken();
+      const editor = document.getElementById("adminSiteNote");
+      const message = document.getElementById("adminNoteMessage");
+      const button = document.getElementById("adminSaveSiteNoteButton");
+      if (!token || !editor || !message || !button) return;
+
+      const content = editor.value.trim();
+      if (!content) {
+        message.textContent = "Please enter a note.";
+        return;
+      }
+
+      button.disabled = true;
+      message.textContent = "Saving note...";
+
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/site_note?id=eq.1",
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              content: content,
+              updated_at: new Date().toISOString()
+            })
+          }
+        );
+
+        if (!response.ok) throw new Error(await response.text());
+
+        renderSiteNote(content);
+        message.textContent = "Site note saved successfully.";
+      } catch (error) {
+        console.error("Site note save error:", error);
+        message.textContent = "Unable to save site note.";
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+
     function setAdminManageSection(section) {
       if (!isAdminUser()) return;
 
@@ -3587,13 +3672,15 @@
         songs: document.getElementById("adminManageSongsSection"),
         access: document.getElementById("adminManageAccessSection"),
         facebook: document.getElementById("adminManageFacebookSection"),
-        login: document.getElementById("adminManageLoginSection")
+        login: document.getElementById("adminManageLoginSection"),
+        note: document.getElementById("adminManageNoteSection")
       };
       const tabs = {
         songs: document.getElementById("adminManageSongsTab"),
         access: document.getElementById("adminManageAccessTab"),
         facebook: document.getElementById("adminManageFacebookTab"),
-        login: document.getElementById("adminManageLoginTab")
+        login: document.getElementById("adminManageLoginTab"),
+        note: document.getElementById("adminManageNoteTab")
       };
 
       Object.keys(sections).forEach(function(key) {
@@ -3604,6 +3691,7 @@
       if (section === "access") loadAdminAccessRequests();
       if (section === "facebook") loadAdminFacebookFollowers();
       if (section === "login") loadAdminLoginActivity();
+      if (section === "note") loadAdminSiteNote();
     }
 
     async function loadAdminAccessRequests() {
@@ -4984,6 +5072,10 @@
     document.getElementById("adminManageLoginTab").addEventListener("click", function() {
       setAdminManageSection("login");
     });
+    document.getElementById("adminManageNoteTab").addEventListener("click", function() {
+      setAdminManageSection("note");
+    });
+    document.getElementById("adminSaveSiteNoteButton").addEventListener("click", saveAdminSiteNote);
     document.getElementById("adminAccessSearch").addEventListener("input", loadAdminAccessRequests);
     document.getElementById("adminFacebookSearch").addEventListener("input", loadAdminFacebookFollowers);
     document.getElementById("adminLoginSearch").addEventListener("input", loadAdminLoginActivity);

@@ -1895,6 +1895,20 @@
 #adminChordEditorFullscreen .admin-fullscreen-textarea{padding:13px;font-size:15px;line-height:1.5}
 }
 
+
+    .manage-fullscreen {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 9999 !important;
+      width: 100% !important;
+      max-width: none !important;
+      min-height: 100vh !important;
+      box-sizing: border-box;
+      overflow-y: auto;
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+
 </style>
 
 
@@ -2176,7 +2190,7 @@
       </div>
     </div>
 
-    <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
+    <div id="adminSongsPanel" class="manage-fullscreen" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
         <h2 style="margin:0;font-size:22px;">⚙️ Manage</h2>
         <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>

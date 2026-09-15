@@ -2993,7 +2993,7 @@
     }
 
 
-    function maybeOpenMobileNote() {
+    async function maybeOpenMobileNote() {
       if (window.innerWidth > 900) return;
 
       const seen = sessionStorage.getItem("jayro_mobile_note_seen");
@@ -3001,6 +3001,8 @@
 
       const modal = document.getElementById("mobileNoteModal");
       if (!modal) return;
+
+      await loadSiteNote();
 
       setTimeout(function() {
         modal.classList.add("show");
@@ -3144,6 +3146,8 @@
         0,
         0
       );
+
+      loadSiteNote();
 
     }
 

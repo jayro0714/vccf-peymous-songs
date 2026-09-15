@@ -484,6 +484,11 @@
       background: rgba(9, 25, 50, 0.96);
     }
 
+    .home-brand,
+    .song-page-brand {
+      cursor: pointer;
+    }
+
     .home-brand {
       display: flex;
       align-items: center;
@@ -2140,7 +2145,7 @@
   <div id="homePage">
 
     <div class="home-header">
-      <div class="home-brand">
+      <div class="home-brand" onclick="showHome()" role="button" tabindex="0" title="Go to Home">
         <img
           class="home-brand-logo"
           src="logo.png"
@@ -2301,7 +2306,7 @@
   <div id="songPage">
 
     <div class="song-page-header">
-      <div class="song-page-brand">
+      <div class="song-page-brand" onclick="showHome()" role="button" tabindex="0" title="Go to Home">
         <img
           class="song-page-brand-logo"
           src="logo.png"

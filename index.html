@@ -4013,29 +4013,64 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     function renderAdminLoginActivity(data) {
-      const list=document.getElementById("adminLoginList");
-      const query=(document.getElementById("adminLoginSearch").value||"").trim().toLowerCase();
-      const filtered=(data||[]).filter(function(item){
-        return !query ||
-          String(item.name||"").toLowerCase().includes(query) ||
-          String(item.email||"").toLowerCase().includes(query);
+      const list = document.getElementById("adminLoginList");
+      if (!list) return;
+
+      const queryInput = document.getElementById("adminLoginSearch");
+      const query = String(queryInput ? queryInput.value : "").trim().toLowerCase();
+
+      const grouped = {};
+      (data || []).forEach(function(row) {
+        const name = String(row.name || row.email || "Unknown").trim();
+        const email = String(row.email || "").trim().toLowerCase();
+        if (query && !name.toLowerCase().includes(query) && !email.includes(query)) return;
+
+        const date = new Date(row.logged_in_at);
+        if (Number.isNaN(date.getTime())) return;
+
+        const key =
+          date.getFullYear() + "-" +
+          String(date.getMonth() + 1).padStart(2, "0") + "-" +
+          String(date.getDate()).padStart(2, "0");
+
+        if (!grouped[key]) grouped[key] = [];
+        const uniqueKey = (row.user_id || email || name).toLowerCase();
+        if (!grouped[key].some(function(item) { return item.key === uniqueKey; })) {
+          grouped[key].push({ key: uniqueKey, name: name });
+        }
       });
-      if(!filtered.length){
-        list.innerHTML='<div style="color:#94a3b8;padding:10px 0;">No login activity found.</div>';
+
+      const dates = Object.keys(grouped).sort().reverse();
+
+      if (!dates.length) {
+        list.innerHTML = '<div style="color:#94a3b8;">No login activity found.</div>';
         return;
       }
-      list.innerHTML="";
-      filtered.forEach(function(item){
-        const row=document.createElement("div");
-        row.style.cssText="padding:13px 0;border-bottom:1px solid #294e79;overflow-wrap:anywhere;";
-        const when=item.logged_in_at?new Date(item.logged_in_at).toLocaleString([],{
-          year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"
-        }):"";
-        row.innerHTML="<strong>"+escapeHtml(item.name||"User")+"</strong><br>"+
-          "<span style='color:#cbd5e1;'>"+escapeHtml(item.email||"")+"</span>"+
-          "<br><span style='color:#8fa5c4;'>Logged in: "+escapeHtml(when)+"</span>";
-        list.appendChild(row);
-      });
+
+      list.innerHTML = dates.map(function(key) {
+        const parts = key.split("-");
+        const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        const label = date.toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+          year: "numeric"
+        });
+
+        const names = grouped[key].sort(function(a, b) {
+          return a.name.localeCompare(b.name);
+        });
+
+        return (
+          '<div style="padding:12px 0;border-bottom:1px solid #294e79;">' +
+            '<div style="font-weight:700;color:#e2e8f0;margin-bottom:7px;">📅 ' + label + '</div>' +
+            names.map(function(item) {
+              return '<div style="color:#cbd5e1;padding:3px 0;">• ' +
+                escapeHtml(item.name) +
+              '</div>';
+            }).join("") +
+          '</div>'
+        );
+      }).join("");
     }
 
     /* =====================================================
@@ -5083,21 +5118,54 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
 
     async function recordLoginActivity(user) {
       try {
-        const token=getStoredToken();
-        if(!token||!user||!user.id||!user.email)return;
-        const name=localStorage.getItem("jayro_name")||"";
-        const response=await fetch(SUPABASE_URL+"/rest/v1/login_activity",{
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json",
-            "apikey":SUPABASE_PUBLISHABLE_KEY,
-            "Authorization":"Bearer "+token,
-            "Prefer":"return=minimal"
+        const token = getStoredToken();
+        if (!token || !user || !user.id || !user.email) return;
+
+        // Record this user only once per calendar day (using the browser's local date).
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).toISOString();
+
+        const checkResponse = await fetch(
+          SUPABASE_URL +
+          "/rest/v1/login_activity?select=id&user_id=eq." +
+          encodeURIComponent(user.id) +
+          "&logged_in_at=gte." + encodeURIComponent(startOfDay) +
+          "&logged_in_at=lt." + encodeURIComponent(endOfDay) +
+          "&limit=1",
+          {
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+
+        if (!checkResponse.ok) throw new Error(await checkResponse.text());
+
+        const existing = await checkResponse.json();
+        if (existing.length > 0) return;
+
+        const name = localStorage.getItem("jayro_name") || "";
+        const response = await fetch(SUPABASE_URL + "/rest/v1/login_activity", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + token,
+            "Prefer": "return=minimal"
           },
-          body:JSON.stringify({user_id:user.id,email:user.email,name:name})
+          body: JSON.stringify({
+            user_id: user.id,
+            email: user.email,
+            name: name
+          })
         });
-        if(!response.ok)console.error("Login activity recording failed:",await response.text());
-      }catch(error){console.error("Login activity recording error:",error);}
+
+        if (!response.ok) console.error("Login activity recording failed:", await response.text());
+      } catch (error) {
+        console.error("Login activity recording error:", error);
+      }
     }
 
     (async function restoreSession() {

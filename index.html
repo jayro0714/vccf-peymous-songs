@@ -687,6 +687,22 @@
       background: #1b3d69;
     }
 
+    /* Manage tabs: keep all tabs side by side at their natural width */
+    #adminManageTabs {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-bottom: 18px;
+    }
+
+    #adminManageTabs button {
+      width: auto !important;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
     /* =====================================================
        SONG FEEDBACK
     ===================================================== */
@@ -1836,6 +1852,21 @@
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KK9EJCE6CY"></script>
+    <div id="adminChordEditorFullscreen" aria-hidden="true">
+      <div class="admin-fullscreen-header">
+        <div>
+          <div class="admin-fullscreen-title">🎵 Chord Sheet Editor</div>
+          <div id="adminFullscreenSongName" class="admin-fullscreen-subtitle">New Song</div>
+        </div>
+        <button id="adminExitFullscreenButton" type="button" class="admin-fullscreen-close">✕ Exit</button>
+      </div>
+      <textarea id="adminFullscreenChordSheet" class="admin-fullscreen-textarea" spellcheck="false" placeholder="Paste or edit the chords and lyrics here..."></textarea>
+      <div class="admin-fullscreen-footer">
+        <span>Large editing area • Press ESC to exit</span>
+        <button id="adminFullscreenDoneButton" type="button" class="admin-fullscreen-save">Done</button>
+      </div>
+    </div>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -2103,10 +2134,11 @@
         <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
       </div>
 
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+      <div id="adminManageTabs">
         <button id="adminManageSongsTab" type="button" class="submit-request">🎵 Songs</button>
         <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
+        <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
       </div>
 
       <div id="adminManageSongsSection">
@@ -2132,6 +2164,11 @@
         <div id="adminFacebookMessage" class="login-message"></div>
         <input id="adminFacebookSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
         <div id="adminFacebookList" style="margin-top:10px;"></div>
+      </div>
+      <div id="adminManageLoginSection" style="display:none;">
+        <div id="adminLoginMessage" class="login-message"></div>
+        <input id="adminLoginSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
+        <div id="adminLoginList" style="margin-top:10px;"></div>
       </div>
     </div>
 
@@ -3199,7 +3236,8 @@
 
         const accessToken = authData.access_token;
         const refreshToken = authData.refresh_token || "";
-        const userId = authData.user && authData.user.id;
+        const user = authData.user;
+        const userId = user && user.id;
 
         if (!accessToken || !userId) {
           message.textContent = "Supabase login succeeded, but no session was returned.";
@@ -3233,6 +3271,7 @@
             showHome();
             document.getElementById("adminSongsButton").style.display = "inline-block";
             maybeOpenMobileNote();
+            recordLoginActivity(user);
             loadSongList();
             return;
           }
@@ -3279,6 +3318,7 @@
         message.textContent = "";
         showHome();
         maybeOpenMobileNote();
+        recordLoginActivity(user);
         loadSongList();
       } catch (error) {
         console.error("Supabase login error:", error);
@@ -3546,12 +3586,14 @@
       const sections = {
         songs: document.getElementById("adminManageSongsSection"),
         access: document.getElementById("adminManageAccessSection"),
-        facebook: document.getElementById("adminManageFacebookSection")
+        facebook: document.getElementById("adminManageFacebookSection"),
+        login: document.getElementById("adminManageLoginSection")
       };
       const tabs = {
         songs: document.getElementById("adminManageSongsTab"),
         access: document.getElementById("adminManageAccessTab"),
-        facebook: document.getElementById("adminManageFacebookTab")
+        facebook: document.getElementById("adminManageFacebookTab"),
+        login: document.getElementById("adminManageLoginTab")
       };
 
       Object.keys(sections).forEach(function(key) {
@@ -3561,6 +3603,7 @@
 
       if (section === "access") loadAdminAccessRequests();
       if (section === "facebook") loadAdminFacebookFollowers();
+      if (section === "login") loadAdminLoginActivity();
     }
 
     async function loadAdminAccessRequests() {
@@ -3799,6 +3842,54 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+
+    /* =====================================================
+       ADMIN LOGIN ACTIVITY
+    ===================================================== */
+    async function loadAdminLoginActivity() {
+      if (!isAdminUser()) return;
+      const token=getStoredToken(), list=document.getElementById("adminLoginList");
+      if(!token||!list)return;
+      list.innerHTML="Loading login activity...";
+      try{
+        const response=await fetch(
+          SUPABASE_URL+"/rest/v1/login_activity?select=id,email,name,logged_in_at&order=logged_in_at.desc&limit=200",
+          {headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:"Bearer "+token}}
+        );
+        if(!response.ok)throw new Error(await response.text());
+        renderAdminLoginActivity(await response.json());
+      }catch(error){
+        console.error("Admin login activity error:",error);
+        list.innerHTML="Unable to load login activity.";
+      }
+    }
+
+    function renderAdminLoginActivity(data) {
+      const list=document.getElementById("adminLoginList");
+      const query=(document.getElementById("adminLoginSearch").value||"").trim().toLowerCase();
+      const filtered=(data||[]).filter(function(item){
+        return !query ||
+          String(item.name||"").toLowerCase().includes(query) ||
+          String(item.email||"").toLowerCase().includes(query);
+      });
+      if(!filtered.length){
+        list.innerHTML='<div style="color:#94a3b8;padding:10px 0;">No login activity found.</div>';
+        return;
+      }
+      list.innerHTML="";
+      filtered.forEach(function(item){
+        const row=document.createElement("div");
+        row.style.cssText="padding:13px 0;border-bottom:1px solid #294e79;overflow-wrap:anywhere;";
+        const when=item.logged_in_at?new Date(item.logged_in_at).toLocaleString([],{
+          year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"
+        }):"";
+        row.innerHTML="<strong>"+escapeHtml(item.name||"User")+"</strong><br>"+
+          "<span style='color:#cbd5e1;'>"+escapeHtml(item.email||"")+"</span>"+
+          "<br><span style='color:#8fa5c4;'>Logged in: "+escapeHtml(when)+"</span>";
+        list.appendChild(row);
+      });
     }
 
     /* =====================================================
@@ -4798,6 +4889,26 @@
         }
       );
 
+
+    async function recordLoginActivity(user) {
+      try {
+        const token=getStoredToken();
+        if(!token||!user||!user.id||!user.email)return;
+        const name=localStorage.getItem("jayro_name")||"";
+        const response=await fetch(SUPABASE_URL+"/rest/v1/login_activity",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "apikey":SUPABASE_PUBLISHABLE_KEY,
+            "Authorization":"Bearer "+token,
+            "Prefer":"return=minimal"
+          },
+          body:JSON.stringify({user_id:user.id,email:user.email,name:name})
+        });
+        if(!response.ok)console.error("Login activity recording failed:",await response.text());
+      }catch(error){console.error("Login activity recording error:",error);}
+    }
+
     (async function restoreSession() {
       const token = getStoredToken();
       if (!token) {
@@ -4847,16 +4958,12 @@
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
     document.getElementById("adminSongSearch").addEventListener("input", loadAdminSongs);
     document.getElementById("adminSongFullscreenButton").addEventListener("click", openAdminChordEditorFullscreen);
-
-    window.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("adminExitFullscreenButton").addEventListener("click", closeAdminChordEditorFullscreen);
-      document.getElementById("adminFullscreenDoneButton").addEventListener("click", closeAdminChordEditorFullscreen);
-      document.getElementById("adminFullscreenChordSheet").addEventListener("input", function(){
-        const source=document.getElementById("adminSongChords");
-        if(source) source.value=this.value;
-      });
+    document.getElementById("adminExitFullscreenButton").addEventListener("click", closeAdminChordEditorFullscreen);
+    document.getElementById("adminFullscreenDoneButton").addEventListener("click", closeAdminChordEditorFullscreen);
+    document.getElementById("adminFullscreenChordSheet").addEventListener("input", function(){
+      const source=document.getElementById("adminSongChords");
+      if(source) source.value=this.value;
     });
-
     document.addEventListener("keydown", function(event){
       const overlay=document.getElementById("adminChordEditorFullscreen");
       if(event.key==="Escape" && overlay && overlay.classList.contains("active")){
@@ -4874,26 +4981,16 @@
     document.getElementById("adminManageFacebookTab").addEventListener("click", function() {
       setAdminManageSection("facebook");
     });
+    document.getElementById("adminManageLoginTab").addEventListener("click", function() {
+      setAdminManageSection("login");
+    });
     document.getElementById("adminAccessSearch").addEventListener("input", loadAdminAccessRequests);
     document.getElementById("adminFacebookSearch").addEventListener("input", loadAdminFacebookFollowers);
+    document.getElementById("adminLoginSearch").addEventListener("input", loadAdminLoginActivity);
 </script>
 
 
 
-    <div id="adminChordEditorFullscreen" aria-hidden="true">
-      <div class="admin-fullscreen-header">
-        <div>
-          <div class="admin-fullscreen-title">🎵 Chord Sheet Editor</div>
-          <div id="adminFullscreenSongName" class="admin-fullscreen-subtitle">New Song</div>
-        </div>
-        <button id="adminExitFullscreenButton" type="button" class="admin-fullscreen-close">✕ Exit</button>
-      </div>
-      <textarea id="adminFullscreenChordSheet" class="admin-fullscreen-textarea" spellcheck="false" placeholder="Paste or edit the chords and lyrics here..."></textarea>
-      <div class="admin-fullscreen-footer">
-        <span>Large editing area • Press ESC to exit</span>
-        <button id="adminFullscreenDoneButton" type="button" class="admin-fullscreen-save">Done</button>
-      </div>
-    </div>
 </body>
 
 </html>

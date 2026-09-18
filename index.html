@@ -4101,19 +4101,17 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
             '<div style="color:#cbd5e1;margin-top:6px;">Requested by: ' + escapeHtml(row.name || row.email || "Unknown") + '</div>' +
             (row.note ? '<div style="color:#94a3b8;margin-top:5px;">Note: ' + escapeHtml(row.note) + '</div>' : '') +
             '<div style="color:#64748b;margin-top:5px;">' + date + '</div>' +
-            '<div style="margin-top:8px;">' +
-              '<select data-request-status="' + row.id + '" class="request-input" style="width:auto;">' +
-                '<option value="Pending"' + (status === "Pending" ? " selected" : "") + '>Pending</option>' +
-                '<option value="Added"' + (status === "Added" ? " selected" : "") + '>Added</option>' +
-                '<option value="Rejected"' + (status === "Rejected" ? " selected" : "") + '>Rejected</option>' +
-              '</select>' +
+            '<div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">' +
+              (status === "Pending"
+                ? '<button type="button" data-request-done="' + row.id + '" class="logout-button">✅ Done</button>'
+                : '<span style="color:#94a3b8;">Status: ' + escapeHtml(status) + '</span>') +
             '</div>' +
           '</div>';
         }).join("");
 
-        list.querySelectorAll("[data-request-status]").forEach(function(select) {
-          select.addEventListener("change", function() {
-            updateAdminSongRequestStatus(select.getAttribute("data-request-status"), select.value);
+        list.querySelectorAll("[data-request-done]").forEach(function(button) {
+          button.addEventListener("click", function() {
+            updateAdminSongRequestStatus(button.getAttribute("data-request-done"), "Done");
           });
         });
       } catch (error) {

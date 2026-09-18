@@ -2202,6 +2202,14 @@
           ⚙️ Manage
         </button>
         <button
+          id="songRequestButton"
+          class="logout-button"
+          type="button"
+          style="display:none;"
+        >
+          🎵 Request a Song
+        </button>
+        <button
           id="logoutButton"
           class="logout-button"
           type="button"
@@ -2209,6 +2217,26 @@
           Logout
         </button>
       </div>
+    </div>
+
+    <div id="songRequestPanel" style="display:none;max-width:560px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;">
+        <h2 style="margin:0;font-size:22px;">🎵 Request a Song</h2>
+        <button id="songRequestCloseButton" type="button" class="logout-button">Close</button>
+      </div>
+      <div id="songRequestUsage" style="color:#94a3b8;margin-bottom:14px;">Loading your weekly requests...</div>
+
+      <label style="display:block;color:#cbd5e1;margin-bottom:6px;">Song Title</label>
+      <input id="songRequestTitle" class="request-input" type="text" placeholder="Enter song title">
+
+      <label style="display:block;color:#cbd5e1;margin:12px 0 6px;">Artist / Band</label>
+      <input id="songRequestArtist" class="request-input" type="text" placeholder="Enter artist or band">
+
+      <label style="display:block;color:#cbd5e1;margin:12px 0 6px;">Additional Note (optional)</label>
+      <textarea id="songRequestNote" class="request-textarea" placeholder="Anything else you want to tell me?"></textarea>
+
+      <button id="submitSongRequestButton" class="submit-request" type="button" style="margin-top:12px;">Submit Request</button>
+      <div id="songRequestMessage" class="login-message"></div>
     </div>
 
     <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
@@ -2220,6 +2248,7 @@
       <div id="adminManageTabs">
         <button id="adminManageDashboardTab" type="button" class="submit-request">📊 Dashboard</button>
         <button id="adminManageSongsTab" type="button" class="logout-button">🎵 Songs</button>
+        <button id="adminManageRequestsTab" type="button" class="logout-button">📝 Song Requests</button>
         <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
         <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
@@ -2250,6 +2279,10 @@
             <div style="font-size:28px;font-weight:700;" id="dashboardFeedbackCount">—</div>
             <div style="color:#94a3b8;margin-top:4px;">💬 Feedback</div>
           </div>
+          <div style="padding:16px;border:1px solid #294e79;border-radius:10px;background:#0f2038;">
+            <div style="font-size:28px;font-weight:700;" id="dashboardSongRequestCount">—</div>
+            <div style="color:#94a3b8;margin-top:4px;">📝 Pending Song Requests</div>
+          </div>
         </div>
       </div>
 
@@ -2265,6 +2298,12 @@
         <input id="adminSongSearch" class="request-input" type="text" placeholder="Search songs to edit or delete..." style="margin-top:12px;">
         <div id="adminSongAlphabet" class="song-alphabet" aria-label="Filter songs by first letter"></div>
         <div id="adminSongList" style="margin-top:10px;"></div>
+      </div>
+
+      <div id="adminManageRequestsSection" style="display:none;">
+        <div id="adminRequestsMessage" class="login-message"></div>
+        <input id="adminRequestSearch" class="request-input" type="text" placeholder="Search song, artist, or requester..." style="margin-top:8px;">
+        <div id="adminRequestList" style="margin-top:10px;"></div>
       </div>
 
       <div id="adminManageAccessSection" style="display:none;">
@@ -3354,6 +3393,7 @@
             message.textContent = "";
             showHome();
             document.getElementById("adminSongsButton").style.display = "inline-block";
+            document.getElementById("songRequestButton").style.display = "none";
             maybeOpenMobileNote();
             recordLoginActivity(user);
             loadSongList();
@@ -3401,6 +3441,8 @@
 
         message.textContent = "";
         showHome();
+        document.getElementById("adminSongsButton").style.display = "none";
+        document.getElementById("songRequestButton").style.display = "inline-block";
         maybeOpenMobileNote();
         recordLoginActivity(user);
         loadSongList();
@@ -3460,8 +3502,12 @@
       const adminPanel = document.getElementById("adminSongsPanel");
       const adminButton = document.getElementById("adminSongsButton");
       if (adminPanel) adminPanel.style.display = "none";
+      const songRequestPanel = document.getElementById("songRequestPanel");
+      if (songRequestPanel) songRequestPanel.style.display = "none";
       document.body.classList.remove("manage-open");
       if (adminButton) adminButton.style.display = "none";
+      const songRequestButton = document.getElementById("songRequestButton");
+      if (songRequestButton) songRequestButton.style.display = "none";
       showLoginPage();
     }
 
@@ -3850,10 +3896,253 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         document.getElementById("dashboardLoginTodayCount").textContent = uniqueLogins.size;
         document.getElementById("dashboardFeedbackCount").textContent = feedbackData.length;
 
+        const requestResponse = await fetch(
+          SUPABASE_URL + "/rest/v1/song_requests?select=id&status=eq.Pending&limit=1000",
+          { headers: headers }
+        );
+        if (!requestResponse.ok) throw new Error(await requestResponse.text());
+        const requestData = await requestResponse.json();
+        document.getElementById("dashboardSongRequestCount").textContent = requestData.length;
+
         if (message) message.textContent = "";
       } catch (error) {
         console.error("Admin dashboard error:", error);
         if (message) message.textContent = "Unable to load dashboard.";
+      }
+    }
+
+    let songRequestUsage = { count: 0, limit: 2 };
+
+    function getCurrentUserId() {
+      const token = getStoredToken();
+      if (!token) return "";
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+        return payload.sub || "";
+      } catch (error) {
+        return "";
+      }
+    }
+
+    function getWeekStartAndEnd() {
+      const now = new Date();
+      const start = new Date(now);
+      const day = start.getDay();
+      start.setDate(start.getDate() + (day === 0 ? -6 : 1 - day));
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 7);
+      return { start: start.toISOString(), end: end.toISOString() };
+    }
+
+    async function loadSongRequestUsage() {
+      const token = getStoredToken();
+      const userId = getCurrentUserId();
+      const usage = document.getElementById("songRequestUsage");
+      const button = document.getElementById("submitSongRequestButton");
+      if (!token || !userId || !usage) return;
+
+      const week = getWeekStartAndEnd();
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/song_requests?select=id&user_id=eq." +
+          encodeURIComponent(userId) +
+          "&created_at=gte." + encodeURIComponent(week.start) +
+          "&created_at=lt." + encodeURIComponent(week.end) +
+          "&limit=100",
+          {
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+        if (!response.ok) throw new Error(await response.text());
+
+        const rows = await response.json();
+        songRequestUsage.count = rows.length;
+
+        if (rows.length >= 2) {
+          usage.textContent = "🎵 You've reached your maximum song requests for this week. Your requests reset next week.";
+          button.disabled = true;
+          button.textContent = "🔒 Request Limit Reached";
+        } else {
+          usage.textContent = "You have used " + rows.length + " of 2 song requests this week.";
+          button.disabled = false;
+          button.textContent = "Submit Request";
+        }
+      } catch (error) {
+        console.error("Song request usage error:", error);
+        usage.textContent = "Unable to check your weekly request limit.";
+      }
+    }
+
+    function openSongRequestPanel() {
+      const panel = document.getElementById("songRequestPanel");
+      const manage = document.getElementById("adminSongsPanel");
+      if (!panel) return;
+      if (manage) manage.style.display = "none";
+      panel.style.display = "block";
+      document.getElementById("songRequestMessage").textContent = "";
+      document.getElementById("songRequestTitle").value = "";
+      document.getElementById("songRequestArtist").value = "";
+      document.getElementById("songRequestNote").value = "";
+      loadSongRequestUsage();
+    }
+
+    function closeSongRequestPanel() {
+      const panel = document.getElementById("songRequestPanel");
+      if (panel) panel.style.display = "none";
+    }
+
+    async function submitSongRequest() {
+      const token = getStoredToken();
+      const userId = getCurrentUserId();
+      const email = (localStorage.getItem("jayro_email") || sessionStorage.getItem("jayro_email") || "").trim();
+      const name = localStorage.getItem("jayro_name") || "";
+      const title = document.getElementById("songRequestTitle").value.trim();
+      const artist = document.getElementById("songRequestArtist").value.trim();
+      const note = document.getElementById("songRequestNote").value.trim();
+      const message = document.getElementById("songRequestMessage");
+      const button = document.getElementById("submitSongRequestButton");
+
+      if (!title) {
+        message.textContent = "Please enter the song title.";
+        return;
+      }
+      if (!token || !userId) {
+        message.textContent = "Please log in again.";
+        return;
+      }
+      if (songRequestUsage.count >= 2) {
+        message.textContent = "You've reached your maximum song requests for this week.";
+        return;
+      }
+
+      button.disabled = true;
+      message.textContent = "Submitting request...";
+
+      try {
+        const response = await fetch(SUPABASE_URL + "/rest/v1/song_requests", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + token,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            email: email,
+            name: name,
+            song_title: title,
+            artist: artist,
+            note: note
+          })
+        });
+
+        if (!response.ok) throw new Error(await response.text());
+
+        message.textContent = "✅ Song request submitted!";
+        document.getElementById("songRequestTitle").value = "";
+        document.getElementById("songRequestArtist").value = "";
+        document.getElementById("songRequestNote").value = "";
+        await loadSongRequestUsage();
+      } catch (error) {
+        console.error("Song request error:", error);
+        message.textContent = "Unable to submit your song request. Please try again.";
+        button.disabled = false;
+      }
+    }
+
+    async function loadAdminSongRequests() {
+      if (!isAdminUser()) return;
+      const token = getStoredToken();
+      const list = document.getElementById("adminRequestList");
+      const search = document.getElementById("adminRequestSearch");
+      if (!token || !list) return;
+
+      list.innerHTML = "Loading song requests...";
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/song_requests?select=id,name,email,song_title,artist,note,status,created_at&order=id.desc&limit=500",
+          {
+            headers: {
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token
+            }
+          }
+        );
+        if (!response.ok) throw new Error(await response.text());
+
+        const data = await response.json();
+        const query = String(search ? search.value : "").trim().toLowerCase();
+        const filtered = data.filter(function(row) {
+          return !query ||
+            String(row.song_title || "").toLowerCase().includes(query) ||
+            String(row.artist || "").toLowerCase().includes(query) ||
+            String(row.name || "").toLowerCase().includes(query) ||
+            String(row.email || "").toLowerCase().includes(query);
+        });
+
+        if (!filtered.length) {
+          list.innerHTML = '<div style="color:#94a3b8;">No song requests found.</div>';
+          return;
+        }
+
+        list.innerHTML = filtered.map(function(row) {
+          const status = String(row.status || "Pending");
+          const date = new Date(row.created_at).toLocaleDateString(undefined, {
+            month: "short", day: "numeric", year: "numeric"
+          });
+          return '<div style="padding:12px 0;border-bottom:1px solid #294e79;">' +
+            '<div style="font-weight:700;color:#e2e8f0;">🎵 ' + escapeHtml(row.song_title || "") + '</div>' +
+            '<div style="color:#94a3b8;margin-top:3px;">' + escapeHtml(row.artist || "Artist not provided") + '</div>' +
+            '<div style="color:#cbd5e1;margin-top:6px;">Requested by: ' + escapeHtml(row.name || row.email || "Unknown") + '</div>' +
+            (row.note ? '<div style="color:#94a3b8;margin-top:5px;">Note: ' + escapeHtml(row.note) + '</div>' : '') +
+            '<div style="color:#64748b;margin-top:5px;">' + date + '</div>' +
+            '<div style="margin-top:8px;">' +
+              '<select data-request-status="' + row.id + '" class="request-input" style="width:auto;">' +
+                '<option value="Pending"' + (status === "Pending" ? " selected" : "") + '>Pending</option>' +
+                '<option value="Added"' + (status === "Added" ? " selected" : "") + '>Added</option>' +
+                '<option value="Rejected"' + (status === "Rejected" ? " selected" : "") + '>Rejected</option>' +
+              '</select>' +
+            '</div>' +
+          '</div>';
+        }).join("");
+
+        list.querySelectorAll("[data-request-status]").forEach(function(select) {
+          select.addEventListener("change", function() {
+            updateAdminSongRequestStatus(select.getAttribute("data-request-status"), select.value);
+          });
+        });
+      } catch (error) {
+        console.error("Admin song requests error:", error);
+        list.innerHTML = "Unable to load song requests.";
+      }
+    }
+
+    async function updateAdminSongRequestStatus(id, status) {
+      const token = getStoredToken();
+      if (!token || !id) return;
+      try {
+        const response = await fetch(
+          SUPABASE_URL + "/rest/v1/song_requests?id=eq." + encodeURIComponent(id),
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": "Bearer " + token,
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ status: status })
+          }
+        );
+        if (!response.ok) throw new Error(await response.text());
+        loadAdminSongRequests();
+      } catch (error) {
+        console.error("Song request status error:", error);
       }
     }
 
@@ -3863,6 +4152,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const sections = {
         dashboard: document.getElementById("adminManageDashboardSection"),
         songs: document.getElementById("adminManageSongsSection"),
+        requests: document.getElementById("adminManageRequestsSection"),
         access: document.getElementById("adminManageAccessSection"),
         facebook: document.getElementById("adminManageFacebookSection"),
         login: document.getElementById("adminManageLoginSection"),
@@ -3871,6 +4161,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const tabs = {
         dashboard: document.getElementById("adminManageDashboardTab"),
         songs: document.getElementById("adminManageSongsTab"),
+        requests: document.getElementById("adminManageRequestsTab"),
         access: document.getElementById("adminManageAccessTab"),
         facebook: document.getElementById("adminManageFacebookTab"),
         login: document.getElementById("adminManageLoginTab"),
@@ -3883,6 +4174,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       });
 
       if (section === "dashboard") loadAdminDashboard();
+      if (section === "requests") loadAdminSongRequests();
       if (section === "access") loadAdminAccessRequests();
       if (section === "facebook") loadAdminFacebookFollowers();
       if (section === "login") loadAdminLoginActivity();
@@ -5370,12 +5662,20 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     });
 
 
+    document.getElementById("songRequestButton").addEventListener("click", openSongRequestPanel);
+    document.getElementById("songRequestCloseButton").addEventListener("click", closeSongRequestPanel);
+    document.getElementById("submitSongRequestButton").addEventListener("click", submitSongRequest);
+    document.getElementById("adminRequestSearch").addEventListener("input", loadAdminSongRequests);
+
     document.getElementById("adminManageDashboardTab").addEventListener("click", function() {
       setAdminManageSection("dashboard");
     });
 
     document.getElementById("adminManageSongsTab").addEventListener("click", function() {
       setAdminManageSection("songs");
+    });
+    document.getElementById("adminManageRequestsTab").addEventListener("click", function() {
+      setAdminManageSection("requests");
     });
     document.getElementById("adminManageAccessTab").addEventListener("click", function() {
       setAdminManageSection("access");

@@ -560,8 +560,20 @@
     }
 
     .home-main-heading {
+      position: relative;
       text-align: center;
       margin: 4px 0 20px;
+      padding-top: 30px;
+    }
+
+    .home-welcome {
+      position: absolute;
+      top: 0;
+      right: 4px;
+      color: #93c5fd;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .home-main-heading h1 {
@@ -1446,8 +1458,23 @@
         order: 1;
       }
 
+      .home-main-heading {
+        padding-top: 34px;
+        margin-bottom: 18px;
+      }
+
       .home-main-heading h1 {
         font-size: 27px;
+      }
+
+      .home-welcome {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        margin: 0;
+        text-align: right;
+        white-space: nowrap;
+        font-size: 13px;
       }
 
     }
@@ -2348,6 +2375,7 @@
 
         <div class="home-main-heading">
           <h1>🎵 Praise and Worship Songs List</h1>
+          <div id="homeWelcomeMessage" class="home-welcome" aria-live="polite"></div>
         </div>
 
         <div class="home-search">
@@ -3173,12 +3201,32 @@
        SHOW HOME
     ===================================================== */
 
+    function updateHomeWelcome() {
+      const welcome = document.getElementById("homeWelcomeMessage");
+      if (!welcome) return;
+
+      const name =
+        localStorage.getItem("jayro_name") ||
+        sessionStorage.getItem("jayro_name") ||
+        "";
+
+      const email =
+        localStorage.getItem("jayro_email") ||
+        sessionStorage.getItem("jayro_email") ||
+        "";
+
+      const fallbackName = email ? email.split("@")[0] : "Bandmate";
+      welcome.textContent = "👋 Welcome back, " + (name.trim() || fallbackName) + "!";
+    }
+
     function showHome() {
 
       /*
         The login session is stored locally after Supabase
         authentication, so the page can switch immediately.
       */
+
+      updateHomeWelcome();
 
       document
         .getElementById(
@@ -3395,6 +3443,7 @@
             document.getElementById("adminSongsButton").style.display = "inline-block";
             document.getElementById("songRequestButton").style.display = "none";
             maybeOpenMobileNote();
+            recordLoginActivity(user);
             loadSongList();
             return;
           }
@@ -3443,6 +3492,7 @@
         document.getElementById("adminSongsButton").style.display = "none";
         document.getElementById("songRequestButton").style.display = "inline-block";
         maybeOpenMobileNote();
+        recordLoginActivity(user);
         loadSongList();
       } catch (error) {
         console.error("Supabase login error:", error);
@@ -5541,28 +5591,10 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       );
 
 
-    let activityUserPromise = null;
-
-    async function recordLoginActivity() {
+    async function recordLoginActivity(user) {
       try {
         const token = getStoredToken();
-        if (!token) return;
-
-        // Get the currently authenticated Supabase user once per page session.
-        if (!activityUserPromise) {
-          activityUserPromise = fetch(SUPABASE_URL + "/auth/v1/user", {
-            headers: {
-              "apikey": SUPABASE_PUBLISHABLE_KEY,
-              "Authorization": "Bearer " + token
-            }
-          }).then(async function(response) {
-            if (!response.ok) throw new Error(await response.text());
-            return response.json();
-          });
-        }
-
-        const user = await activityUserPromise;
-        if (!user || !user.id || !user.email) return;
+        if (!token || !user || !user.id || !user.email) return;
 
         // Record this user only once per calendar day (using the browser's local date).
         const now = new Date();
@@ -5589,7 +5621,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         const existing = await checkResponse.json();
         if (existing.length > 0) return;
 
-        const name = localStorage.getItem("jayro_name") || sessionStorage.getItem("jayro_name") || "";
+        const name = localStorage.getItem("jayro_name") || "";
         const response = await fetch(SUPABASE_URL + "/rest/v1/login_activity", {
           method: "POST",
           headers: {
@@ -5607,22 +5639,9 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
 
         if (!response.ok) console.error("Login activity recording failed:", await response.text());
       } catch (error) {
-        console.error("Daily activity recording error:", error);
+        console.error("Login activity recording error:", error);
       }
     }
-
-    // A meaningful button click proves the user is actively using Jayro Chords.
-    // The existing one-record-per-user-per-day rule prevents duplicate rows.
-    document.addEventListener("click", function(event) {
-      const button = event.target && event.target.closest ? event.target.closest("button") : null;
-      if (!button) return;
-
-      const text = (button.textContent || "").trim().toLowerCase();
-      if (text === "logout" || text.includes("log out")) return;
-      if (!getStoredToken()) return;
-
-      recordLoginActivity();
-    }, true);
 
     (async function restoreSession() {
       const token = getStoredToken();

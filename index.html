@@ -3671,17 +3671,73 @@
       return (localStorage.getItem("jayro_role") || sessionStorage.getItem("jayro_role") || "").toLowerCase() === "admin";
     }
 
+    // Full Manage access belongs to Jayro.
+    // Raquel remains an approved Admin account, but has a limited Manage menu.
+    function isFullAdminUser() {
+      const email = (
+        localStorage.getItem("jayro_email") ||
+        sessionStorage.getItem("jayro_email") ||
+        ""
+      ).trim().toLowerCase();
+
+      return email === "tobiasjayro67@gmail.com";
+    }
+
+    function isLimitedAdminUser() {
+      const email = (
+        localStorage.getItem("jayro_email") ||
+        sessionStorage.getItem("jayro_email") ||
+        ""
+      ).trim().toLowerCase();
+
+      return email === "qhuelyl15@outlook.com";
+    }
+
+    function canUseAdminManageSection(section) {
+      if (!isAdminUser()) return false;
+
+      // Raquel cannot access Songs or Song Requests.
+      if (
+        isLimitedAdminUser() &&
+        (section === "songs" || section === "requests")
+      ) {
+        return false;
+      }
+
+      return true;
+    }
+
+    function applyAdminManagePermissions() {
+      const songsTab = document.getElementById("adminManageSongsTab");
+      const requestsTab = document.getElementById("adminManageRequestsTab");
+
+      if (isLimitedAdminUser()) {
+        if (songsTab) songsTab.style.display = "none";
+        if (requestsTab) requestsTab.style.display = "none";
+      } else {
+        if (songsTab) songsTab.style.display = "";
+        if (requestsTab) requestsTab.style.display = "";
+      }
+    }
+
     function openAdminSongManager() {
       if (!isAdminUser()) return;
       const panel = document.getElementById("adminSongsPanel");
       if (!panel) return;
+
       panel.style.display = "block";
       document.body.classList.add("manage-open");
       selectedAdminSongLetter = "ALL";
       refreshAdminSongAlphabet();
       closeAdminManageMenu();
+      applyAdminManagePermissions();
       setAdminManageSection("dashboard");
-      loadAdminSongs();
+
+      // Only the full admin loads the Song Manager data.
+      if (isFullAdminUser()) {
+        loadAdminSongs();
+      }
+
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
@@ -4221,7 +4277,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     async function loadAdminSongRequests() {
-      if (!isAdminUser()) return;
+      if (!isFullAdminUser()) return;
       const token = getStoredToken();
       const list = document.getElementById("adminRequestList");
       const search = document.getElementById("adminRequestSearch");
@@ -4310,7 +4366,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     function setAdminManageSection(section) {
-      if (!isAdminUser()) return;
+      if (!canUseAdminManageSection(section)) return;
 
       const sections = {
         dashboard: document.getElementById("adminManageDashboardSection"),
@@ -4330,6 +4386,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         login: document.getElementById("adminManageLoginTab"),
         note: document.getElementById("adminManageNoteTab")
       };
+
+      applyAdminManagePermissions();
 
       Object.keys(sections).forEach(function(key) {
         sections[key].style.display = key === section ? "block" : "none";
@@ -5850,10 +5908,12 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     });
 
     document.getElementById("adminManageSongsTab").addEventListener("click", function() {
+      if (!isFullAdminUser()) return;
       setAdminManageSection("songs");
       closeAdminManageMenu();
     });
     document.getElementById("adminManageRequestsTab").addEventListener("click", function() {
+      if (!isFullAdminUser()) return;
       setAdminManageSection("requests");
       closeAdminManageMenu();
     });

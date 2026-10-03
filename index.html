@@ -705,21 +705,61 @@
       background: #1b3d69;
     }
 
-    /* Manage tabs: keep all tabs side by side at their natural width */
-    #adminManageTabs {
-      display: flex;
-      align-items: stretch;
-      gap: 8px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      margin-bottom: 18px;
+    /* Manage page: keep the existing Home burger untouched.
+       The Manage page has its own right-side burger menu. */
+    #adminManageHeader {
+      position: relative;
+      padding-right: 92px;
     }
 
+    #adminManageCloseButton,
+    #adminManageBurgerButton {
+      position: absolute;
+      top: 0;
+      width: 38px;
+      height: 38px;
+      min-height: 38px;
+      padding: 0;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      line-height: 1;
+      z-index: 10002;
+    }
+
+    #adminManageCloseButton { right: 48px; }
+    #adminManageBurgerButton { right: 0; }
+
+    #adminManageTabs {
+      position: absolute;
+      top: 54px;
+      right: 20px;
+      z-index: 10001;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      width: min(260px, calc(100% - 40px));
+      padding: 12px;
+      margin: 0;
+      border: 1px solid #294e79;
+      border-radius: 12px;
+      background: #0f2038;
+      box-shadow: 0 14px 35px rgba(0,0,0,.35);
+    }
+
+    #adminManageTabs.active { display: flex; }
+
     #adminManageTabs button {
-      width: auto !important;
+      width: 100% !important;
       flex: 0 0 auto;
       white-space: nowrap;
+      text-align: left;
     }
+
+    #adminManageDashboardTab { display: none !important; }
 
     .song-alphabet {
       display: flex;
@@ -2297,9 +2337,10 @@
     </div>
 
     <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+      <div id="adminManageHeader" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
         <h2 style="margin:0;font-size:22px;">⚙️ Manage</h2>
-        <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
+        <button id="adminManageCloseButton" type="button" class="logout-button" aria-label="Close Manage">✕</button>
+        <button id="adminManageBurgerButton" type="button" class="logout-button" aria-label="Open Manage menu" aria-expanded="false">☰</button>
       </div>
 
       <div id="adminManageTabs">
@@ -3638,6 +3679,7 @@
       document.body.classList.add("manage-open");
       selectedAdminSongLetter = "ALL";
       refreshAdminSongAlphabet();
+      closeAdminManageMenu();
       setAdminManageSection("dashboard");
       loadAdminSongs();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3647,7 +3689,23 @@
       const panel = document.getElementById("adminSongsPanel");
       if (panel) panel.style.display = "none";
       document.body.classList.remove("manage-open");
+      closeAdminManageMenu();
       cancelAdminEdit();
+    }
+
+    function toggleAdminManageMenu() {
+      const menu = document.getElementById("adminManageTabs");
+      const burger = document.getElementById("adminManageBurgerButton");
+      if (!menu || !burger) return;
+      const isOpen = menu.classList.toggle("active");
+      burger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    function closeAdminManageMenu() {
+      const menu = document.getElementById("adminManageTabs");
+      const burger = document.getElementById("adminManageBurgerButton");
+      if (menu) menu.classList.remove("active");
+      if (burger) burger.setAttribute("aria-expanded", "false");
     }
 
     function cancelAdminEdit() {
@@ -5746,7 +5804,6 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     document.getElementById("adminSongsButton").addEventListener("click", openAdminSongManager);
-    document.getElementById("adminCloseSongsButton").addEventListener("click", closeAdminSongManager);
     document.getElementById("adminCancelEditButton").addEventListener("click", cancelAdminEdit);
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
     refreshHomeAlphabet();
@@ -5784,27 +5841,37 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     document.getElementById("submitSongRequestButton").addEventListener("click", submitSongRequest);
     document.getElementById("adminRequestSearch").addEventListener("input", loadAdminSongRequests);
 
+    document.getElementById("adminManageCloseButton").addEventListener("click", closeAdminSongManager);
+    document.getElementById("adminManageBurgerButton").addEventListener("click", toggleAdminManageMenu);
+
     document.getElementById("adminManageDashboardTab").addEventListener("click", function() {
       setAdminManageSection("dashboard");
+      closeAdminManageMenu();
     });
 
     document.getElementById("adminManageSongsTab").addEventListener("click", function() {
       setAdminManageSection("songs");
+      closeAdminManageMenu();
     });
     document.getElementById("adminManageRequestsTab").addEventListener("click", function() {
       setAdminManageSection("requests");
+      closeAdminManageMenu();
     });
     document.getElementById("adminManageAccessTab").addEventListener("click", function() {
       setAdminManageSection("access");
+      closeAdminManageMenu();
     });
     document.getElementById("adminManageFacebookTab").addEventListener("click", function() {
       setAdminManageSection("facebook");
+      closeAdminManageMenu();
     });
     document.getElementById("adminManageLoginTab").addEventListener("click", function() {
       setAdminManageSection("login");
+      closeAdminManageMenu();
     });
     document.getElementById("adminManageNoteTab").addEventListener("click", function() {
       setAdminManageSection("note");
+      closeAdminManageMenu();
     });
     document.getElementById("adminSaveSiteNoteButton").addEventListener("click", saveAdminSiteNote);
     document.getElementById("adminAccessSearch").addEventListener("input", loadAdminAccessRequests);

@@ -721,6 +721,74 @@
       white-space: nowrap;
     }
 
+
+    /* =====================================================
+       MOBILE MANAGE HAMBURGER
+       Mobile only — desktop Manage tabs remain unchanged.
+    ===================================================== */
+
+    .admin-manage-mobile-toggle,
+    .admin-manage-mobile-menu {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .admin-manage-mobile-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 14px;
+        margin-bottom: 12px;
+        background: #1e3a5f;
+        color: white;
+        border: 1px solid #315b89;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .admin-manage-mobile-toggle:hover {
+        background: #24466f;
+      }
+
+      .admin-manage-mobile-menu {
+        flex-direction: column;
+        gap: 7px;
+        margin-bottom: 16px;
+        padding: 10px;
+        background: #0f2038;
+        border: 1px solid #294e79;
+        border-radius: 10px;
+      }
+
+      .admin-manage-mobile-menu.open {
+        display: flex;
+      }
+
+      .admin-manage-mobile-menu button {
+        width: 100%;
+        padding: 11px 13px;
+        text-align: left;
+        background: #142943;
+        color: white;
+        border: 1px solid #294e79;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .admin-manage-mobile-menu button:hover {
+        background: #1b3d69;
+      }
+
+      #adminManageTabs {
+        display: none;
+      }
+    }
+
     .song-alphabet {
       display: flex;
       align-items: center;
@@ -1416,40 +1484,6 @@
 
     }
 
-    .mobile-nav-toggle,
-    .mobile-nav-menu {
-      display: none;
-    }
-
-    .mobile-nav-toggle {
-      width: 42px; height: 42px; padding: 0;
-      border: 1px solid #294e79; border-radius: 10px;
-      background: #102544; color: #f8fafc;
-      font-size: 22px; line-height: 1; cursor: pointer;
-      align-items: center; justify-content: center;
-    }
-
-    .mobile-nav-menu {
-      position: absolute; top: calc(100% + 8px); right: 12px; z-index: 1000;
-      min-width: 190px; padding: 8px;
-      border: 1px solid #294e79; border-radius: 12px;
-      background: #102544; box-shadow: 0 12px 30px rgba(0,0,0,.35);
-    }
-
-    .mobile-nav-menu.active { display: flex; flex-direction: column; gap: 4px; }
-
-    .mobile-nav-menu button {
-      width: 100%; border: 0; border-radius: 8px; background: transparent;
-      color: #f8fafc; padding: 11px 12px; text-align: left;
-      font-size: 14px; font-weight: 700; cursor: pointer;
-    }
-
-    .mobile-nav-menu button:hover, .mobile-nav-menu button:focus-visible {
-      background: #17345c; outline: none;
-    }
-
-    .mobile-nav-divider { height: 1px; margin: 4px 0; background: #294e79; }
-
     @media (max-width: 900px) {
       .home-sidebar {
         display: none !important;
@@ -1519,13 +1553,7 @@
       .home-header {
         min-height: 76px;
         padding: 8px 12px;
-        position: relative;
       }
-
-      .home-header-actions { display: none !important; }
-      .mobile-nav-toggle { display: inline-flex; flex-shrink: 0; }
-      .mobile-nav-menu { display: none; }
-      .mobile-nav-menu.active { display: flex; }
 
       .home-brand {
         gap: 9px;
@@ -2260,19 +2288,30 @@
         </div>
       </div>
 
-      <div class="home-header-actions" style="display:flex;align-items:center;gap:10px;">
-        <button id="adminSongsButton" class="logout-button" type="button" style="display:none;">⚙️ Manage</button>
-        <button id="songRequestButton" class="logout-button" type="button" style="display:none;">🎵 Request a Song</button>
-        <button id="logoutButton" class="logout-button" type="button">Logout</button>
-      </div>
-
-      <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-
-      <div id="mobileNavMenu" class="mobile-nav-menu" aria-hidden="true">
-        <button id="mobileAdminSongsButton" type="button" style="display:none;">⚙️ Manage</button>
-        <button id="mobileSongRequestButton" type="button" style="display:none;">🎵 Request a Song</button>
-        <div class="mobile-nav-divider"></div>
-        <button id="mobileLogoutButton" type="button">🚪 Logout</button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button
+          id="adminSongsButton"
+          class="logout-button"
+          type="button"
+          style="display:none;"
+        >
+          ⚙️ Manage
+        </button>
+        <button
+          id="songRequestButton"
+          class="logout-button"
+          type="button"
+          style="display:none;"
+        >
+          🎵 Request a Song
+        </button>
+        <button
+          id="logoutButton"
+          class="logout-button"
+          type="button"
+        >
+          Logout
+        </button>
       </div>
     </div>
 
@@ -2310,6 +2349,21 @@
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
         <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
         <button id="adminManageNoteTab" type="button" class="logout-button">📢 Site Note</button>
+      </div>
+
+      <button id="adminManageMobileToggle" type="button" class="admin-manage-mobile-toggle">
+        <span>☰ Manage Menu</span>
+        <span id="adminManageMobileArrow">▼</span>
+      </button>
+
+      <div id="adminManageMobileMenu" class="admin-manage-mobile-menu">
+        <button type="button" data-admin-section="dashboard">📊 Dashboard</button>
+        <button type="button" data-admin-section="songs">🎵 Songs</button>
+        <button type="button" data-admin-section="requests">📝 Song Requests</button>
+        <button type="button" data-admin-section="access">👤 Access Approval</button>
+        <button type="button" data-admin-section="facebook">📘 Facebook</button>
+        <button type="button" data-admin-section="login">📊 Login Activity</button>
+        <button type="button" data-admin-section="note">📢 Site Note</button>
       </div>
 
       <div id="adminManageDashboardSection">
@@ -3249,30 +3303,6 @@
       welcome.textContent = "👋 Welcome back, " + (name.trim() || fallbackName) + "!";
     }
 
-    function syncMobileNavRole() {
-      const role = (localStorage.getItem("jayro_role") || sessionStorage.getItem("jayro_role") || "").toLowerCase();
-      const adminButton = document.getElementById("mobileAdminSongsButton");
-      const requestButton = document.getElementById("mobileSongRequestButton");
-      if (adminButton) adminButton.style.display = role === "admin" ? "block" : "none";
-      if (requestButton) requestButton.style.display = role === "admin" ? "none" : "block";
-    }
-
-    function closeMobileNav() {
-      const menu = document.getElementById("mobileNavMenu");
-      const toggle = document.getElementById("mobileNavToggle");
-      if (menu) { menu.classList.remove("active"); menu.setAttribute("aria-hidden", "true"); }
-      if (toggle) { toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Open menu"); }
-    }
-
-    function toggleMobileNav() {
-      const menu = document.getElementById("mobileNavMenu");
-      const toggle = document.getElementById("mobileNavToggle");
-      if (!menu) return;
-      const isOpen = menu.classList.toggle("active");
-      menu.setAttribute("aria-hidden", isOpen ? "false" : "true");
-      if (toggle) { toggle.setAttribute("aria-expanded", isOpen ? "true" : "false"); toggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu"); }
-    }
-
     function showHome() {
 
       /*
@@ -3320,9 +3350,6 @@
             ? "inline-block"
             : "none";
       }
-
-      syncMobileNavRole();
-      closeMobileNav();
 
 
       currentSong =
@@ -3499,7 +3526,6 @@
             showHome();
             document.getElementById("adminSongsButton").style.display = "inline-block";
             document.getElementById("songRequestButton").style.display = "none";
-            syncMobileNavRole();
             maybeOpenMobileNote();
             recordLoginActivity(user);
             loadSongList();
@@ -3549,7 +3575,6 @@
         showHome();
         document.getElementById("adminSongsButton").style.display = "none";
         document.getElementById("songRequestButton").style.display = "inline-block";
-        syncMobileNavRole();
         maybeOpenMobileNote();
         recordLoginActivity(user);
         loadSongList();
@@ -5767,22 +5792,36 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     });
 
 
-    document.getElementById("mobileNavToggle").addEventListener("click", toggleMobileNav);
-    document.getElementById("mobileAdminSongsButton").addEventListener("click", function() { closeMobileNav(); openAdminSongManager(); });
-    document.getElementById("mobileSongRequestButton").addEventListener("click", function() { closeMobileNav(); openSongRequestPanel(); });
-    document.getElementById("mobileLogoutButton").addEventListener("click", function() { closeMobileNav(); logout(); });
-
-    document.addEventListener("click", function(event) {
-      const menu = document.getElementById("mobileNavMenu");
-      const toggle = document.getElementById("mobileNavToggle");
-      if (!menu || !menu.classList.contains("active")) return;
-      if (!menu.contains(event.target) && !toggle.contains(event.target)) closeMobileNav();
-    });
-
     document.getElementById("songRequestButton").addEventListener("click", openSongRequestPanel);
     document.getElementById("songRequestCloseButton").addEventListener("click", closeSongRequestPanel);
     document.getElementById("submitSongRequestButton").addEventListener("click", submitSongRequest);
     document.getElementById("adminRequestSearch").addEventListener("input", loadAdminSongRequests);
+
+    const adminManageMobileToggle = document.getElementById("adminManageMobileToggle");
+    const adminManageMobileMenu = document.getElementById("adminManageMobileMenu");
+    const adminManageMobileArrow = document.getElementById("adminManageMobileArrow");
+
+    if (adminManageMobileToggle && adminManageMobileMenu) {
+      adminManageMobileToggle.addEventListener("click", function() {
+        const isOpen = adminManageMobileMenu.classList.toggle("open");
+        if (adminManageMobileArrow) {
+          adminManageMobileArrow.textContent = isOpen ? "▲" : "▼";
+        }
+      });
+
+      adminManageMobileMenu.querySelectorAll("[data-admin-section]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          const section = button.getAttribute("data-admin-section");
+          if (section) {
+            setAdminManageSection(section);
+          }
+          adminManageMobileMenu.classList.remove("open");
+          if (adminManageMobileArrow) {
+            adminManageMobileArrow.textContent = "▼";
+          }
+        });
+      });
+    }
 
     document.getElementById("adminManageDashboardTab").addEventListener("click", function() {
       setAdminManageSection("dashboard");

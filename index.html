@@ -2038,6 +2038,33 @@
       }
     }
 
+
+/* Request a Song — standalone page */
+body.request-song-open {
+  overflow: hidden;
+}
+
+body.request-song-open #songRequestPanel {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 20000 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 !important;
+  padding: 24px !important;
+  box-sizing: border-box !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow-y: auto !important;
+  background: #111f35 !important;
+}
+
+body.request-song-open #homePage > *:not(#songRequestPanel) {
+  visibility: hidden !important;
+}
+
 </style>
 
 
@@ -4215,18 +4242,24 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const panel = document.getElementById("songRequestPanel");
       const manage = document.getElementById("adminSongsPanel");
       if (!panel) return;
+
       if (manage) manage.style.display = "none";
+
+      document.body.classList.add("request-song-open");
       panel.style.display = "block";
+
       document.getElementById("songRequestMessage").textContent = "";
       document.getElementById("songRequestTitle").value = "";
       document.getElementById("songRequestArtist").value = "";
       document.getElementById("songRequestNote").value = "";
+
       loadSongRequestUsage();
     }
 
     function closeSongRequestPanel() {
       const panel = document.getElementById("songRequestPanel");
       if (panel) panel.style.display = "none";
+      document.body.classList.remove("request-song-open");
     }
 
     async function submitSongRequest() {

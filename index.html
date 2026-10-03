@@ -4243,7 +4243,10 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const manage = document.getElementById("adminSongsPanel");
       if (!panel) return;
 
+      // Request a Song is its own page. Remove the Manage overlay first.
       if (manage) manage.style.display = "none";
+      document.body.classList.remove("manage-open");
+      closeAdminManageMenu();
 
       document.body.classList.add("request-song-open");
       panel.style.display = "block";
@@ -4259,7 +4262,15 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     function closeSongRequestPanel() {
       const panel = document.getElementById("songRequestPanel");
       if (panel) panel.style.display = "none";
+
+      // Fully clear both page overlays so Home returns normally.
       document.body.classList.remove("request-song-open");
+      document.body.classList.remove("manage-open");
+
+      const manage = document.getElementById("adminSongsPanel");
+      if (manage) manage.style.display = "none";
+
+      closeAdminManageMenu();
     }
 
     async function submitSongRequest() {

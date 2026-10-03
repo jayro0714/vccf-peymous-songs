@@ -2347,6 +2347,7 @@
         <button id="adminManageDashboardTab" type="button" class="submit-request">📊 Dashboard</button>
         <button id="adminManageSongsTab" type="button" class="logout-button">🎵 Songs</button>
         <button id="adminManageRequestsTab" type="button" class="logout-button">📝 Song Requests</button>
+        <button id="adminManageRequestSongTab" type="button" class="logout-button" style="display:none;">🎵 Request a Song</button>
         <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
         <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
@@ -3710,13 +3711,16 @@
     function applyAdminManagePermissions() {
       const songsTab = document.getElementById("adminManageSongsTab");
       const requestsTab = document.getElementById("adminManageRequestsTab");
+      const requestSongTab = document.getElementById("adminManageRequestSongTab");
 
       if (isLimitedAdminUser()) {
         if (songsTab) songsTab.style.display = "none";
         if (requestsTab) requestsTab.style.display = "none";
+        if (requestSongTab) requestSongTab.style.display = "block";
       } else {
         if (songsTab) songsTab.style.display = "";
         if (requestsTab) requestsTab.style.display = "";
+        if (requestSongTab) requestSongTab.style.display = "none";
       }
     }
 
@@ -5917,6 +5921,13 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       setAdminManageSection("requests");
       closeAdminManageMenu();
     });
+
+    document.getElementById("adminManageRequestSongTab").addEventListener("click", function() {
+      if (!isLimitedAdminUser()) return;
+      closeAdminManageMenu();
+      openSongRequestPanel();
+    });
+
     document.getElementById("adminManageAccessTab").addEventListener("click", function() {
       setAdminManageSection("access");
       closeAdminManageMenu();

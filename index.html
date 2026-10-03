@@ -3713,15 +3713,11 @@
       const requestsTab = document.getElementById("adminManageRequestsTab");
       const requestSongTab = document.getElementById("adminManageRequestSongTab");
 
-      if (isLimitedAdminUser()) {
-        if (songsTab) songsTab.style.display = "none";
-        if (requestsTab) requestsTab.style.display = "none";
-        if (requestSongTab) requestSongTab.style.display = "block";
-      } else {
-        if (songsTab) songsTab.style.display = "";
-        if (requestsTab) requestsTab.style.display = "";
-        if (requestSongTab) requestSongTab.style.display = "none";
-      }
+      const limited = isLimitedAdminUser();
+
+      if (songsTab) songsTab.style.display = limited ? "none" : "";
+      if (requestsTab) requestsTab.style.display = limited ? "none" : "";
+      if (requestSongTab) requestSongTab.style.display = limited ? "block" : "none";
     }
 
     function openAdminSongManager() {
@@ -5916,6 +5912,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       setAdminManageSection("songs");
       closeAdminManageMenu();
     });
+
     document.getElementById("adminManageRequestsTab").addEventListener("click", function() {
       if (!isFullAdminUser()) return;
       setAdminManageSection("requests");

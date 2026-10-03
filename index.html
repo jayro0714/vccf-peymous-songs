@@ -3691,7 +3691,20 @@
         ""
       ).trim().toLowerCase();
 
-      return email === "qhuelyl15@outlook.com";
+      const name = (
+        localStorage.getItem("jayro_name") ||
+        sessionStorage.getItem("jayro_name") ||
+        ""
+      ).trim().toLowerCase();
+
+      // Raquel's approved Admin account.
+      // Use both email and profile name so a stored-email formatting
+      // difference cannot accidentally give her the full Manage menu.
+      return (
+        email === "qhuelyl15@outlook.com" ||
+        email === "qhuelly15@outlook.com" ||
+        name === "raquel"
+      );
     }
 
     function canUseAdminManageSection(section) {

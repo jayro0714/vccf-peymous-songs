@@ -570,11 +570,10 @@
       position: absolute;
       top: 0;
       right: 4px;
-      color: #fbbf24;
-      font-size: 16px;
-      font-weight: 800;
+      color: #93c5fd;
+      font-size: 15px;
+      font-weight: 700;
       white-space: nowrap;
-      text-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
     }
 
     .home-main-heading h1 {
@@ -705,61 +704,21 @@
       background: #1b3d69;
     }
 
-    /* Manage page: keep the existing Home burger untouched.
-       The Manage page has its own right-side burger menu. */
-    #adminManageHeader {
-      position: relative;
-      padding-right: 92px;
-    }
-
-    #adminManageCloseButton,
-    #adminManageBurgerButton {
-      position: absolute;
-      top: 0;
-      width: 38px;
-      height: 38px;
-      min-height: 38px;
-      padding: 0;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      line-height: 1;
-      z-index: 10002;
-    }
-
-    #adminManageCloseButton { right: 48px; }
-    #adminManageBurgerButton { right: 0; }
-
+    /* Manage tabs: keep all tabs side by side at their natural width */
     #adminManageTabs {
-      position: absolute;
-      top: 54px;
-      right: 20px;
-      z-index: 10001;
-      display: none;
-      flex-direction: column;
+      display: flex;
       align-items: stretch;
       gap: 8px;
-      width: min(260px, calc(100% - 40px));
-      padding: 12px;
-      margin: 0;
-      border: 1px solid #294e79;
-      border-radius: 12px;
-      background: #0f2038;
-      box-shadow: 0 14px 35px rgba(0,0,0,.35);
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-bottom: 18px;
     }
-
-    #adminManageTabs.active { display: flex; }
 
     #adminManageTabs button {
-      width: 100% !important;
+      width: auto !important;
       flex: 0 0 auto;
       white-space: nowrap;
-      text-align: left;
     }
-
-    #adminManageDashboardTab { display: none !important; }
 
     .song-alphabet {
       display: flex;
@@ -1456,40 +1415,6 @@
 
     }
 
-    .mobile-nav-toggle,
-    .mobile-nav-menu {
-      display: none;
-    }
-
-    .mobile-nav-toggle {
-      width: 42px; height: 42px; padding: 0;
-      border: 1px solid #294e79; border-radius: 10px;
-      background: #102544; color: #f8fafc;
-      font-size: 22px; line-height: 1; cursor: pointer;
-      align-items: center; justify-content: center;
-    }
-
-    .mobile-nav-menu {
-      position: absolute; top: calc(100% + 8px); right: 12px; z-index: 1000;
-      min-width: 190px; padding: 8px;
-      border: 1px solid #294e79; border-radius: 12px;
-      background: #102544; box-shadow: 0 12px 30px rgba(0,0,0,.35);
-    }
-
-    .mobile-nav-menu.active { display: flex; flex-direction: column; gap: 4px; }
-
-    .mobile-nav-menu button {
-      width: 100%; border: 0; border-radius: 8px; background: transparent;
-      color: #f8fafc; padding: 11px 12px; text-align: left;
-      font-size: 14px; font-weight: 700; cursor: pointer;
-    }
-
-    .mobile-nav-menu button:hover, .mobile-nav-menu button:focus-visible {
-      background: #17345c; outline: none;
-    }
-
-    .mobile-nav-divider { height: 1px; margin: 4px 0; background: #294e79; }
-
     @media (max-width: 900px) {
       .home-sidebar {
         display: none !important;
@@ -1559,13 +1484,7 @@
       .home-header {
         min-height: 76px;
         padding: 8px 12px;
-        position: relative;
       }
-
-      .home-header-actions { display: none !important; }
-      .mobile-nav-toggle { display: inline-flex; flex-shrink: 0; }
-      .mobile-nav-menu { display: none; }
-      .mobile-nav-menu.active { display: flex; }
 
       .home-brand {
         gap: 9px;
@@ -2038,33 +1957,6 @@
       }
     }
 
-
-/* Request a Song — standalone page */
-body.request-song-open {
-  overflow: hidden;
-}
-
-body.request-song-open #songRequestPanel {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 20000 !important;
-  width: 100% !important;
-  max-width: none !important;
-  height: 100dvh !important;
-  max-height: 100dvh !important;
-  margin: 0 !important;
-  padding: 24px !important;
-  box-sizing: border-box !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  overflow-y: auto !important;
-  background: #111f35 !important;
-}
-
-body.request-song-open #homePage > *:not(#songRequestPanel) {
-  visibility: hidden !important;
-}
-
 </style>
 
 
@@ -2327,19 +2219,30 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
         </div>
       </div>
 
-      <div class="home-header-actions" style="display:flex;align-items:center;gap:10px;">
-        <button id="adminSongsButton" class="logout-button" type="button" style="display:none;">⚙️ Manage</button>
-        <button id="songRequestButton" class="logout-button" type="button" style="display:none;">🎵 Request a Song</button>
-        <button id="logoutButton" class="logout-button" type="button">Logout</button>
-      </div>
-
-      <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-
-      <div id="mobileNavMenu" class="mobile-nav-menu" aria-hidden="true">
-        <button id="mobileAdminSongsButton" type="button" style="display:none;">⚙️ Manage</button>
-        <button id="mobileSongRequestButton" type="button" style="display:none;">🎵 Request a Song</button>
-        <div class="mobile-nav-divider"></div>
-        <button id="mobileLogoutButton" type="button">🚪 Logout</button>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button
+          id="adminSongsButton"
+          class="logout-button"
+          type="button"
+          style="display:none;"
+        >
+          ⚙️ Manage
+        </button>
+        <button
+          id="songRequestButton"
+          class="logout-button"
+          type="button"
+          style="display:none;"
+        >
+          🎵 Request a Song
+        </button>
+        <button
+          id="logoutButton"
+          class="logout-button"
+          type="button"
+        >
+          Logout
+        </button>
       </div>
     </div>
 
@@ -2364,17 +2267,15 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
     </div>
 
     <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
-      <div id="adminManageHeader" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
         <h2 style="margin:0;font-size:22px;">⚙️ Manage</h2>
-        <button id="adminManageCloseButton" type="button" class="logout-button" aria-label="Close Manage">✕</button>
-        <button id="adminManageBurgerButton" type="button" class="logout-button" aria-label="Open Manage menu" aria-expanded="false">☰</button>
+        <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
       </div>
 
       <div id="adminManageTabs">
         <button id="adminManageDashboardTab" type="button" class="submit-request">📊 Dashboard</button>
         <button id="adminManageSongsTab" type="button" class="logout-button">🎵 Songs</button>
         <button id="adminManageRequestsTab" type="button" class="logout-button">📝 Song Requests</button>
-        <button id="adminManageRequestSongTab" type="button" class="logout-button" style="display:none;">🎵 Request a Song</button>
         <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
         <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
         <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
@@ -3318,30 +3219,6 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
       welcome.textContent = "👋 Welcome back, " + (name.trim() || fallbackName) + "!";
     }
 
-    function syncMobileNavRole() {
-      const role = (localStorage.getItem("jayro_role") || sessionStorage.getItem("jayro_role") || "").toLowerCase();
-      const adminButton = document.getElementById("mobileAdminSongsButton");
-      const requestButton = document.getElementById("mobileSongRequestButton");
-      if (adminButton) adminButton.style.display = role === "admin" ? "block" : "none";
-      if (requestButton) requestButton.style.display = role === "admin" ? "none" : "block";
-    }
-
-    function closeMobileNav() {
-      const menu = document.getElementById("mobileNavMenu");
-      const toggle = document.getElementById("mobileNavToggle");
-      if (menu) { menu.classList.remove("active"); menu.setAttribute("aria-hidden", "true"); }
-      if (toggle) { toggle.setAttribute("aria-expanded", "false"); toggle.setAttribute("aria-label", "Open menu"); }
-    }
-
-    function toggleMobileNav() {
-      const menu = document.getElementById("mobileNavMenu");
-      const toggle = document.getElementById("mobileNavToggle");
-      if (!menu) return;
-      const isOpen = menu.classList.toggle("active");
-      menu.setAttribute("aria-hidden", isOpen ? "false" : "true");
-      if (toggle) { toggle.setAttribute("aria-expanded", isOpen ? "true" : "false"); toggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu"); }
-    }
-
     function showHome() {
 
       /*
@@ -3389,9 +3266,6 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
             ? "inline-block"
             : "none";
       }
-
-      syncMobileNavRole();
-      closeMobileNav();
 
 
       currentSong =
@@ -3458,9 +3332,26 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
       return checkbox && checkbox.checked ? localStorage : sessionStorage;
     }
 
+    const JAYRO_SESSION_MAX_AGE = 24 * 60 * 60 * 1000;
+
     function getStoredToken() {
       return localStorage.getItem("jayro_token") ||
              sessionStorage.getItem("jayro_token");
+    }
+
+    function getSessionStartedAt() {
+      return localStorage.getItem("jayro_session_started_at") ||
+             sessionStorage.getItem("jayro_session_started_at");
+    }
+
+    function setSessionStartedNow() {
+      setStoredValue("jayro_session_started_at", String(Date.now()));
+    }
+
+    function isStoredSessionExpired() {
+      const startedAt = Number(getSessionStartedAt());
+      if (!startedAt) return false;
+      return (Date.now() - startedAt) >= JAYRO_SESSION_MAX_AGE;
     }
 
     function setStoredValue(key, value) {
@@ -3564,11 +3455,11 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
             setStoredValue("jayro_name", profiles[0].name || "");
             setStoredValue("jayro_role", "Admin");
             setStoredValue("jayro_auth_provider", "supabase");
+            setSessionStartedNow();
             message.textContent = "";
             showHome();
             document.getElementById("adminSongsButton").style.display = "inline-block";
             document.getElementById("songRequestButton").style.display = "none";
-            syncMobileNavRole();
             maybeOpenMobileNote();
             recordLoginActivity(user);
             loadSongList();
@@ -3613,12 +3504,12 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
         setStoredValue("jayro_name", accessRequest.name || "");
         setStoredValue("jayro_role", "User");
         setStoredValue("jayro_auth_provider", "supabase");
+        setSessionStartedNow();
 
         message.textContent = "";
         showHome();
         document.getElementById("adminSongsButton").style.display = "none";
         document.getElementById("songRequestButton").style.display = "inline-block";
-        syncMobileNavRole();
         maybeOpenMobileNote();
         recordLoginActivity(user);
         loadSongList();
@@ -3665,6 +3556,7 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
       removeStoredValue("jayro_name");
       removeStoredValue("jayro_role");
       removeStoredValue("jayro_auth_provider");
+      removeStoredValue("jayro_session_started_at");
       clearSongCaches();
       sessionStorage.removeItem("jayro_mobile_note_seen");
 
@@ -3699,85 +3591,16 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
       return (localStorage.getItem("jayro_role") || sessionStorage.getItem("jayro_role") || "").toLowerCase() === "admin";
     }
 
-    // Full Manage access belongs to Jayro.
-    // Raquel remains an approved Admin account, but has a limited Manage menu.
-    function isFullAdminUser() {
-      const email = (
-        localStorage.getItem("jayro_email") ||
-        sessionStorage.getItem("jayro_email") ||
-        ""
-      ).trim().toLowerCase();
-
-      return email === "tobiasjayro67@gmail.com";
-    }
-
-    function isLimitedAdminUser() {
-      const email = (
-        localStorage.getItem("jayro_email") ||
-        sessionStorage.getItem("jayro_email") ||
-        ""
-      ).trim().toLowerCase();
-
-      const name = (
-        localStorage.getItem("jayro_name") ||
-        sessionStorage.getItem("jayro_name") ||
-        ""
-      ).trim().toLowerCase();
-
-      // Raquel's approved Admin account.
-      // Use both email and profile name so a stored-email formatting
-      // difference cannot accidentally give her the full Manage menu.
-      return (
-        email === "qhuelyl15@outlook.com" ||
-        email === "qhuelly15@outlook.com" ||
-        name === "raquel"
-      );
-    }
-
-    function canUseAdminManageSection(section) {
-      if (!isAdminUser()) return false;
-
-      // Raquel cannot access Songs or Song Requests.
-      if (
-        isLimitedAdminUser() &&
-        (section === "songs" || section === "requests")
-      ) {
-        return false;
-      }
-
-      return true;
-    }
-
-    function applyAdminManagePermissions() {
-      const songsTab = document.getElementById("adminManageSongsTab");
-      const requestsTab = document.getElementById("adminManageRequestsTab");
-      const requestSongTab = document.getElementById("adminManageRequestSongTab");
-
-      const limited = isLimitedAdminUser();
-
-      if (songsTab) songsTab.style.display = limited ? "none" : "";
-      if (requestsTab) requestsTab.style.display = limited ? "none" : "";
-      if (requestSongTab) requestSongTab.style.display = limited ? "block" : "none";
-    }
-
     function openAdminSongManager() {
       if (!isAdminUser()) return;
       const panel = document.getElementById("adminSongsPanel");
       if (!panel) return;
-
       panel.style.display = "block";
       document.body.classList.add("manage-open");
       selectedAdminSongLetter = "ALL";
       refreshAdminSongAlphabet();
-      closeAdminManageMenu();
-      applyAdminManagePermissions();
       setAdminManageSection("dashboard");
-
-      // Only the full admin loads the Song Manager data.
-      if (isFullAdminUser()) {
-        loadAdminSongs();
-      }
-
+      loadAdminSongs();
       panel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
@@ -3785,23 +3608,7 @@ body.request-song-open #homePage > *:not(#songRequestPanel) {
       const panel = document.getElementById("adminSongsPanel");
       if (panel) panel.style.display = "none";
       document.body.classList.remove("manage-open");
-      closeAdminManageMenu();
       cancelAdminEdit();
-    }
-
-    function toggleAdminManageMenu() {
-      const menu = document.getElementById("adminManageTabs");
-      const burger = document.getElementById("adminManageBurgerButton");
-      if (!menu || !burger) return;
-      const isOpen = menu.classList.toggle("active");
-      burger.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    }
-
-    function closeAdminManageMenu() {
-      const menu = document.getElementById("adminManageTabs");
-      const burger = document.getElementById("adminManageBurgerButton");
-      if (menu) menu.classList.remove("active");
-      if (burger) burger.setAttribute("aria-expanded", "false");
     }
 
     function cancelAdminEdit() {
@@ -4242,35 +4049,18 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const panel = document.getElementById("songRequestPanel");
       const manage = document.getElementById("adminSongsPanel");
       if (!panel) return;
-
-      // Request a Song is its own page. Remove the Manage overlay first.
       if (manage) manage.style.display = "none";
-      document.body.classList.remove("manage-open");
-      closeAdminManageMenu();
-
-      document.body.classList.add("request-song-open");
       panel.style.display = "block";
-
       document.getElementById("songRequestMessage").textContent = "";
       document.getElementById("songRequestTitle").value = "";
       document.getElementById("songRequestArtist").value = "";
       document.getElementById("songRequestNote").value = "";
-
       loadSongRequestUsage();
     }
 
     function closeSongRequestPanel() {
       const panel = document.getElementById("songRequestPanel");
       if (panel) panel.style.display = "none";
-
-      // Fully clear both page overlays so Home returns normally.
-      document.body.classList.remove("request-song-open");
-      document.body.classList.remove("manage-open");
-
-      const manage = document.getElementById("adminSongsPanel");
-      if (manage) manage.style.display = "none";
-
-      closeAdminManageMenu();
     }
 
     async function submitSongRequest() {
@@ -4334,7 +4124,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     async function loadAdminSongRequests() {
-      if (!isFullAdminUser()) return;
+      if (!isAdminUser()) return;
       const token = getStoredToken();
       const list = document.getElementById("adminRequestList");
       const search = document.getElementById("adminRequestSearch");
@@ -4423,7 +4213,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     function setAdminManageSection(section) {
-      if (!canUseAdminManageSection(section)) return;
+      if (!isAdminUser()) return;
 
       const sections = {
         dashboard: document.getElementById("adminManageDashboardSection"),
@@ -4443,8 +4233,6 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         login: document.getElementById("adminManageLoginTab"),
         note: document.getElementById("adminManageNoteTab")
       };
-
-      applyAdminManagePermissions();
 
       Object.keys(sections).forEach(function(key) {
         sections[key].style.display = key === section ? "block" : "none";
@@ -5882,6 +5670,19 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         return;
       }
 
+      // Expire saved sessions after 24 hours so returning users must sign in again.
+      if (isStoredSessionExpired()) {
+        await logout();
+        showLoginPage();
+        return;
+      }
+
+      // Older sessions created before this 24-hour rule have no timestamp.
+      // Start their 24-hour window now instead of forcing an immediate logout.
+      if (!getSessionStartedAt()) {
+        setSessionStartedNow();
+      }
+
       showHome();
       const refreshed = await refreshSupabaseSession();
       if (!refreshed && !getStoredToken()) {
@@ -5919,6 +5720,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
     document.getElementById("adminSongsButton").addEventListener("click", openAdminSongManager);
+    document.getElementById("adminCloseSongsButton").addEventListener("click", closeAdminSongManager);
     document.getElementById("adminCancelEditButton").addEventListener("click", cancelAdminEdit);
     document.getElementById("adminSaveSongButton").addEventListener("click", saveAdminSong);
     refreshHomeAlphabet();
@@ -5939,64 +5741,32 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     });
 
 
-    document.getElementById("mobileNavToggle").addEventListener("click", toggleMobileNav);
-    document.getElementById("mobileAdminSongsButton").addEventListener("click", function() { closeMobileNav(); openAdminSongManager(); });
-    document.getElementById("mobileSongRequestButton").addEventListener("click", function() { closeMobileNav(); openSongRequestPanel(); });
-    document.getElementById("mobileLogoutButton").addEventListener("click", function() { closeMobileNav(); logout(); });
-
-    document.addEventListener("click", function(event) {
-      const menu = document.getElementById("mobileNavMenu");
-      const toggle = document.getElementById("mobileNavToggle");
-      if (!menu || !menu.classList.contains("active")) return;
-      if (!menu.contains(event.target) && !toggle.contains(event.target)) closeMobileNav();
-    });
-
     document.getElementById("songRequestButton").addEventListener("click", openSongRequestPanel);
     document.getElementById("songRequestCloseButton").addEventListener("click", closeSongRequestPanel);
     document.getElementById("submitSongRequestButton").addEventListener("click", submitSongRequest);
     document.getElementById("adminRequestSearch").addEventListener("input", loadAdminSongRequests);
 
-    document.getElementById("adminManageCloseButton").addEventListener("click", closeAdminSongManager);
-    document.getElementById("adminManageBurgerButton").addEventListener("click", toggleAdminManageMenu);
-
     document.getElementById("adminManageDashboardTab").addEventListener("click", function() {
       setAdminManageSection("dashboard");
-      closeAdminManageMenu();
     });
 
     document.getElementById("adminManageSongsTab").addEventListener("click", function() {
-      if (!isFullAdminUser()) return;
       setAdminManageSection("songs");
-      closeAdminManageMenu();
     });
-
     document.getElementById("adminManageRequestsTab").addEventListener("click", function() {
-      if (!isFullAdminUser()) return;
       setAdminManageSection("requests");
-      closeAdminManageMenu();
     });
-
-    document.getElementById("adminManageRequestSongTab").addEventListener("click", function() {
-      if (!isLimitedAdminUser()) return;
-      closeAdminManageMenu();
-      openSongRequestPanel();
-    });
-
     document.getElementById("adminManageAccessTab").addEventListener("click", function() {
       setAdminManageSection("access");
-      closeAdminManageMenu();
     });
     document.getElementById("adminManageFacebookTab").addEventListener("click", function() {
       setAdminManageSection("facebook");
-      closeAdminManageMenu();
     });
     document.getElementById("adminManageLoginTab").addEventListener("click", function() {
       setAdminManageSection("login");
-      closeAdminManageMenu();
     });
     document.getElementById("adminManageNoteTab").addEventListener("click", function() {
       setAdminManageSection("note");
-      closeAdminManageMenu();
     });
     document.getElementById("adminSaveSiteNoteButton").addEventListener("click", saveAdminSiteNote);
     document.getElementById("adminAccessSearch").addEventListener("input", loadAdminAccessRequests);

@@ -1449,6 +1449,38 @@
 
     .mobile-nav-divider { height: 1px; margin: 4px 0; background: #294e79; }
 
+    .admin-mobile-nav-toggle,
+    .admin-mobile-nav-menu {
+      display: none;
+    }
+
+    .admin-mobile-nav-toggle {
+      width: 42px; height: 42px; padding: 0;
+      border: 1px solid #294e79; border-radius: 10px;
+      background: #102544; color: #f8fafc;
+      font-size: 22px; line-height: 1; cursor: pointer;
+      align-items: center; justify-content: center;
+    }
+
+    .admin-mobile-nav-menu {
+      position: absolute; top: calc(100% + 8px); right: 0; z-index: 1001;
+      min-width: 230px; padding: 8px;
+      border: 1px solid #294e79; border-radius: 12px;
+      background: #102544; box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    }
+
+    .admin-mobile-nav-menu.active { display: flex; flex-direction: column; gap: 4px; }
+
+    .admin-mobile-nav-menu button {
+      width: 100%; border: 0; border-radius: 8px; background: transparent;
+      color: #f8fafc; padding: 11px 12px; text-align: left;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+
+    .admin-mobile-nav-menu button:hover, .admin-mobile-nav-menu button:focus-visible {
+      background: #17345c; outline: none;
+    }
+
     @media (max-width: 900px) {
       .home-header {
         min-height: 76px;
@@ -1460,6 +1492,11 @@
       .mobile-nav-toggle { display: inline-flex; flex-shrink: 0; }
       .mobile-nav-menu { display: none; }
       .mobile-nav-menu.active { display: flex; }
+      .admin-mobile-nav-wrap { display: block !important; position: relative; }
+      #adminManageTabs { display: none !important; }
+      .admin-mobile-nav-toggle { display: inline-flex; }
+      .admin-mobile-nav-menu { display: none; }
+      .admin-mobile-nav-menu.active { display: flex; }
 
       .home-brand { gap: 9px; }
       .home-brand-logo { width: 50px; height: 50px; }
@@ -2270,7 +2307,7 @@
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;gap:10px;">
+      <div class="home-header-actions" style="display:flex;align-items:center;gap:10px;">
         <button
           id="adminSongsButton"
           class="logout-button"
@@ -2329,6 +2366,18 @@
     <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
         <h2 style="margin:0;font-size:22px;">⚙️ Manage</h2>
+        <div class="admin-mobile-nav-wrap" style="display:none;">
+          <button id="adminMobileNavToggle" class="admin-mobile-nav-toggle" type="button" aria-label="Open manage menu" aria-expanded="false">☰</button>
+          <div id="adminMobileNavMenu" class="admin-mobile-nav-menu" aria-hidden="true">
+            <button type="button" data-admin-mobile-tab="adminManageDashboardTab">📊 Dashboard</button>
+            <button type="button" data-admin-mobile-tab="adminManageSongsTab">🎵 Songs</button>
+            <button type="button" data-admin-mobile-tab="adminManageRequestsTab">📝 Song Requests</button>
+            <button type="button" data-admin-mobile-tab="adminManageAccessTab">👤 Access Approval</button>
+            <button type="button" data-admin-mobile-tab="adminManageFacebookTab">📘 Facebook</button>
+            <button type="button" data-admin-mobile-tab="adminManageLoginTab">📊 Login Activity</button>
+            <button type="button" data-admin-mobile-tab="adminManageNoteTab">📢 Site Note</button>
+          </div>
+        </div>
         <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
       </div>
 
@@ -5828,9 +5877,24 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       mobileNavToggle.setAttribute("aria-expanded", "false");
     }
 
+    function syncMobileNavOptions() {
+      const desktopAdmin = document.getElementById("adminSongsButton");
+      const desktopRequest = document.getElementById("songRequestButton");
+      const mobileAdmin = document.getElementById("mobileAdminSongsButton");
+      const mobileRequest = document.getElementById("mobileSongRequestButton");
+
+      if (desktopAdmin && mobileAdmin) {
+        mobileAdmin.style.display = desktopAdmin.style.display === "none" ? "none" : "block";
+      }
+      if (desktopRequest && mobileRequest) {
+        mobileRequest.style.display = desktopRequest.style.display === "none" ? "none" : "block";
+      }
+    }
+
     if (mobileNavToggle && mobileNavMenu) {
       mobileNavToggle.addEventListener("click", function(event) {
         event.stopPropagation();
+        syncMobileNavOptions();
         const open = mobileNavMenu.classList.toggle("active");
         mobileNavMenu.setAttribute("aria-hidden", open ? "false" : "true");
         mobileNavToggle.setAttribute("aria-expanded", open ? "true" : "false");
@@ -5857,6 +5921,45 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         closeMobileNav();
       }
     });
+
+    const adminMobileNavToggle = document.getElementById("adminMobileNavToggle");
+    const adminMobileNavMenu = document.getElementById("adminMobileNavMenu");
+
+    function closeAdminMobileNav() {
+      if (!adminMobileNavMenu || !adminMobileNavToggle) return;
+      adminMobileNavMenu.classList.remove("active");
+      adminMobileNavMenu.setAttribute("aria-hidden", "true");
+      adminMobileNavToggle.setAttribute("aria-expanded", "false");
+    }
+
+    if (adminMobileNavToggle && adminMobileNavMenu) {
+      adminMobileNavToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        const open = adminMobileNavMenu.classList.toggle("active");
+        adminMobileNavMenu.setAttribute("aria-hidden", open ? "false" : "true");
+        adminMobileNavToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+
+      adminMobileNavMenu.querySelectorAll("[data-admin-mobile-tab]").forEach(function(button) {
+        button.addEventListener("click", function() {
+          const targetId = button.getAttribute("data-admin-mobile-tab");
+          const target = document.getElementById(targetId);
+          if (target) target.click();
+          closeAdminMobileNav();
+        });
+      });
+
+      document.addEventListener("click", function(event) {
+        if (
+          adminMobileNavMenu &&
+          adminMobileNavToggle &&
+          !adminMobileNavMenu.contains(event.target) &&
+          !adminMobileNavToggle.contains(event.target)
+        ) {
+          closeAdminMobileNav();
+        }
+      });
+    }
 
     document.getElementById("adminSongsButton").addEventListener("click", openAdminSongManager);
     document.getElementById("adminCloseSongsButton").addEventListener("click", closeAdminSongManager);

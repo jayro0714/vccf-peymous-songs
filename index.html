@@ -5840,11 +5840,9 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       }
 
       showHome();
-      const refreshed = await refreshSupabaseSession();
-      if (!refreshed && !getStoredToken()) {
-        showLoginPage();
-        return;
-      }
+
+      // Keep the existing access token on page refresh.
+      // If Supabase rejects it, loadSongList(true) will refresh the session and retry.
 
       // Returning with a valid session counts as activity.
       setLastActivityNow();

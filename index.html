@@ -1415,7 +1415,58 @@
 
     }
 
+    .mobile-nav-toggle,
+    .mobile-nav-menu {
+      display: none;
+    }
+
+    .mobile-nav-toggle {
+      width: 42px; height: 42px; padding: 0;
+      border: 1px solid #294e79; border-radius: 10px;
+      background: #102544; color: #f8fafc;
+      font-size: 22px; line-height: 1; cursor: pointer;
+      align-items: center; justify-content: center;
+    }
+
+    .mobile-nav-menu {
+      position: absolute; top: calc(100% + 8px); right: 12px; z-index: 1000;
+      min-width: 190px; padding: 8px;
+      border: 1px solid #294e79; border-radius: 12px;
+      background: #102544; box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    }
+
+    .mobile-nav-menu.active { display: flex; flex-direction: column; gap: 4px; }
+
+    .mobile-nav-menu button {
+      width: 100%; border: 0; border-radius: 8px; background: transparent;
+      color: #f8fafc; padding: 11px 12px; text-align: left;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+    }
+
+    .mobile-nav-menu button:hover, .mobile-nav-menu button:focus-visible {
+      background: #17345c; outline: none;
+    }
+
+    .mobile-nav-divider { height: 1px; margin: 4px 0; background: #294e79; }
+
     @media (max-width: 900px) {
+      .home-header {
+        min-height: 76px;
+        padding: 8px 12px;
+        position: relative;
+      }
+
+      .home-header-actions { display: none !important; }
+      .mobile-nav-toggle { display: inline-flex; flex-shrink: 0; }
+      .mobile-nav-menu { display: none; }
+      .mobile-nav-menu.active { display: flex; }
+
+      .home-brand { gap: 9px; }
+      .home-brand-logo { width: 50px; height: 50px; }
+      .home-brand-name { font-size: 18px; }
+      .home-brand-subtitle { font-size: 11px; }
+
+
       .home-sidebar {
         display: none !important;
       }
@@ -2243,6 +2294,15 @@
         >
           Logout
         </button>
+      </div>
+
+      <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+
+      <div id="mobileNavMenu" class="mobile-nav-menu" aria-hidden="true">
+        <button id="mobileAdminSongsButton" type="button" style="display:none;">⚙️ Manage</button>
+        <button id="mobileSongRequestButton" type="button" style="display:none;">🎵 Request a Song</button>
+        <div class="mobile-nav-divider"></div>
+        <button id="mobileLogoutButton" type="button">🚪 Logout</button>
       </div>
     </div>
 
@@ -5757,6 +5817,46 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       if (overlay) { overlay.classList.remove("active"); overlay.setAttribute("aria-hidden","true"); }
       document.body.style.overflow = "";
     }
+
+    const mobileNavToggle = document.getElementById("mobileNavToggle");
+    const mobileNavMenu = document.getElementById("mobileNavMenu");
+
+    function closeMobileNav() {
+      if (!mobileNavMenu || !mobileNavToggle) return;
+      mobileNavMenu.classList.remove("active");
+      mobileNavMenu.setAttribute("aria-hidden", "true");
+      mobileNavToggle.setAttribute("aria-expanded", "false");
+    }
+
+    if (mobileNavToggle && mobileNavMenu) {
+      mobileNavToggle.addEventListener("click", function(event) {
+        event.stopPropagation();
+        const open = mobileNavMenu.classList.toggle("active");
+        mobileNavMenu.setAttribute("aria-hidden", open ? "false" : "true");
+        mobileNavToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
+
+    document.getElementById("mobileAdminSongsButton").addEventListener("click", function() {
+      closeMobileNav();
+      openAdminSongManager();
+    });
+
+    document.getElementById("mobileSongRequestButton").addEventListener("click", function() {
+      closeMobileNav();
+      openSongRequestPanel();
+    });
+
+    document.getElementById("mobileLogoutButton").addEventListener("click", function() {
+      closeMobileNav();
+      document.getElementById("logoutButton").click();
+    });
+
+    document.addEventListener("click", function(event) {
+      if (mobileNavMenu && mobileNavToggle && !mobileNavMenu.contains(event.target) && !mobileNavToggle.contains(event.target)) {
+        closeMobileNav();
+      }
+    });
 
     document.getElementById("adminSongsButton").addEventListener("click", openAdminSongManager);
     document.getElementById("adminCloseSongsButton").addEventListener("click", closeAdminSongManager);

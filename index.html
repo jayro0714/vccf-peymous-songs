@@ -5849,9 +5849,10 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
 
       // Record returning users in Login Activity for the current calendar day.
       // This only creates a row when one does not already exist for today.
-      const restoredUser = await getCurrentUser();
-      if (restoredUser) {
-        await recordLoginActivity(restoredUser);
+      const restoredUserId = getCurrentUserId();
+      const restoredUserEmail = (localStorage.getItem("jayro_email") || sessionStorage.getItem("jayro_email") || "").trim().toLowerCase();
+      if (restoredUserId && restoredUserEmail) {
+        recordLoginActivity({ id: restoredUserId, email: restoredUserEmail });
       }
 
       loadSongList(true);

@@ -3339,20 +3339,49 @@
              sessionStorage.getItem("jayro_token");
     }
 
-    function getSessionStartedAt() {
-      return localStorage.getItem("jayro_session_started_at") ||
-             sessionStorage.getItem("jayro_session_started_at");
+    function getLastActivityAt() {
+      return localStorage.getItem("jayro_last_activity_at") ||
+             sessionStorage.getItem("jayro_last_activity_at");
     }
 
-    function setSessionStartedNow() {
-      setStoredValue("jayro_session_started_at", String(Date.now()));
+    function setLastActivityNow() {
+      setStoredValue("jayro_last_activity_at", String(Date.now()));
     }
 
     function isStoredSessionExpired() {
-      const startedAt = Number(getSessionStartedAt());
-      if (!startedAt) return false;
-      return (Date.now() - startedAt) >= JAYRO_SESSION_MAX_AGE;
+      const lastActivityAt = Number(getLastActivityAt());
+      if (!lastActivityAt) return false;
+      return (Date.now() - lastActivityAt) >= JAYRO_SESSION_MAX_AGE;
     }
+
+    let lastActivityWriteAt = 0;
+    let inactivityLogoutInProgress = false;
+
+    function recordUserActivity() {
+      if (!getStoredToken()) return;
+
+      const now = Date.now();
+
+      // Avoid writing to storage on every mouse movement/scroll event.
+      if (now - lastActivityWriteAt < 60000) return;
+
+      lastActivityWriteAt = now;
+      setLastActivityNow();
+    }
+
+    ["click", "keydown", "touchstart", "scroll"].forEach(function(eventName) {
+      document.addEventListener(eventName, recordUserActivity, { passive: true });
+    });
+
+    setInterval(async function() {
+      if (inactivityLogoutInProgress || !getStoredToken()) return;
+
+      if (isStoredSessionExpired()) {
+        inactivityLogoutInProgress = true;
+        await logout();
+        inactivityLogoutInProgress = false;
+      }
+    }, 60000);
 
     function setStoredValue(key, value) {
       const storage = getActiveStorage();
@@ -3455,7 +3484,7 @@
             setStoredValue("jayro_name", profiles[0].name || "");
             setStoredValue("jayro_role", "Admin");
             setStoredValue("jayro_auth_provider", "supabase");
-            setSessionStartedNow();
+            setLastActivityNow();
             message.textContent = "";
             showHome();
             document.getElementById("adminSongsButton").style.display = "inline-block";
@@ -3504,7 +3533,7 @@
         setStoredValue("jayro_name", accessRequest.name || "");
         setStoredValue("jayro_role", "User");
         setStoredValue("jayro_auth_provider", "supabase");
-        setSessionStartedNow();
+        setLastActivityNow();
 
         message.textContent = "";
         showHome();
@@ -3556,7 +3585,7 @@
       removeStoredValue("jayro_name");
       removeStoredValue("jayro_role");
       removeStoredValue("jayro_auth_provider");
-      removeStoredValue("jayro_session_started_at");
+      removeStoredValue("jayro_last_activity_at");
       clearSongCaches();
       sessionStorage.removeItem("jayro_mobile_note_seen");
 
@@ -5670,17 +5699,16 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         return;
       }
 
-      // Expire saved sessions after 24 hours so returning users must sign in again.
+      // Expire saved sessions after 24 hours of inactivity.
       if (isStoredSessionExpired()) {
         await logout();
         showLoginPage();
         return;
       }
 
-      // Older sessions created before this 24-hour rule have no timestamp.
-      // Start their 24-hour window now instead of forcing an immediate logout.
-      if (!getSessionStartedAt()) {
-        setSessionStartedNow();
+      // Older sessions with no activity timestamp start their inactivity window now.
+      if (!getLastActivityAt()) {
+        setLastActivityNow();
       }
 
       showHome();
@@ -5689,6 +5717,17 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         showLoginPage();
         return;
       }
+
+      // Returning with a valid session counts as activity.
+      setLastActivityNow();
+
+      // Record returning users in Login Activity for the current calendar day.
+      // This only creates a row when one does not already exist for today.
+      const restoredUser = await getCurrentUser();
+      if (restoredUser) {
+        await recordLoginActivity(restoredUser);
+      }
+
       loadSongList();
     })();
 

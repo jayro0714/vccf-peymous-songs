@@ -334,20 +334,6 @@
     }
 
 
-    function formatSongSectionLabels(text) {
-      const escaped = String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-
-      return escaped.replace(/(^|\n)([ \t]*)([^\n:]{1,80}:)[ \t]*(?=\n|$)/g, function(_, lineStart, indent, label) {
-        return lineStart + indent + '<span class="song-section-label">' + label + '</span>';
-      });
-    }
-
-
     /* =====================================================
        REQUEST ACCESS
     ===================================================== */
@@ -2700,6 +2686,20 @@
 
 
   <script>
+
+
+    function formatSongSectionLabels(text) {
+      const escaped = String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+      return escaped.replace(/(^|\n)([ \t]*)([^\n:]{1,80}:)[ \t]*(?=\n|$)/g, function(_, lineStart, indent, label) {
+        return lineStart + indent + '<span class="song-section-label">' + label + '</span>';
+      });
+    }
 
     /* =====================================================
        SUPABASE

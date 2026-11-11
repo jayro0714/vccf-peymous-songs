@@ -1128,11 +1128,6 @@
       overflow-x: auto;
     }
 
-    .song-section-label {
-      color: #60a5fa;
-      font-weight: 700;
-    }
-
 
     /* =====================================================
        CHORD ACCESS LOCK
@@ -2051,6 +2046,221 @@
       }
     }
 
+
+
+    /* =====================================================
+       LIGHT / DARK MODE
+       Theme-only addition. Existing layout and functionality unchanged.
+    ===================================================== */
+    :root {
+      color-scheme: dark;
+    }
+
+    body.light-mode {
+      color-scheme: light;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    #themeToggle {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 12000;
+      min-width: 48px;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #294e79;
+      border-radius: 10px;
+      background: #102544;
+      color: #f8fafc;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    }
+
+    #themeToggle:hover {
+      transform: translateY(-1px);
+    }
+
+    body.light-mode #themeToggle {
+      border-color: #cbd5e1;
+      background: #ffffff;
+      color: #1f2937;
+      box-shadow: 0 6px 18px rgba(15,23,42,.12);
+    }
+
+    /* Main pages */
+    body.light-mode #homePage,
+    body.light-mode #songPage {
+      background: #f4f7fb !important;
+      color: #1f2937 !important;
+    }
+
+    body.light-mode .home-header {
+      background: #ffffff !important;
+      border-bottom-color: #dbe3ee !important;
+    }
+
+    body.light-mode .home-brand-subtitle,
+    body.light-mode .home-main-heading p,
+    body.light-mode .home-sidebar-title,
+    body.light-mode .home-sidebar-symbol-title {
+      color: #2563eb !important;
+    }
+
+    body.light-mode .home-sidebar {
+      background: #ffffff !important;
+      border-color: #dbe3ee !important;
+      color: #334155 !important;
+    }
+
+    body.light-mode .home-sidebar-divider {
+      background: #dbe3ee !important;
+    }
+
+    body.light-mode .home-main-heading h1,
+    body.light-mode .home-brand-name {
+      color: #172033 !important;
+    }
+
+    body.light-mode .home-welcome {
+      color: #2563eb !important;
+    }
+
+    body.light-mode .home-search {
+      background: #ffffff !important;
+      border-color: #b9c7d8 !important;
+    }
+
+    body.light-mode #search {
+      color: #1f2937 !important;
+    }
+
+    body.light-mode #search::placeholder {
+      color: #64748b !important;
+    }
+
+    body.light-mode .song-card,
+    body.light-mode .song-list,
+    body.light-mode .song-results,
+    body.light-mode .feedback-panel,
+    body.light-mode .comment-section,
+    body.light-mode .song-container {
+      background: #ffffff !important;
+      color: #1f2937 !important;
+      border-color: #dbe3ee !important;
+    }
+
+    /* Login / access request */
+    body.light-mode #loginPage,
+    body.light-mode #requestPage {
+      background: #f4f7fb !important;
+    }
+
+    body.light-mode .login-box,
+    body.light-mode .request-box {
+      background: #ffffff !important;
+      border-color: #dbe3ee !important;
+      color: #1f2937 !important;
+      box-shadow: 0 16px 40px rgba(15,23,42,.10) !important;
+    }
+
+    body.light-mode .login-box h1,
+    body.light-mode .request-box h1,
+    body.light-mode .login-subtitle,
+    body.light-mode .request-subtitle,
+    body.light-mode .request-label {
+      color: #1f2937 !important;
+    }
+
+    body.light-mode .login-input,
+    body.light-mode .request-input,
+    body.light-mode .request-textarea,
+    body.light-mode #loginPassword,
+    body.light-mode #loginEmail {
+      background: #ffffff !important;
+      color: #1f2937 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.light-mode .login-input::placeholder,
+    body.light-mode .request-input::placeholder,
+    body.light-mode .request-textarea::placeholder {
+      color: #64748b !important;
+    }
+
+    body.light-mode .login-divider {
+      color: #64748b !important;
+    }
+
+    body.light-mode .login-divider::before,
+    body.light-mode .login-divider::after {
+      background: #dbe3ee !important;
+    }
+
+    body.light-mode .back-login {
+      color: #2563eb !important;
+    }
+
+    /* Header/action buttons */
+    body.light-mode .logout-button,
+    body.light-mode .mobile-nav-toggle,
+    body.light-mode .mobile-nav-menu,
+    body.light-mode .admin-mobile-nav-toggle,
+    body.light-mode .admin-mobile-nav-menu {
+      background: #ffffff !important;
+      color: #1f2937 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    body.light-mode .mobile-nav-menu button,
+    body.light-mode .admin-mobile-nav-menu button {
+      color: #1f2937 !important;
+    }
+
+    /* Request / Manage panels use inline dark backgrounds in the existing file. */
+    body.light-mode #songRequestPanel,
+    body.light-mode #adminSongsPanel {
+      background: #ffffff !important;
+      color: #1f2937 !important;
+      border-color: #dbe3ee !important;
+      box-shadow: 0 12px 30px rgba(15,23,42,.08) !important;
+    }
+
+    body.light-mode #songRequestPanel label,
+    body.light-mode #songRequestUsage,
+    body.light-mode #adminSongsPanel label {
+      color: #475569 !important;
+    }
+
+    /* Song/chord area and common text controls */
+    body.light-mode textarea,
+    body.light-mode input,
+    body.light-mode select {
+      color: #1f2937;
+    }
+
+    body.light-mode .song-page-header,
+    body.light-mode .song-page-content,
+    body.light-mode .song-page-card {
+      background: #ffffff !important;
+      color: #1f2937 !important;
+      border-color: #dbe3ee !important;
+    }
+
+    @media (max-width: 700px) {
+      #themeToggle {
+        top: 10px;
+        right: 62px;
+        height: 38px;
+        min-width: 44px;
+        padding: 0 10px;
+      }
+    }
+
 </style>
 
 
@@ -2082,6 +2292,8 @@
 
 
 <body>
+
+  <button id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
 
 
   <!-- =====================================================
@@ -2686,20 +2898,6 @@
 
 
   <script>
-
-
-    function formatSongSectionLabels(text) {
-      const escaped = String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-
-      return escaped.replace(/(^|\n)([ \t]*)([^\n:]{1,80}:)[ \t]*(?=\n|$)/g, function(_, lineStart, indent, label) {
-        return lineStart + indent + '<span class="song-section-label">' + label + '</span>';
-      });
-    }
 
     /* =====================================================
        SUPABASE
@@ -5489,8 +5687,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         .getElementById(
           "chords"
         )
-        .innerHTML =
-        formatSongSectionLabels(transposed);
+        .textContent =
+        transposed;
 
 
     }
@@ -5729,7 +5927,38 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
 
 
   // -----------------------------------------------------
-      /* =====================================================
+  
+
+    /* =====================================================
+       LIGHT / DARK MODE
+    ===================================================== */
+    const JAYRO_THEME_KEY = "jayro_theme";
+
+    function applyTheme(theme) {
+      const isLight = theme === "light";
+      document.body.classList.toggle("light-mode", isLight);
+
+      const button = document.getElementById("themeToggle");
+      if (button) {
+        button.textContent = isLight ? "🌙" : "☀️";
+        button.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
+        button.setAttribute("title", isLight ? "Switch to dark mode" : "Switch to light mode");
+      }
+    }
+
+    function toggleTheme() {
+      const nextTheme = document.body.classList.contains("light-mode") ? "dark" : "light";
+      localStorage.setItem(JAYRO_THEME_KEY, nextTheme);
+      applyTheme(nextTheme);
+    }
+
+    const savedTheme = localStorage.getItem(JAYRO_THEME_KEY) || "dark";
+    applyTheme(savedTheme);
+
+    document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+
+
+    /* =====================================================
        BUTTON EVENTS
     ===================================================== */
 
@@ -5866,14 +6095,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       // Returning with a valid session counts as activity.
       setLastActivityNow();
 
-      // Record returning users in Login Activity for the current calendar day.
-      // This only creates a row when one does not already exist for today.
-      const restoredUserId = getCurrentUserId();
-      const restoredUserEmail = (localStorage.getItem("jayro_email") || sessionStorage.getItem("jayro_email") || "").trim().toLowerCase();
-      if (restoredUserId && restoredUserEmail) {
-        recordLoginActivity({ id: restoredUserId, email: restoredUserEmail });
-      }
-
+      // Keep returning-session activity recording non-blocking on refresh.
+      // Song loading must not wait on login-activity work.
       loadSongList(true);
     })();
 

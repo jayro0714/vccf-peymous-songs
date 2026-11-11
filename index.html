@@ -2063,11 +2063,8 @@
       color: #1e293b;
     }
 
-    #themeToggle {
-      position: fixed;
-      top: 18px;
-      right: 12px;
-      z-index: 12000;
+    .theme-toggle-mobile {
+      display: none;
       width: 42px;
       min-width: 42px;
       height: 42px;
@@ -2080,13 +2077,14 @@
       font-weight: 700;
       line-height: 1;
       cursor: pointer;
-      display: inline-flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 6px 18px rgba(0,0,0,.18);
     }
 
-    #themeToggle:hover {
+    .theme-toggle-mobile:hover,
+    #themeToggleDesktop:hover,
+    #themeToggleSongDesktop:hover {
       transform: translateY(-1px);
     }
 
@@ -2137,21 +2135,16 @@
 
     @media (min-width: 901px) {
       /* Desktop only: Home toggle is beside Manage/Request, before Logout. */
-      #themeToggle { display: none !important; }
       #themeToggleDesktop { display: inline-flex; }
       #themeToggleSongDesktop { display: inline-flex; }
       .home-header-actions { margin-right: 0 !important; }
     }
 
-    /* Keep the theme toggle directly before the mobile hamburger. */
+    /* Mobile toggles stay inside the navigation bars; they do not follow the page. */
     @media (max-width: 900px) {
-      #themeToggle {
-        top: 17px;
-        right: 64px;
-        width: 42px;
-        min-width: 42px;
-        height: 42px;
-      }
+      .theme-toggle-mobile { display: inline-flex; flex-shrink: 0; }
+      .home-header > .theme-toggle-mobile { margin-left: auto; }
+      #themeToggleDesktop { display: none !important; }
       #themeToggleSongDesktop { display: none !important; }
     }
 
@@ -2210,8 +2203,9 @@
       border-color: #1d4ed8 !important;
     }
 
-    body.light-mode #themeToggle,
-    body.light-mode #themeToggleDesktop {
+    body.light-mode #themeToggleDesktop,
+    body.light-mode #themeToggleSongDesktop,
+    body.light-mode .theme-toggle-mobile {
       background: #ffffff !important;
       border-color: #b8c7d9 !important;
       color: #1d4ed8 !important;
@@ -2599,9 +2593,6 @@
 
 <body>
 
-  <button id="themeToggle" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
-
-
   <!-- =====================================================
        LOGIN PAGE
   ===================================================== -->
@@ -2858,6 +2849,7 @@
         </button>
       </div>
 
+      <button id="themeToggleMobile" class="theme-toggle-mobile" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
       <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
 
       <div id="mobileNavMenu" class="mobile-nav-menu" aria-hidden="true">
@@ -3083,6 +3075,7 @@
       </div>
       <div class="song-page-header-actions">
         <button id="themeToggleSongDesktop" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
+        <button id="themeToggleSongMobile" class="theme-toggle-mobile" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
         <button
           class="song-page-logout"
           type="button"
@@ -6248,7 +6241,12 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const isLight = theme === "light";
       document.body.classList.toggle("light-mode", isLight);
 
-      [document.getElementById("themeToggle"), document.getElementById("themeToggleDesktop"), document.getElementById("themeToggleSongDesktop")].forEach(function(button) {
+      [
+        document.getElementById("themeToggleDesktop"),
+        document.getElementById("themeToggleSongDesktop"),
+        document.getElementById("themeToggleMobile"),
+        document.getElementById("themeToggleSongMobile")
+      ].forEach(function(button) {
         if (!button) return;
         button.textContent = isLight ? "🌙" : "☀️";
         button.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
@@ -6265,9 +6263,14 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     const savedTheme = localStorage.getItem(JAYRO_THEME_KEY) || "dark";
     applyTheme(savedTheme);
 
-    document.getElementById("themeToggle").addEventListener("click", toggleTheme);
-    document.getElementById("themeToggleDesktop").addEventListener("click", toggleTheme);
-    document.getElementById("themeToggleSongDesktop").addEventListener("click", toggleTheme);
+    [
+      document.getElementById("themeToggleDesktop"),
+      document.getElementById("themeToggleSongDesktop"),
+      document.getElementById("themeToggleMobile"),
+      document.getElementById("themeToggleSongMobile")
+    ].forEach(function(button) {
+      if (button) button.addEventListener("click", toggleTheme);
+    });
 
 
     /* =====================================================

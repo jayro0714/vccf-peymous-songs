@@ -474,6 +474,7 @@
     }
 
     .home-header {
+      position: relative;
       width: 100%;
       min-height: 86px;
       display: flex;
@@ -2090,15 +2091,56 @@
     }
 
     /* Keep the theme toggle beside the desktop actions. */
-    @media (min-width: 901px) {
-      #themeToggle {
-        top: 32px;
-        right: 14px;
-      }
+    #themeToggleDesktop {
+      display: none;
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid #294e79;
+      border-radius: 10px;
+      background: #102544;
+      color: #f8fafc;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    }
 
-      .home-header-actions {
-        margin-right: 56px !important;
-      }
+    .song-page-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #themeToggleSongDesktop {
+      display: none;
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid #294e79;
+      border-radius: 10px;
+      background: #102544;
+      color: #f8fafc;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    }
+
+    @media (min-width: 901px) {
+      /* Desktop only: Home toggle is beside Manage/Request, before Logout. */
+      #themeToggle { display: none !important; }
+      #themeToggleDesktop { display: inline-flex; }
+      #themeToggleSongDesktop { display: inline-flex; }
+      .home-header-actions { margin-right: 0 !important; }
     }
 
     /* Keep the theme toggle directly before the mobile hamburger. */
@@ -2110,6 +2152,7 @@
         min-width: 42px;
         height: 42px;
       }
+      #themeToggleSongDesktop { display: none !important; }
     }
 
     /* =========================
@@ -2167,7 +2210,8 @@
       border-color: #1d4ed8 !important;
     }
 
-    body.light-mode #themeToggle {
+    body.light-mode #themeToggle,
+    body.light-mode #themeToggleDesktop {
       background: #ffffff !important;
       border-color: #b8c7d9 !important;
       color: #1d4ed8 !important;
@@ -2804,6 +2848,7 @@
         >
           🎵 Request a Song
         </button>
+        <button id="themeToggleDesktop" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
         <button
           id="logoutButton"
           class="logout-button"
@@ -3036,13 +3081,16 @@
           <div class="song-page-brand-subtitle">Your Worship Chord Library</div>
         </div>
       </div>
-      <button
-        class="song-page-logout"
-        type="button"
-        onclick="logout()"
-      >
-        Logout
-      </button>
+      <div class="song-page-header-actions">
+        <button id="themeToggleSongDesktop" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
+        <button
+          class="song-page-logout"
+          type="button"
+          onclick="logout()"
+          >
+          Logout
+        </button>
+      </div>
     </div>
 
     <div class="song-navigation">
@@ -6200,12 +6248,12 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const isLight = theme === "light";
       document.body.classList.toggle("light-mode", isLight);
 
-      const button = document.getElementById("themeToggle");
-      if (button) {
+      [document.getElementById("themeToggle"), document.getElementById("themeToggleDesktop"), document.getElementById("themeToggleSongDesktop")].forEach(function(button) {
+        if (!button) return;
         button.textContent = isLight ? "🌙" : "☀️";
         button.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
         button.setAttribute("title", isLight ? "Switch to dark mode" : "Switch to light mode");
-      }
+      });
     }
 
     function toggleTheme() {
@@ -6218,6 +6266,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     applyTheme(savedTheme);
 
     document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+    document.getElementById("themeToggleDesktop").addEventListener("click", toggleTheme);
+    document.getElementById("themeToggleSongDesktop").addEventListener("click", toggleTheme);
 
 
     /* =====================================================

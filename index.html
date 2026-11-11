@@ -2495,6 +2495,27 @@
       box-shadow: 0 10px 28px rgba(15,23,42,.08) !important;
     }
 
+    /* Light-mode chord sheet visibility only. */
+    body.light-mode #chords {
+      font-size: 20px !important;
+      line-height: 1.85 !important;
+      font-weight: 600 !important;
+      color: #0b1220 !important;
+      letter-spacing: 0.05px;
+    }
+
+    body.light-mode #chords * {
+      color: #0b1220 !important;
+      font-weight: 600 !important;
+    }
+
+    @media (max-width: 700px) {
+      body.light-mode #chords {
+        font-size: 18px !important;
+        line-height: 1.8 !important;
+      }
+    }
+
     body.light-mode #chords * {
       color: #0f172a !important;
     }

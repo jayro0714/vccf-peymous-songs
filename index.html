@@ -2058,26 +2058,30 @@
 
     body.light-mode {
       color-scheme: light;
-      background: #f4f7fb;
-      color: #1f2937;
+      background: #f3f6fb;
+      color: #1e293b;
     }
 
     #themeToggle {
       position: fixed;
-      top: 14px;
-      right: 14px;
+      top: 18px;
+      right: 12px;
       z-index: 12000;
-      min-width: 48px;
-      height: 40px;
-      padding: 0 12px;
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      padding: 0;
       border: 1px solid #294e79;
       border-radius: 10px;
       background: #102544;
       color: #f8fafc;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       line-height: 1;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       box-shadow: 0 6px 18px rgba(0,0,0,.18);
     }
 
@@ -2085,86 +2089,166 @@
       transform: translateY(-1px);
     }
 
-    body.light-mode #themeToggle {
-      border-color: #cbd5e1;
-      background: #ffffff;
-      color: #1f2937;
-      box-shadow: 0 6px 18px rgba(15,23,42,.12);
+    /* Keep the theme toggle beside the desktop actions. */
+    @media (min-width: 901px) {
+      #themeToggle {
+        top: 32px;
+        right: 14px;
+      }
+
+      .home-header-actions {
+        margin-right: 56px !important;
+      }
     }
 
-    /* Main pages */
+    /* Keep the theme toggle directly before the mobile hamburger. */
+    @media (max-width: 900px) {
+      #themeToggle {
+        top: 17px;
+        right: 64px;
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+      }
+    }
+
+    /* =========================
+       LIGHT THEME
+       Clean white / slate / blue palette while retaining Jayro branding.
+    ========================= */
     body.light-mode #homePage,
-    body.light-mode #songPage {
-      background: #f4f7fb !important;
-      color: #1f2937 !important;
+    body.light-mode #songPage,
+    body.light-mode #loginPage,
+    body.light-mode #requestPage {
+      background: #f3f6fb !important;
+      color: #1e293b !important;
     }
 
-    body.light-mode .home-header {
+    body.light-mode .home-header,
+    body.light-mode .song-page-header {
       background: #ffffff !important;
-      border-bottom-color: #dbe3ee !important;
+      border-bottom-color: #d7e0eb !important;
+    }
+
+    body.light-mode .home-brand-name,
+    body.light-mode .home-main-heading h1 {
+      color: #0f172a !important;
     }
 
     body.light-mode .home-brand-subtitle,
     body.light-mode .home-main-heading p,
     body.light-mode .home-sidebar-title,
-    body.light-mode .home-sidebar-symbol-title {
+    body.light-mode .home-sidebar-symbol-title,
+    body.light-mode .home-welcome {
       color: #2563eb !important;
     }
 
     body.light-mode .home-sidebar {
       background: #ffffff !important;
-      border-color: #dbe3ee !important;
+      border-color: #d7e0eb !important;
       color: #334155 !important;
+      box-shadow: 0 8px 24px rgba(15,23,42,.06);
     }
 
     body.light-mode .home-sidebar-divider {
-      background: #dbe3ee !important;
+      background: #d7e0eb !important;
     }
 
-    body.light-mode .home-main-heading h1,
-    body.light-mode .home-brand-name {
-      color: #172033 !important;
+    /* Header action buttons */
+    body.light-mode .logout-button {
+      background: #2563eb !important;
+      border-color: #2563eb !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(37,99,235,.18);
     }
 
-    body.light-mode .home-welcome {
-      color: #2563eb !important;
+    body.light-mode .logout-button:hover {
+      background: #1d4ed8 !important;
+      border-color: #1d4ed8 !important;
     }
 
-    body.light-mode .home-search {
+    body.light-mode #themeToggle {
       background: #ffffff !important;
-      border-color: #b9c7d8 !important;
+      border-color: #b8c7d9 !important;
+      color: #1d4ed8 !important;
+      box-shadow: 0 4px 12px rgba(15,23,42,.10);
     }
 
-    body.light-mode #search {
-      color: #1f2937 !important;
+    body.light-mode .mobile-nav-toggle,
+    body.light-mode .admin-mobile-nav-toggle {
+      background: #ffffff !important;
+      border-color: #b8c7d9 !important;
+      color: #1d4ed8 !important;
+      box-shadow: 0 4px 12px rgba(15,23,42,.08);
     }
 
-    body.light-mode #search::placeholder {
-      color: #64748b !important;
+    body.light-mode .mobile-nav-menu,
+    body.light-mode .admin-mobile-nav-menu {
+      background: #ffffff !important;
+      border-color: #d0dbe8 !important;
+      box-shadow: 0 14px 30px rgba(15,23,42,.14);
     }
 
+    body.light-mode .mobile-nav-menu button,
+    body.light-mode .admin-mobile-nav-menu button {
+      color: #1e293b !important;
+    }
+
+    body.light-mode .mobile-nav-menu button:hover,
+    body.light-mode .mobile-nav-menu button:focus-visible,
+    body.light-mode .admin-mobile-nav-menu button:hover,
+    body.light-mode .admin-mobile-nav-menu button:focus-visible {
+      background: #eff6ff !important;
+      color: #1d4ed8 !important;
+    }
+
+    body.light-mode .mobile-nav-divider {
+      background: #d7e0eb !important;
+    }
+
+    /* Search / song list / cards */
+    body.light-mode .home-search,
     body.light-mode .song-card,
     body.light-mode .song-list,
     body.light-mode .song-results,
     body.light-mode .feedback-panel,
     body.light-mode .comment-section,
-    body.light-mode .song-container {
+    body.light-mode .song-container,
+    body.light-mode .song-page-content,
+    body.light-mode .song-page-card {
       background: #ffffff !important;
-      color: #1f2937 !important;
-      border-color: #dbe3ee !important;
+      color: #1e293b !important;
+      border-color: #d7e0eb !important;
+      box-shadow: 0 6px 18px rgba(15,23,42,.04);
     }
 
-    /* Login / access request */
-    body.light-mode #loginPage,
-    body.light-mode #requestPage {
-      background: #f4f7fb !important;
+    body.light-mode #search,
+    body.light-mode input,
+    body.light-mode textarea,
+    body.light-mode select,
+    body.light-mode .login-input,
+    body.light-mode .request-input,
+    body.light-mode .request-textarea {
+      background: #ffffff !important;
+      color: #1e293b !important;
+      border-color: #b8c7d9 !important;
     }
 
+    body.light-mode #search::placeholder,
+    body.light-mode input::placeholder,
+    body.light-mode textarea::placeholder,
+    body.light-mode .login-input::placeholder,
+    body.light-mode .request-input::placeholder,
+    body.light-mode .request-textarea::placeholder {
+      color: #64748b !important;
+    }
+
+    /* Login / request cards */
     body.light-mode .login-box,
     body.light-mode .request-box {
       background: #ffffff !important;
-      border-color: #dbe3ee !important;
-      color: #1f2937 !important;
+      border-color: #d7e0eb !important;
+      color: #1e293b !important;
       box-shadow: 0 16px 40px rgba(15,23,42,.10) !important;
     }
 
@@ -2173,23 +2257,7 @@
     body.light-mode .login-subtitle,
     body.light-mode .request-subtitle,
     body.light-mode .request-label {
-      color: #1f2937 !important;
-    }
-
-    body.light-mode .login-input,
-    body.light-mode .request-input,
-    body.light-mode .request-textarea,
-    body.light-mode #loginPassword,
-    body.light-mode #loginEmail {
-      background: #ffffff !important;
-      color: #1f2937 !important;
-      border-color: #cbd5e1 !important;
-    }
-
-    body.light-mode .login-input::placeholder,
-    body.light-mode .request-input::placeholder,
-    body.light-mode .request-textarea::placeholder {
-      color: #64748b !important;
+      color: #1e293b !important;
     }
 
     body.light-mode .login-divider {
@@ -2198,36 +2266,20 @@
 
     body.light-mode .login-divider::before,
     body.light-mode .login-divider::after {
-      background: #dbe3ee !important;
+      background: #d7e0eb !important;
     }
 
     body.light-mode .back-login {
       color: #2563eb !important;
     }
 
-    /* Header/action buttons */
-    body.light-mode .logout-button,
-    body.light-mode .mobile-nav-toggle,
-    body.light-mode .mobile-nav-menu,
-    body.light-mode .admin-mobile-nav-toggle,
-    body.light-mode .admin-mobile-nav-menu {
-      background: #ffffff !important;
-      color: #1f2937 !important;
-      border-color: #cbd5e1 !important;
-    }
-
-    body.light-mode .mobile-nav-menu button,
-    body.light-mode .admin-mobile-nav-menu button {
-      color: #1f2937 !important;
-    }
-
-    /* Request / Manage panels use inline dark backgrounds in the existing file. */
+    /* Panels that previously used inline dark colors */
     body.light-mode #songRequestPanel,
     body.light-mode #adminSongsPanel {
       background: #ffffff !important;
-      color: #1f2937 !important;
-      border-color: #dbe3ee !important;
-      box-shadow: 0 12px 30px rgba(15,23,42,.08) !important;
+      color: #1e293b !important;
+      border-color: #d7e0eb !important;
+      box-shadow: 0 14px 30px rgba(15,23,42,.10) !important;
     }
 
     body.light-mode #songRequestPanel label,
@@ -2236,29 +2288,12 @@
       color: #475569 !important;
     }
 
-    /* Song/chord area and common text controls */
-    body.light-mode textarea,
-    body.light-mode input,
-    body.light-mode select {
-      color: #1f2937;
-    }
-
-    body.light-mode .song-page-header,
+    /* Common light-theme text */
+    body.light-mode .song-name,
+    body.light-mode .song-title,
     body.light-mode .song-page-content,
     body.light-mode .song-page-card {
-      background: #ffffff !important;
-      color: #1f2937 !important;
-      border-color: #dbe3ee !important;
-    }
-
-    @media (max-width: 700px) {
-      #themeToggle {
-        top: 10px;
-        right: 62px;
-        height: 38px;
-        min-width: 44px;
-        padding: 0 10px;
-      }
+      color: #1e293b !important;
     }
 
 </style>

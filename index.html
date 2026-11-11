@@ -2495,27 +2495,6 @@
       box-shadow: 0 10px 28px rgba(15,23,42,.08) !important;
     }
 
-    /* Light-mode chord sheet visibility only. */
-    body.light-mode #chords {
-      font-size: 20px !important;
-      line-height: 1.85 !important;
-      font-weight: 600 !important;
-      color: #0b1220 !important;
-      letter-spacing: 0.05px;
-    }
-
-    body.light-mode #chords * {
-      color: #0b1220 !important;
-      font-weight: 600 !important;
-    }
-
-    @media (max-width: 700px) {
-      body.light-mode #chords {
-        font-size: 18px !important;
-        line-height: 1.8 !important;
-      }
-    }
-
     body.light-mode #chords * {
       color: #0f172a !important;
     }
@@ -2581,6 +2560,32 @@
 
     body.light-mode .site-footer * {
       color: #475569 !important;
+    }
+
+
+    /* LIGHT MODE — make every chord-sheet character clearly visible. */
+    body.light-mode #chords {
+      font-size: 23px !important;
+      line-height: 2 !important;
+      font-weight: 700 !important;
+      color: #020617 !important;
+      letter-spacing: 0.1px !important;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body.light-mode #chords * {
+      color: #020617 !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+      font-weight: 700 !important;
+    }
+
+    @media (max-width: 700px) {
+      body.light-mode #chords {
+        font-size: 20px !important;
+        line-height: 1.9 !important;
+      }
     }
 </style>
 

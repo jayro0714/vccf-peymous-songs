@@ -2367,6 +2367,70 @@
       color: #475569 !important;
     }
 
+    /* Setlists: scoped light-mode surfaces and readable text. */
+    body.light-mode #setlistsPanel,
+    body.light-mode #setlistPlaybackControls {
+      background: #ffffff !important;
+      color: #1e293b !important;
+      border-color: #d7e0eb !important;
+      box-shadow: 0 6px 18px rgba(15,23,42,.06) !important;
+    }
+
+    body.light-mode #setlistList .setlist-card,
+    body.light-mode #setlistSongList .setlist-song-row {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 2px 8px rgba(15,23,42,.06) !important;
+    }
+
+    body.light-mode .setlists-heading h2,
+    body.light-mode .setlist-editor-heading h3,
+    body.light-mode .setlist-card-name,
+    body.light-mode .setlist-song-name {
+      color: #0f172a !important;
+    }
+
+    body.light-mode .setlist-player-status,
+    body.light-mode #setlistMessage,
+    body.light-mode #setlistPlaybackStatus {
+      color: #475569 !important;
+    }
+
+    body.light-mode #newSetlistName {
+      background: #ffffff !important;
+      color: #1e293b !important;
+      border: 1px solid #d7e0eb !important;
+      border-radius: 8px;
+      padding: 13px 14px;
+    }
+
+    body.light-mode #newSetlistName::placeholder {
+      color: #64748b !important;
+    }
+
+    body.light-mode .setlist-song-missing {
+      color: #92400e !important;
+    }
+
+    body.light-mode .setlist-actions button,
+    body.light-mode .setlist-song-actions button,
+    body.light-mode .setlist-player button,
+    body.light-mode #setlistPlaybackControls button {
+      background: #2563eb !important;
+      border-color: #2563eb !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(37,99,235,.18);
+    }
+
+    body.light-mode .setlist-actions button:hover,
+    body.light-mode .setlist-song-actions button:hover,
+    body.light-mode .setlist-player button:hover,
+    body.light-mode #setlistPlaybackControls button:hover {
+      background: #1d4ed8 !important;
+      border-color: #1d4ed8 !important;
+    }
+
     /* Common light-theme text */
     body.light-mode .song-name,
     body.light-mode .song-title,

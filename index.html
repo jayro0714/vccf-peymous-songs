@@ -637,6 +637,37 @@
       margin: 0 auto 20px;
     }
 
+    /* SETLISTS: scoped additions only */
+    #setlistsPanel { width: 100%; margin: 0 0 18px; padding: 16px; border: 1px solid #294e79; border-radius: 10px; background: rgba(17,31,53,.88); }
+    .setlists-heading, .setlist-card, .setlist-song-row, .setlist-player { display:flex; align-items:center; gap:10px; }
+    .setlists-heading { justify-content:space-between; flex-wrap:wrap; margin-bottom:12px; }
+    .setlists-heading h2 { margin:0; font-size:20px; }
+    .setlist-create-row, .setlist-add-row { display:flex; gap:8px; margin:0 0 12px; }
+    .setlist-create-row input, .setlist-add-row select { flex:1; min-width:0; }
+    .setlist-create-row input { margin:0; }
+    #setlistList, #setlistSongList { display:grid; gap:8px; }
+    .setlist-card, .setlist-song-row { justify-content:space-between; flex-wrap:wrap; padding:10px; border:1px solid rgba(49,82,120,.65); border-radius:8px; background:rgba(24,48,79,.65); }
+    .setlist-card-name, .setlist-song-name { min-width:0; overflow-wrap:anywhere; flex:1; }
+    .setlist-actions, .setlist-song-actions { display:flex; gap:6px; flex-wrap:wrap; }
+    .setlist-actions button, .setlist-song-actions button, .setlist-player button, #setlistPlaybackControls button { border:1px solid #3269a8; border-radius:7px; background:#173e78; color:#e0edff; padding:7px 10px; font-weight:700; cursor:pointer; }
+    .setlist-actions button:disabled, .setlist-song-actions button:disabled, #setlistPlaybackControls button:disabled { opacity:.5; cursor:not-allowed; }
+    #setlistEditor { margin-top:14px; padding-top:14px; border-top:1px solid #294e79; }
+    .setlist-editor-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+    .setlist-editor-heading h3 { margin:0; overflow-wrap:anywhere; }
+    .setlist-player { flex-wrap:wrap; margin-top:10px; }
+    .setlist-player-status, #setlistMessage { color:#94a3b8; font-size:14px; }
+    .setlist-song-missing { color:#fbbf24; }
+    #setlistPlaybackControls { display:none; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; margin:4px 0 16px; padding:10px; border:1px solid #294e79; border-radius:9px; background:rgba(17,31,53,.88); }
+    #setlistPlaybackStatus { color:#93c5fd; font-size:14px; text-align:center; }
+    @media (max-width:600px) {
+      #setlistsPanel { padding:12px; }
+      .setlist-create-row, .setlist-add-row { flex-direction:column; }
+      .setlist-create-row button, .setlist-add-row button { width:100%; }
+      .setlist-card, .setlist-song-row { align-items:flex-start; }
+      .setlist-actions, .setlist-song-actions { width:100%; }
+      .setlist-actions button, .setlist-song-actions button { flex:1; }
+    }
+
     .song {
       display: flex;
       align-items: center;
@@ -3040,6 +3071,22 @@
           <div id="homeWelcomeMessage" class="home-welcome" aria-live="polite"></div>
         </div>
 
+        <section id="setlistsPanel" aria-label="Your private setlists">
+          <div class="setlists-heading"><h2>🎼 My Setlists</h2><button id="refreshSetlistsButton" type="button" class="logout-button">Refresh</button></div>
+          <div class="setlist-create-row">
+            <input id="newSetlistName" class="request-input" type="text" maxlength="100" placeholder="New setlist name" aria-label="New setlist name">
+            <button id="createSetlistButton" type="button" class="home-search-button">Create Setlist</button>
+          </div>
+          <div id="setlistMessage" role="status" aria-live="polite"></div>
+          <div id="setlistList"></div>
+          <div id="setlistEditor" style="display:none;">
+            <div class="setlist-editor-heading"><h3 id="setlistEditorTitle"></h3><button id="closeSetlistButton" type="button" class="logout-button">Close</button></div>
+            <div class="setlist-add-row"><select id="setlistSongChoice" aria-label="Choose a song to add"><option value="">Choose a song to add…</option></select><button id="addSetlistSongButton" type="button" class="home-search-button">Add Song</button></div>
+            <div id="setlistSongList"></div>
+            <div class="setlist-player"><button id="playSetlistButton" type="button" class="home-search-button">▶ Play Setlist</button></div>
+          </div>
+        </section>
+
         <div class="home-search">
           <input
             id="search"
@@ -3147,6 +3194,13 @@
 
     </div>
 
+
+    <div id="setlistPlaybackControls" aria-label="Setlist playback">
+      <button id="setlistPreviousButton" type="button">← Previous</button>
+      <span id="setlistPlaybackStatus" aria-live="polite"></span>
+      <button id="setlistNextButton" type="button">Next →</button>
+      <button id="stopSetlistButton" type="button">Stop Setlist</button>
+    </div>
 
     <h1 id="songTitle"></h1>
 
@@ -3256,6 +3310,14 @@
     let songs = [];
 
     let currentSong = null;
+
+    let setlistRows = [];
+    let currentSetlistId = "";
+    let currentSetlistSongs = [];
+    let setlistSongChoices = null;
+    let setlistPlayback = null;
+    let setlistNavigationRequestId = 0;
+    let songOpenRequestId = 0;
 
     let transposeAmount = 0;
 
@@ -3887,6 +3949,8 @@
 
     function showHome() {
 
+      stopSetlistPlayback();
+
       /*
         The login session is stored locally after Supabase
         authentication, so the page can switch immediately.
@@ -3964,6 +4028,7 @@
       );
 
       loadSiteNote();
+      if (getStoredToken()) loadSetlists();
 
     }
 
@@ -4686,6 +4751,290 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         return "";
       }
     }
+
+    /* =====================================================
+       PRIVATE SETLISTS
+    ===================================================== */
+    async function setlistRequest(path, options) {
+      const token = getStoredToken();
+      if (!token) throw new Error("Authentication required.");
+      const requestOptions = options || {};
+      const headers = Object.assign({ "apikey": SUPABASE_PUBLISHABLE_KEY, "Authorization": "Bearer " + token }, requestOptions.headers || {});
+      if (requestOptions.body && !headers["Content-Type"]) headers["Content-Type"] = "application/json";
+      const response = await fetch(SUPABASE_URL + path, Object.assign({}, requestOptions, { headers: headers }));
+      const text = await response.text();
+      if (!response.ok) throw new Error("Setlist request failed (" + response.status + "): " + text);
+      if (!text) return null;
+      try { return JSON.parse(text); } catch (error) { return text; }
+    }
+
+    function setlistMessage(text, isError) {
+      const element = document.getElementById("setlistMessage");
+      if (!element) return;
+      element.textContent = text || "";
+      element.style.color = isError ? "#fca5a5" : "#94a3b8";
+    }
+
+    async function loadSetlists() {
+      if (!getStoredToken()) return;
+      try {
+        const rows = await setlistRequest("/rest/v1/setlists?select=id,name,created_at,updated_at&order=updated_at.desc");
+        setlistRows = Array.isArray(rows) ? rows : [];
+        renderSetlists();
+        setlistMessage(setlistRows.length ? "" : "No setlists yet. Create one to get started.");
+      } catch (error) {
+        console.error("Setlist load error:", error);
+        setlistMessage("Unable to load setlists. Please try again.", true);
+      }
+    }
+
+    function renderSetlists() {
+      const list = document.getElementById("setlistList");
+      if (!list) return;
+      list.innerHTML = setlistRows.map(function(row) {
+        const id = escapeHtml(String(row.id));
+        return '<div class="setlist-card"><strong class="setlist-card-name">' + escapeHtml(row.name || "Untitled Setlist") +
+          '</strong><div class="setlist-actions"><button type="button" data-setlist-action="open" data-setlist-id="' + id + '">Open</button>' +
+          '<button type="button" data-setlist-action="rename" data-setlist-id="' + id + '">Rename</button>' +
+          '<button type="button" data-setlist-action="delete" data-setlist-id="' + id + '">Delete</button></div></div>';
+      }).join("");
+    }
+
+    async function createSetlist() {
+      const input = document.getElementById("newSetlistName");
+      const name = String(input.value || "").trim();
+      if (!name) { setlistMessage("Enter a setlist name.", true); input.focus(); return; }
+      const userId = getCurrentUserId();
+      if (!userId) { setlistMessage("Authentication required.", true); return; }
+      try {
+        await setlistRequest("/rest/v1/setlists", {
+          method: "POST", headers: { "Prefer": "return=minimal" },
+          body: JSON.stringify({ user_id: userId, name: name })
+        });
+        input.value = "";
+        await loadSetlists();
+        setlistMessage("Setlist created.");
+      } catch (error) { console.error(error); setlistMessage("Unable to create setlist.", true); }
+    }
+
+    async function renameSetlist(id) {
+      const row = setlistRows.find(function(item) { return String(item.id) === String(id); });
+      if (!row) return;
+      const name = window.prompt("Rename setlist:", row.name || "");
+      if (name === null) return;
+      if (!String(name).trim()) { setlistMessage("Setlist name cannot be blank.", true); return; }
+      try {
+        await setlistRequest("/rest/v1/setlists?id=eq." + encodeURIComponent(id), {
+          method: "PATCH", headers: { "Prefer": "return=minimal" }, body: JSON.stringify({ name: String(name).trim() })
+        });
+        await loadSetlists();
+        if (currentSetlistId === String(id)) document.getElementById("setlistEditorTitle").textContent = String(name).trim();
+        setlistMessage("Setlist renamed.");
+      } catch (error) { console.error(error); setlistMessage("Unable to rename setlist.", true); }
+    }
+
+    async function deleteSetlist(id) {
+      const row = setlistRows.find(function(item) { return String(item.id) === String(id); });
+      if (!row || !window.confirm('Delete the setlist "' + row.name + '"?')) return;
+      try {
+        await setlistRequest("/rest/v1/setlists?id=eq." + encodeURIComponent(id), { method: "DELETE" });
+        if (setlistPlayback && setlistPlayback.id === String(id)) stopSetlistPlayback();
+        if (currentSetlistId === String(id)) closeSetlistEditor();
+        await loadSetlists();
+        setlistMessage("Setlist deleted.");
+      } catch (error) { console.error(error); setlistMessage("Unable to delete setlist.", true); }
+    }
+
+    async function openSetlist(id) {
+      currentSetlistId = String(id);
+      document.getElementById("setlistEditor").style.display = "block";
+      document.getElementById("setlistEditorTitle").textContent = "Loading setlist…";
+      try {
+        const row = setlistRows.find(function(item) { return String(item.id) === currentSetlistId; });
+        if (!row) throw new Error("Setlist not found.");
+        document.getElementById("setlistEditorTitle").textContent = row.name;
+        await Promise.all([loadSetlistSongs(), loadSetlistSongChoices()]);
+      } catch (error) { console.error(error); setlistMessage("Unable to open setlist.", true); }
+    }
+
+    function closeSetlistEditor() {
+      currentSetlistId = "";
+      currentSetlistSongs = [];
+      document.getElementById("setlistEditor").style.display = "none";
+    }
+
+    async function resolveSetlistSong(songId) {
+      const rows = await setlistRequest("/rest/v1/songs?select=id,name&id=eq." + encodeURIComponent(songId) + "&limit=2");
+      if (!Array.isArray(rows) || rows.length !== 1 || String(rows[0].id) !== String(songId)) {
+        return { found: false, name: "Missing song (ID " + songId + ")" };
+      }
+      return { found: true, name: String(rows[0].name || "") };
+    }
+
+    async function loadSetlistSongs() {
+      const requestedId = currentSetlistId;
+      if (!requestedId) return;
+      const rows = await setlistRequest("/rest/v1/setlist_songs?select=id,setlist_id,song_id,position&setlist_id=eq." + encodeURIComponent(requestedId) + "&order=position.asc");
+      if (requestedId !== currentSetlistId) return;
+      const entries = Array.isArray(rows) ? rows : [];
+      const resolved = await Promise.all(entries.map(async function(entry) {
+        try { return Object.assign({}, entry, await resolveSetlistSong(entry.song_id)); }
+        catch (error) { return Object.assign({}, entry, { found: false, name: "Unable to resolve song (ID " + entry.song_id + ")" }); }
+      }));
+      if (requestedId !== currentSetlistId) return;
+      currentSetlistSongs = resolved;
+      renderSetlistSongs();
+    }
+
+    async function loadSetlistSongChoices() {
+      const select = document.getElementById("setlistSongChoice");
+      if (!select) return;
+      try {
+        if (!Array.isArray(setlistSongChoices)) {
+          const rows = await setlistRequest("/rest/v1/songs?select=id,name&order=name.asc");
+          setlistSongChoices = Array.isArray(rows) ? rows : [];
+        }
+        select.innerHTML = '<option value="">Choose a song to add…</option>' + setlistSongChoices.map(function(song) {
+          return '<option value="' + escapeHtml(String(song.id)) + '">' + escapeHtml(song.name || "") + '</option>';
+        }).join("");
+      } catch (error) { console.error(error); setlistMessage("Unable to load songs for the setlist.", true); }
+    }
+
+    function renderSetlistSongs() {
+      const list = document.getElementById("setlistSongList");
+      if (!list) return;
+      if (!currentSetlistSongs.length) { list.innerHTML = '<div class="setlist-player-status">This setlist is empty.</div>'; return; }
+      list.innerHTML = currentSetlistSongs.map(function(entry, index) {
+        const songId = escapeHtml(String(entry.song_id));
+        return '<div class="setlist-song-row"><span class="setlist-song-name ' + (entry.found ? '' : 'setlist-song-missing') + '">' +
+          (index + 1) + '. ' + escapeHtml(entry.name) + '</span><div class="setlist-song-actions">' +
+          '<button type="button" data-setlist-action="up" data-song-id="' + songId + '"' + (index === 0 ? ' disabled' : '') + '>↑</button>' +
+          '<button type="button" data-setlist-action="down" data-song-id="' + songId + '"' + (index === currentSetlistSongs.length - 1 ? ' disabled' : '') + '>↓</button>' +
+          '<button type="button" data-setlist-action="remove" data-song-id="' + songId + '">Remove</button></div></div>';
+      }).join("");
+    }
+
+    async function addSongToSetlist() {
+      const select = document.getElementById("setlistSongChoice");
+      const songId = select.value;
+      if (!currentSetlistId || !songId) { setlistMessage("Choose a song first.", true); return; }
+      const position = currentSetlistSongs.reduce(function(max, entry) { return Math.max(max, Number(entry.position) + 1); }, 0);
+      try {
+        await setlistRequest("/rest/v1/setlist_songs", {
+          method: "POST", headers: { "Prefer": "return=minimal" },
+          body: JSON.stringify({ setlist_id: currentSetlistId, song_id: Number(songId), position: position })
+        });
+        await loadSetlistSongs();
+        select.value = "";
+        setlistMessage("Song added.");
+      } catch (error) { console.error(error); setlistMessage("Unable to add song. It may already be in this setlist.", true); }
+    }
+
+    async function removeSongFromSetlist(songId) {
+      const setlistId = currentSetlistId;
+      if (!setlistId) return;
+      try {
+        await setlistRequest("/rest/v1/setlist_songs?setlist_id=eq." + encodeURIComponent(setlistId) + "&song_id=eq." + encodeURIComponent(songId), { method: "DELETE" });
+        await loadSetlistSongs();
+        if (currentSetlistSongs.length) await saveSetlistOrder(currentSetlistSongs.map(function(entry) { return Number(entry.song_id); }));
+        setlistMessage("Song removed.");
+      } catch (error) { console.error(error); setlistMessage("Unable to remove song.", true); }
+    }
+
+    async function moveSetlistSong(songId, direction) {
+      const next = currentSetlistSongs.slice();
+      const index = next.findIndex(function(entry) { return String(entry.song_id) === String(songId); });
+      const target = index + Number(direction);
+      if (index < 0 || target < 0 || target >= next.length) return;
+      const [entry] = next.splice(index, 1);
+      next.splice(target, 0, entry);
+      await saveSetlistOrder(next.map(function(item) { return Number(item.song_id); }));
+    }
+
+    async function saveSetlistOrder(songIds) {
+      const setlistId = currentSetlistId;
+      if (!setlistId) return;
+      try {
+        await setlistRequest("/rest/v1/rpc/reorder_setlist_songs", {
+          method: "POST", body: JSON.stringify({ p_setlist_id: setlistId, p_song_ids: songIds })
+        });
+        await loadSetlistSongs();
+        setlistMessage("Setlist order saved.");
+      } catch (error) { console.error(error); setlistMessage("Unable to save setlist order. Refresh and try again.", true); }
+    }
+
+    function updateSetlistPlaybackControls() {
+      const controls = document.getElementById("setlistPlaybackControls");
+      if (!controls) return;
+      controls.style.display = setlistPlayback ? "flex" : "none";
+      if (!setlistPlayback) return;
+      const index = setlistPlayback.index;
+      document.getElementById("setlistPreviousButton").disabled = index <= 0;
+      document.getElementById("setlistNextButton").disabled = index >= setlistPlayback.songs.length - 1;
+      document.getElementById("setlistPlaybackStatus").textContent = setlistPlayback.name + " · " + (index + 1) + " of " + setlistPlayback.songs.length;
+    }
+
+    async function playSetlist() {
+      if (!currentSetlistId || !currentSetlistSongs.length) { setlistMessage("Add at least one song before playing.", true); return; }
+      if (currentSetlistSongs.some(function(entry) { return !entry.found; })) { setlistMessage("Remove or resolve missing songs before playing this setlist.", true); return; }
+      const row = setlistRows.find(function(item) { return String(item.id) === currentSetlistId; });
+      setlistPlayback = { id: currentSetlistId, name: row ? row.name : "Setlist", songs: currentSetlistSongs.slice(), index: 0 };
+      updateSetlistPlaybackControls();
+      await openSetlistPlaybackSong(0);
+    }
+
+    async function openSetlistPlaybackSong(index) {
+      if (!setlistPlayback || index < 0 || index >= setlistPlayback.songs.length) return;
+      const requestId = ++setlistNavigationRequestId;
+      setlistPlayback.index = index;
+      updateSetlistPlaybackControls();
+      const entry = setlistPlayback.songs[index];
+      try {
+        const resolved = await resolveSetlistSong(entry.song_id);
+        if (requestId !== setlistNavigationRequestId || !setlistPlayback) return;
+        if (!resolved.found) { setlistMessage("This song is missing from the library.", true); return; }
+        openSong({ name: resolved.name }, { setlistPlayback: true });
+      } catch (error) { console.error(error); setlistMessage("Unable to resolve this setlist song.", true); }
+    }
+
+    function playSetlistPrevious() {
+      if (setlistPlayback && setlistPlayback.index > 0) openSetlistPlaybackSong(setlistPlayback.index - 1);
+    }
+
+    function playSetlistNext() {
+      if (setlistPlayback && setlistPlayback.index < setlistPlayback.songs.length - 1) openSetlistPlaybackSong(setlistPlayback.index + 1);
+    }
+
+    function stopSetlistPlayback() {
+      setlistNavigationRequestId++;
+      setlistPlayback = null;
+      updateSetlistPlaybackControls();
+    }
+
+    document.getElementById("createSetlistButton").addEventListener("click", createSetlist);
+    document.getElementById("refreshSetlistsButton").addEventListener("click", loadSetlists);
+    document.getElementById("closeSetlistButton").addEventListener("click", closeSetlistEditor);
+    document.getElementById("addSetlistSongButton").addEventListener("click", addSongToSetlist);
+    document.getElementById("playSetlistButton").addEventListener("click", playSetlist);
+    document.getElementById("setlistPreviousButton").addEventListener("click", playSetlistPrevious);
+    document.getElementById("setlistNextButton").addEventListener("click", playSetlistNext);
+    document.getElementById("stopSetlistButton").addEventListener("click", stopSetlistPlayback);
+    document.getElementById("setlistList").addEventListener("click", function(event) {
+      const button = event.target.closest("[data-setlist-action]");
+      if (!button) return;
+      const id = button.getAttribute("data-setlist-id");
+      if (button.dataset.setlistAction === "open") openSetlist(id);
+      if (button.dataset.setlistAction === "rename") renameSetlist(id);
+      if (button.dataset.setlistAction === "delete") deleteSetlist(id);
+    });
+    document.getElementById("setlistSongList").addEventListener("click", function(event) {
+      const button = event.target.closest("[data-setlist-action]");
+      if (!button) return;
+      const songId = button.getAttribute("data-song-id");
+      if (button.dataset.setlistAction === "remove") removeSongFromSetlist(songId);
+      if (button.dataset.setlistAction === "up") moveSetlistSong(songId, -1);
+      if (button.dataset.setlistAction === "down") moveSetlistSong(songId, 1);
+    });
 
     function getWeekStartAndEnd() {
       const now = new Date();
@@ -5876,8 +6225,11 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
        OPEN SONG
     ===================================================== */
 
-    function openSong(song) {
+    function openSong(song, options) {
       if (!song) return;
+
+      const openRequestId = ++songOpenRequestId;
+      if (!options || options.setlistPlayback !== true) stopSetlistPlayback();
 
       currentSong = {
         name: String(song.name || ""),
@@ -5897,6 +6249,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       resetFeedbackForm();
 
       loadSingleSong(currentSong.name).then(function(result) {
+        if (openRequestId !== songOpenRequestId) return;
         if (!result || result.access !== true) {
           if (result && result.message && result.message.indexOf("Authentication") !== -1) {
             handleSessionFailure(result.message);

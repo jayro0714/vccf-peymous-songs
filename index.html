@@ -643,7 +643,7 @@
     .setlists-heading { justify-content:space-between; flex-wrap:wrap; margin-bottom:12px; }
     .setlists-heading h2 { margin:0; font-size:20px; }
     .setlist-create-row, .setlist-add-row { display:flex; gap:8px; margin:0 0 12px; }
-    .setlist-create-row input, .setlist-add-row select { flex:1; min-width:0; }
+    .setlist-create-row input, .setlist-add-row .setlist-song-picker-trigger { flex:1; min-width:0; }
     .setlist-create-row input { margin:0; }
     #setlistList, #setlistSongList { display:grid; gap:8px; }
     .setlist-card, .setlist-song-row { justify-content:space-between; flex-wrap:wrap; padding:10px; border:1px solid rgba(49,82,120,.65); border-radius:8px; background:rgba(24,48,79,.65); }
@@ -659,6 +659,26 @@
     .setlist-song-missing { color:#fbbf24; }
     #setlistPlaybackControls { display:none; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; margin:4px 0 16px; padding:10px; border:1px solid #294e79; border-radius:9px; background:rgba(17,31,53,.88); }
     #setlistPlaybackStatus { color:#93c5fd; font-size:14px; text-align:center; }
+    .setlist-song-picker-trigger { width:100%; min-height:44px; padding:11px 14px; border:1px solid #355678; border-radius:8px; background:#0f2038; color:#e2e8f0; font:inherit; text-align:left; cursor:pointer; }
+    .setlist-song-picker-backdrop { display:none; position:fixed; inset:0; z-index:10001; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; background:rgba(2,6,23,.72); }
+    .setlist-song-picker-backdrop.show { display:flex; }
+    .setlist-song-picker { display:flex; flex-direction:column; width:100%; max-width:560px; max-height:88vh; max-height:88dvh; min-width:0; overflow:hidden; padding:16px; border:1px solid #355678; border-radius:12px; background:#0f1f37; color:#e2e8f0; box-shadow:0 18px 55px rgba(0,0,0,.42); }
+    .setlist-song-picker-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .setlist-song-picker-heading h3 { margin:0; font-size:18px; }
+    #setlistSongPickerSearch { position:sticky; top:0; z-index:1; flex:0 0 auto; width:100%; min-height:48px; padding:12px 14px; border:1px solid #355678; border-radius:8px; background:#0b1730; color:#f8fafc; outline:none; font:inherit; }
+    #setlistSongPickerSearch::placeholder { color:#94a3b8; }
+    #setlistSongPickerResults { display:grid; flex:1 1 auto; min-height:0; gap:7px; overflow-y:auto; overscroll-behavior:contain; padding:10px 2px 4px; }
+    .setlist-song-picker-option { display:flex; align-items:center; gap:12px; min-height:48px; padding:10px 12px; border:1px solid #29496f; border-radius:8px; background:rgba(20,43,72,.75); color:#e2e8f0; overflow-wrap:anywhere; cursor:pointer; }
+    .setlist-song-picker-option input { flex:0 0 20px; width:20px; height:20px; margin:0; accent-color:#3b82f6; }
+    .setlist-song-picker-empty { padding:14px 8px; color:#94a3b8; text-align:center; }
+    .setlist-song-picker-footer { display:flex; justify-content:flex-end; padding-top:10px; }
+    body.light-mode .setlist-song-picker-trigger { border-color:#d7e0eb; background:#ffffff; color:#1e293b; }
+    body.light-mode .setlist-song-picker { border-color:#d7e0eb; background:#ffffff; color:#1e293b; }
+    body.light-mode .setlist-song-picker-heading h3 { color:#0f172a; }
+    body.light-mode #setlistSongPickerSearch { border-color:#d7e0eb; background:#ffffff; color:#1e293b; }
+    body.light-mode #setlistSongPickerSearch::placeholder { color:#64748b; }
+    body.light-mode .setlist-song-picker-option { border-color:#d7e0eb; background:#f8fafc; color:#1e293b; }
+    body.light-mode .setlist-song-picker-empty { color:#64748b; }
     @media (max-width:600px) {
       #setlistsPanel { padding:12px; }
       .setlist-create-row, .setlist-add-row { flex-direction:column; }
@@ -666,6 +686,8 @@
       .setlist-card, .setlist-song-row { align-items:flex-start; }
       .setlist-actions, .setlist-song-actions { width:100%; }
       .setlist-actions button, .setlist-song-actions button { flex:1; }
+      .setlist-song-picker { max-height:90vh; max-height:90dvh; padding:13px; }
+      .setlist-song-picker-option { padding:12px 10px; }
     }
 
     .song {
@@ -3145,11 +3167,20 @@
           <div id="setlistList"></div>
           <div id="setlistEditor" style="display:none;">
             <div class="setlist-editor-heading"><h3 id="setlistEditorTitle"></h3><button id="closeSetlistButton" type="button" class="logout-button">Close</button></div>
-            <div class="setlist-add-row"><select id="setlistSongChoice" aria-label="Choose a song to add"><option value="">Choose a song to add…</option></select><button id="addSetlistSongButton" type="button" class="home-search-button">Add Song</button></div>
+            <div class="setlist-add-row"><button id="setlistSongPickerTrigger" type="button" class="setlist-song-picker-trigger" aria-haspopup="dialog" aria-controls="setlistSongPickerDialog" aria-expanded="false">Choose a song to add…</button><input id="setlistSongChoice" type="hidden" value=""><button id="addSetlistSongButton" type="button" class="home-search-button">Add Song</button></div>
             <div id="setlistSongList"></div>
             <div class="setlist-player"><button id="playSetlistButton" type="button" class="home-search-button">▶ Play Setlist</button></div>
           </div>
         </section>
+
+        <div id="setlistSongPickerDialog" class="setlist-song-picker-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="setlistSongPickerTitle" tabindex="-1">
+          <div class="setlist-song-picker">
+            <div class="setlist-song-picker-heading"><h3 id="setlistSongPickerTitle">Choose a song to add…</h3><button id="closeSetlistSongPickerButton" type="button" class="logout-button" aria-label="Close song picker">×</button></div>
+            <input id="setlistSongPickerSearch" type="search" placeholder="Search songs…" aria-label="Search songs">
+            <div id="setlistSongPickerResults" role="radiogroup" aria-label="Songs"></div>
+            <div class="setlist-song-picker-footer"><button id="cancelSetlistSongPickerButton" type="button" class="logout-button">Cancel</button></div>
+          </div>
+        </div>
 
         <div class="home-search">
           <input
@@ -3379,6 +3410,8 @@
     let currentSetlistId = "";
     let currentSetlistSongs = [];
     let setlistSongChoices = null;
+    let setlistSongPickerPreviousFocus = null;
+    let setlistSongPickerPreviousOverflow = "";
     let setlistPlayback = null;
     let setlistNavigationRequestId = 0;
     let songOpenRequestId = 0;
@@ -4950,17 +4983,87 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       renderSetlistSongs();
     }
 
+    function renderSetlistSongChoiceResults() {
+      const results = document.getElementById("setlistSongPickerResults");
+      const search = document.getElementById("setlistSongPickerSearch");
+      const selected = document.getElementById("setlistSongChoice");
+      if (!results || !search || !selected) return;
+
+      const query = String(search.value || "").trim().toLowerCase();
+      const matches = (Array.isArray(setlistSongChoices) ? setlistSongChoices : []).filter(function(song) {
+        return String(song.name || "").toLowerCase().includes(query);
+      });
+      results.innerHTML = "";
+
+      if (!matches.length) {
+        const empty = document.createElement("div");
+        empty.className = "setlist-song-picker-empty";
+        empty.textContent = "No songs found";
+        results.appendChild(empty);
+        return;
+      }
+
+      matches.forEach(function(song) {
+        const label = document.createElement("label");
+        label.className = "setlist-song-picker-option";
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "setlistSongPickerChoice";
+        radio.value = String(song.id);
+        radio.checked = String(selected.value || "") === radio.value;
+        const title = document.createElement("span");
+        title.textContent = String(song.name || "");
+        radio.addEventListener("change", function() {
+          if (!radio.checked) return;
+          selected.value = radio.value;
+          document.getElementById("setlistSongPickerTrigger").textContent = title.textContent || "Choose a song to add…";
+          closeSetlistSongPicker();
+        });
+        label.appendChild(radio);
+        label.appendChild(title);
+        results.appendChild(label);
+      });
+    }
+
+    function openSetlistSongPicker() {
+      const dialog = document.getElementById("setlistSongPickerDialog");
+      const trigger = document.getElementById("setlistSongPickerTrigger");
+      const search = document.getElementById("setlistSongPickerSearch");
+      if (!dialog || !trigger || !search || dialog.classList.contains("show")) return;
+      setlistSongPickerPreviousFocus = trigger;
+      setlistSongPickerPreviousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      search.value = "";
+      renderSetlistSongChoiceResults();
+      dialog.classList.add("show");
+      dialog.setAttribute("aria-hidden", "false");
+      trigger.setAttribute("aria-expanded", "true");
+      search.focus();
+    }
+
+    function closeSetlistSongPicker() {
+      const dialog = document.getElementById("setlistSongPickerDialog");
+      const trigger = document.getElementById("setlistSongPickerTrigger");
+      if (!dialog || !dialog.classList.contains("show")) return;
+      dialog.classList.remove("show");
+      dialog.setAttribute("aria-hidden", "true");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = setlistSongPickerPreviousOverflow;
+      if (setlistSongPickerPreviousFocus && typeof setlistSongPickerPreviousFocus.focus === "function") {
+        setlistSongPickerPreviousFocus.focus();
+      }
+      setlistSongPickerPreviousFocus = null;
+    }
+
     async function loadSetlistSongChoices() {
-      const select = document.getElementById("setlistSongChoice");
-      if (!select) return;
       try {
         if (!Array.isArray(setlistSongChoices)) {
           const rows = await setlistRequest("/rest/v1/songs?select=id,name&order=name.asc");
           setlistSongChoices = Array.isArray(rows) ? rows : [];
         }
-        select.innerHTML = '<option value="">Choose a song to add…</option>' + setlistSongChoices.map(function(song) {
-          return '<option value="' + escapeHtml(String(song.id)) + '">' + escapeHtml(song.name || "") + '</option>';
-        }).join("");
+        document.getElementById("setlistSongChoice").value = "";
+        document.getElementById("setlistSongPickerTrigger").textContent = "Choose a song to add…";
+        renderSetlistSongChoiceResults();
       } catch (error) { console.error(error); setlistMessage("Unable to load songs for the setlist.", true); }
     }
 
@@ -4990,6 +5093,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         });
         await loadSetlistSongs();
         select.value = "";
+        document.getElementById("setlistSongPickerTrigger").textContent = "Choose a song to add…";
         setlistMessage("Song added.");
       } catch (error) { console.error(error); setlistMessage("Unable to add song. It may already be in this setlist.", true); }
     }
@@ -5078,6 +5182,34 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     document.getElementById("createSetlistButton").addEventListener("click", createSetlist);
     document.getElementById("refreshSetlistsButton").addEventListener("click", loadSetlists);
     document.getElementById("closeSetlistButton").addEventListener("click", closeSetlistEditor);
+    document.getElementById("setlistSongPickerTrigger").addEventListener("click", openSetlistSongPicker);
+    document.getElementById("setlistSongPickerSearch").addEventListener("input", renderSetlistSongChoiceResults);
+    document.getElementById("closeSetlistSongPickerButton").addEventListener("click", closeSetlistSongPicker);
+    document.getElementById("cancelSetlistSongPickerButton").addEventListener("click", closeSetlistSongPicker);
+    document.getElementById("setlistSongPickerDialog").addEventListener("click", function(event) {
+      if (event.target === this) closeSetlistSongPicker();
+    });
+    document.addEventListener("keydown", function(event) {
+      const dialog = document.getElementById("setlistSongPickerDialog");
+      if (!dialog || !dialog.classList.contains("show")) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeSetlistSongPicker();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(dialog.querySelectorAll('button:not([disabled]), input:not([disabled])'));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
     document.getElementById("addSetlistSongButton").addEventListener("click", addSongToSetlist);
     document.getElementById("playSetlistButton").addEventListener("click", playSetlist);
     document.getElementById("setlistPreviousButton").addEventListener("click", playSetlistPrevious);

@@ -667,10 +667,11 @@
       body.setlist-printing > :not(#setlistPrintView) { display:none !important; }
       body.setlist-printing #setlistPrintView { display:block !important; position:static; box-sizing:border-box; padding:0; width:100%; background:#fff; color:#111; font-family:Arial, sans-serif; }
       .setlist-print-title { margin:0 0 18pt; font-size:22pt; line-height:1.2; overflow-wrap:anywhere; }
-      .setlist-print-song { margin:0 0 18pt; break-inside:avoid-page; page-break-inside:avoid; }
+      .setlist-print-song { margin:0 0 18pt; }
+      .setlist-print-song:nth-of-type(2n):not(:last-of-type) { break-after:page; page-break-after:always; }
       .setlist-print-song-title { margin:0 0 4pt; padding-top:10pt; border-top:1px solid #aaa; font-size:15pt; line-height:1.25; overflow-wrap:anywhere; }
       .setlist-print-song-key { margin:0 0 8pt; font-size:10pt; font-weight:700; }
-      .setlist-print-chords { margin:0; white-space:pre-wrap; overflow-wrap:break-word; font-family:"Courier New", monospace; font-size:9pt; line-height:1.25; }
+      .setlist-print-chords { margin:0; white-space:pre-wrap; overflow-wrap:break-word; font-family:"Courier New", monospace; font-size:10pt; line-height:1.3; }
     }
     .setlist-song-picker-trigger { width:100%; min-height:44px; padding:11px 14px; border:1px solid #355678; border-radius:8px; background:#0f2038; color:#e2e8f0; font:inherit; text-align:left; cursor:pointer; }
     .setlist-song-picker-backdrop { display:none; position:fixed; inset:0; z-index:10001; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; background:rgba(2,6,23,.72); }

@@ -661,6 +661,17 @@
     .setlist-song-key-input { width:76px; min-width:0; margin:0; padding:7px 8px; border:1px solid #355678; border-radius:6px; background:#0f2038; color:#e2e8f0; font:inherit; font-size:14px; }
     #setlistPlaybackControls { display:none; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; margin:4px 0 16px; padding:10px; border:1px solid #294e79; border-radius:9px; background:rgba(17,31,53,.88); }
     #setlistPlaybackStatus { color:#93c5fd; font-size:14px; text-align:center; }
+    #setlistPrintView { display:none; }
+    @media print {
+      body.setlist-printing { margin:0 !important; background:#fff !important; color:#111 !important; }
+      body.setlist-printing > :not(#setlistPrintView) { display:none !important; }
+      body.setlist-printing #setlistPrintView { display:block !important; position:static; box-sizing:border-box; padding:0; width:100%; background:#fff; color:#111; font-family:Arial, sans-serif; }
+      .setlist-print-title { margin:0 0 18pt; font-size:22pt; line-height:1.2; overflow-wrap:anywhere; }
+      .setlist-print-song { margin:0 0 18pt; break-inside:avoid-page; page-break-inside:avoid; }
+      .setlist-print-song-title { margin:0 0 4pt; padding-top:10pt; border-top:1px solid #aaa; font-size:15pt; line-height:1.25; overflow-wrap:anywhere; }
+      .setlist-print-song-key { margin:0 0 8pt; font-size:10pt; font-weight:700; }
+      .setlist-print-chords { margin:0; white-space:pre-wrap; overflow-wrap:break-word; font-family:"Courier New", monospace; font-size:9pt; line-height:1.25; }
+    }
     .setlist-song-picker-trigger { width:100%; min-height:44px; padding:11px 14px; border:1px solid #355678; border-radius:8px; background:#0f2038; color:#e2e8f0; font:inherit; text-align:left; cursor:pointer; }
     .setlist-song-picker-backdrop { display:none; position:fixed; inset:0; z-index:10001; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; background:rgba(2,6,23,.72); }
     .setlist-song-picker-backdrop.show { display:flex; }
@@ -3394,6 +3405,7 @@
       <button id="setlistPreviousButton" type="button">← Previous</button>
       <span id="setlistPlaybackStatus" aria-live="polite"></span>
       <button id="setlistNextButton" type="button">Next →</button>
+      <button id="printSetlistButton" type="button">Save as PDF</button>
       <button id="stopSetlistButton" type="button">Stop Setlist</button>
     </div>
 
@@ -3483,6 +3495,7 @@
 
   </div>
 
+  <div id="setlistPrintView" aria-hidden="true"></div>
 
 
   <script>
@@ -3861,6 +3874,19 @@
 
       return map[note];
 
+    }
+
+
+    function getSetlistKeyTransposeAmount(chordText, savedKey) {
+      if (!savedKey) return 0;
+      const originalKeyMatch = String(chordText || "").match(/^[ \t]*Key[ \t]*:[ \t]*([A-G](?:#|b)?)[ \t]*$/im);
+      const setlistKeyMatch = String(savedKey).trim().match(/^([A-G](?:#|b)?)$/i);
+      if (!originalKeyMatch || !setlistKeyMatch) return 0;
+      const normalizeKey = function(note) { return note.charAt(0).toUpperCase() + note.slice(1).toLowerCase(); };
+      const originalKeyNumber = noteToNumber(normalizeKey(originalKeyMatch[1]));
+      const setlistKeyNumber = noteToNumber(normalizeKey(setlistKeyMatch[1]));
+      if (originalKeyNumber === undefined || setlistKeyNumber === undefined) return 0;
+      return setlistKeyNumber - originalKeyNumber;
     }
 
 
@@ -5312,6 +5338,75 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       updateSetlistPlaybackControls();
     }
 
+    async function printSetlist() {
+      if (!setlistPlayback || !setlistPlayback.songs.length) return;
+      const playback = setlistPlayback;
+      const songs = playback.songs.slice();
+      const printButton = document.getElementById("printSetlistButton");
+      const printView = document.getElementById("setlistPrintView");
+      if (!printView) return;
+      if (printButton) printButton.disabled = true;
+      let cleanupPrintView = null;
+
+      try {
+        const printableSongs = [];
+        for (const entry of songs) {
+          const song = await loadSingleSong(entry.name);
+          if (!song || song.access !== true) throw new Error("Unable to load a Setlist song for printing.");
+          const chordText = String(song.chords || "");
+          const transposeAmount = getSetlistKeyTransposeAmount(chordText, entry.song_key);
+          printableSongs.push({
+            title: String(song.name || entry.name || ""),
+            key: String(entry.song_key || ""),
+            chords: transposeChords(chordText, transposeAmount)
+          });
+        }
+
+        if (setlistPlayback !== playback || !printView) return;
+        printView.textContent = "";
+        const heading = document.createElement("h1");
+        heading.className = "setlist-print-title";
+        heading.textContent = playback.name || "Setlist";
+        printView.appendChild(heading);
+
+        printableSongs.forEach(function(song) {
+          const section = document.createElement("section");
+          section.className = "setlist-print-song";
+          const title = document.createElement("h2");
+          title.className = "setlist-print-song-title";
+          title.textContent = song.title;
+          const key = document.createElement("p");
+          key.className = "setlist-print-song-key";
+          key.textContent = "Saved Setlist Key: " + (song.key || "Not set");
+          const chords = document.createElement("pre");
+          chords.className = "setlist-print-chords";
+          chords.textContent = song.chords;
+          section.appendChild(title);
+          section.appendChild(key);
+          section.appendChild(chords);
+          printView.appendChild(section);
+        });
+
+        printView.setAttribute("aria-hidden", "false");
+        document.body.classList.add("setlist-printing");
+        cleanupPrintView = function() {
+          document.body.classList.remove("setlist-printing");
+          printView.setAttribute("aria-hidden", "true");
+          if (printButton) printButton.disabled = false;
+        };
+        window.addEventListener("afterprint", cleanupPrintView, { once: true });
+        window.print();
+        if (printButton) printButton.disabled = false;
+      } catch (error) {
+        console.error(error);
+        if (cleanupPrintView) window.removeEventListener("afterprint", cleanupPrintView);
+        document.body.classList.remove("setlist-printing");
+        printView.setAttribute("aria-hidden", "true");
+        if (printButton) printButton.disabled = false;
+        setlistMessage("Unable to prepare this setlist for printing. Please try again.", true);
+      }
+    }
+
     document.getElementById("createSetlistButton").addEventListener("click", createSetlist);
     document.getElementById("refreshSetlistsButton").addEventListener("click", loadSetlists);
     document.getElementById("closeSetlistButton").addEventListener("click", closeSetlistEditor);
@@ -5347,6 +5442,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     document.getElementById("playSetlistButton").addEventListener("click", playSetlist);
     document.getElementById("setlistPreviousButton").addEventListener("click", playSetlistPrevious);
     document.getElementById("setlistNextButton").addEventListener("click", playSetlistNext);
+    document.getElementById("printSetlistButton").addEventListener("click", printSetlist);
     document.getElementById("stopSetlistButton").addEventListener("click", stopSetlistPlayback);
     document.getElementById("setlistList").addEventListener("click", function(event) {
       const button = event.target.closest("[data-setlist-action]");
@@ -6657,17 +6753,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         }
 
         currentSong.chords = result.chords || "";
-        if (options && options.setlistPlayback === true && options.setlistKey) {
-          const originalKeyMatch = currentSong.chords.match(/^[ \t]*Key[ \t]*:[ \t]*([A-G](?:#|b)?)[ \t]*$/im);
-          const setlistKeyMatch = String(options.setlistKey).trim().match(/^([A-G](?:#|b)?)$/i);
-          if (originalKeyMatch && setlistKeyMatch) {
-            const normalizeKey = function(note) { return note.charAt(0).toUpperCase() + note.slice(1).toLowerCase(); };
-            const originalKeyNumber = noteToNumber(normalizeKey(originalKeyMatch[1]));
-            const setlistKeyNumber = noteToNumber(normalizeKey(setlistKeyMatch[1]));
-            if (originalKeyNumber !== undefined && setlistKeyNumber !== undefined) {
-              transposeAmount = setlistKeyNumber - originalKeyNumber;
-            }
-          }
+        if (options && options.setlistPlayback === true) {
+          transposeAmount = getSetlistKeyTransposeAmount(currentSong.chords, options.setlistKey);
         }
         hideChordAccessLocked();
         updateSong();

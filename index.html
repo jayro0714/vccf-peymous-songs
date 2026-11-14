@@ -657,6 +657,8 @@
     .setlist-player { flex-wrap:wrap; margin-top:10px; }
     .setlist-player-status, #setlistMessage { color:#94a3b8; font-size:14px; }
     .setlist-song-missing { color:#fbbf24; }
+    .setlist-song-key-field { display:flex; align-items:center; gap:6px; color:#bfdbfe; font-size:13px; font-weight:700; white-space:nowrap; }
+    .setlist-song-key-input { width:76px; min-width:0; margin:0; padding:7px 8px; border:1px solid #355678; border-radius:6px; background:#0f2038; color:#e2e8f0; font:inherit; font-size:14px; }
     #setlistPlaybackControls { display:none; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; margin:4px 0 16px; padding:10px; border:1px solid #294e79; border-radius:9px; background:rgba(17,31,53,.88); }
     #setlistPlaybackStatus { color:#93c5fd; font-size:14px; text-align:center; }
     .setlist-song-picker-trigger { width:100%; min-height:44px; padding:11px 14px; border:1px solid #355678; border-radius:8px; background:#0f2038; color:#e2e8f0; font:inherit; text-align:left; cursor:pointer; }
@@ -684,6 +686,7 @@
       .setlist-create-row, .setlist-add-row { flex-direction:column; }
       .setlist-create-row button, .setlist-add-row button { width:100%; }
       .setlist-card, .setlist-song-row { align-items:flex-start; }
+      .setlist-song-key-field { margin-left:auto; }
       .setlist-actions, .setlist-song-actions { width:100%; }
       .setlist-actions button, .setlist-song-actions button { flex:1; }
       .setlist-song-picker { max-height:90vh; max-height:90dvh; padding:13px; }
@@ -2494,6 +2497,10 @@
     body.light-mode #setlistPlaybackStatus {
       color: #475569 !important;
     }
+
+    body.light-mode .setlist-song-key-field { color: #475569; }
+    body.light-mode .setlist-song-key-input { background:#ffffff; color:#1e293b; border:1px solid #d7e0eb; }
+    body.light-mode .setlist-song-key-input::placeholder { color:#64748b; }
 
     body.light-mode #newSetlistName {
       background: #ffffff !important;
@@ -5064,7 +5071,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     async function loadSetlistSongs() {
       const requestedId = currentSetlistId;
       if (!requestedId) return;
-      const rows = await setlistRequest("/rest/v1/setlist_songs?select=id,setlist_id,song_id,position&setlist_id=eq." + encodeURIComponent(requestedId) + "&order=position.asc");
+      const rows = await setlistRequest("/rest/v1/setlist_songs?select=id,setlist_id,song_id,position,song_key&setlist_id=eq." + encodeURIComponent(requestedId) + "&order=position.asc");
       if (requestedId !== currentSetlistId) return;
       const entries = Array.isArray(rows) ? rows : [];
       const resolved = await Promise.all(entries.map(async function(entry) {
@@ -5167,7 +5174,9 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       list.innerHTML = currentSetlistSongs.map(function(entry, index) {
         const songId = escapeHtml(String(entry.song_id));
         return '<div class="setlist-song-row"><span class="setlist-song-name ' + (entry.found ? '' : 'setlist-song-missing') + '">' +
-          (index + 1) + '. ' + escapeHtml(entry.name) + '</span><div class="setlist-song-actions">' +
+          (index + 1) + '. ' + escapeHtml(entry.name) + '</span>' +
+          '<label class="setlist-song-key-field">Key <input type="text" class="setlist-song-key-input" maxlength="16" placeholder="—" value="' + escapeHtml(String(entry.song_key || "")) + '" data-setlist-song-key data-song-id="' + songId + '" aria-label="Key for ' + escapeHtml(entry.name) + '"></label>' +
+          '<div class="setlist-song-actions">' +
           '<button type="button" data-setlist-action="up" data-song-id="' + songId + '"' + (index === 0 ? ' disabled' : '') + '>↑</button>' +
           '<button type="button" data-setlist-action="down" data-song-id="' + songId + '"' + (index === currentSetlistSongs.length - 1 ? ' disabled' : '') + '>↓</button>' +
           '<button type="button" data-setlist-action="remove" data-song-id="' + songId + '">Remove</button></div></div>';
@@ -5189,6 +5198,35 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         document.getElementById("setlistSongPickerTrigger").textContent = "Choose a song to add…";
         setlistMessage("Song added.");
       } catch (error) { console.error(error); setlistMessage("Unable to add song. It may already be in this setlist.", true); }
+    }
+
+    async function saveSetlistSongKey(songId, value, input) {
+      const setlistId = currentSetlistId;
+      if (!setlistId || !songId) return;
+      const entry = currentSetlistSongs.find(function(item) { return String(item.song_id) === String(songId); });
+      if (!entry) return;
+      const originalKey = String(entry.song_key || "");
+      const songKey = String(value || "").trim();
+      if (songKey === originalKey.trim()) return;
+
+      try {
+        await setlistRequest(
+          "/rest/v1/setlist_songs?setlist_id=eq." + encodeURIComponent(setlistId) + "&song_id=eq." + encodeURIComponent(songId),
+          {
+            method: "PATCH",
+            headers: { "Prefer": "return=minimal" },
+            body: JSON.stringify({ song_key: songKey || null })
+          }
+        );
+        if (setlistId !== currentSetlistId) return;
+        entry.song_key = songKey || null;
+        setlistMessage(songKey ? "Key saved." : "Key cleared.");
+        if (setlistPlayback && setlistPlayback.id === setlistId) updateSetlistPlaybackControls();
+      } catch (error) {
+        console.error("Setlist song key save error:", error);
+        if (input) input.value = originalKey;
+        setlistMessage("Unable to save this key. Please try again.", true);
+      }
     }
 
     async function removeSongFromSetlist(songId) {
@@ -5232,7 +5270,9 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const index = setlistPlayback.index;
       document.getElementById("setlistPreviousButton").disabled = index <= 0;
       document.getElementById("setlistNextButton").disabled = index >= setlistPlayback.songs.length - 1;
-      document.getElementById("setlistPlaybackStatus").textContent = setlistPlayback.name + " · " + (index + 1) + " of " + setlistPlayback.songs.length;
+      const currentEntry = setlistPlayback.songs[index];
+      const keyLabel = currentEntry && currentEntry.song_key ? " · Key: " + currentEntry.song_key : "";
+      document.getElementById("setlistPlaybackStatus").textContent = setlistPlayback.name + " · " + (index + 1) + " of " + setlistPlayback.songs.length + keyLabel;
     }
 
     async function playSetlist() {
@@ -5254,7 +5294,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         const resolved = await resolveSetlistSong(entry.song_id);
         if (requestId !== setlistNavigationRequestId || !setlistPlayback) return;
         if (!resolved.found) { setlistMessage("This song is missing from the library.", true); return; }
-        openSong({ name: resolved.name }, { setlistPlayback: true });
+        openSong({ name: resolved.name }, { setlistPlayback: true, setlistKey: entry.song_key });
       } catch (error) { console.error(error); setlistMessage("Unable to resolve this setlist song.", true); }
     }
 
@@ -5323,6 +5363,11 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       if (button.dataset.setlistAction === "remove") removeSongFromSetlist(songId);
       if (button.dataset.setlistAction === "up") moveSetlistSong(songId, -1);
       if (button.dataset.setlistAction === "down") moveSetlistSong(songId, 1);
+    });
+    document.getElementById("setlistSongList").addEventListener("change", function(event) {
+      const input = event.target.closest("[data-setlist-song-key]");
+      if (!input) return;
+      saveSetlistSongKey(input.getAttribute("data-song-id"), input.value, input);
     });
 
     function getWeekStartAndEnd() {
@@ -6612,6 +6657,18 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         }
 
         currentSong.chords = result.chords || "";
+        if (options && options.setlistPlayback === true && options.setlistKey) {
+          const originalKeyMatch = currentSong.chords.match(/^[ \t]*Key[ \t]*:[ \t]*([A-G](?:#|b)?)[ \t]*$/im);
+          const setlistKeyMatch = String(options.setlistKey).trim().match(/^([A-G](?:#|b)?)$/i);
+          if (originalKeyMatch && setlistKeyMatch) {
+            const normalizeKey = function(note) { return note.charAt(0).toUpperCase() + note.slice(1).toLowerCase(); };
+            const originalKeyNumber = noteToNumber(normalizeKey(originalKeyMatch[1]));
+            const setlistKeyNumber = noteToNumber(normalizeKey(setlistKeyMatch[1]));
+            if (originalKeyNumber !== undefined && setlistKeyNumber !== undefined) {
+              transposeAmount = setlistKeyNumber - originalKeyNumber;
+            }
+          }
+        }
         hideChordAccessLocked();
         updateSong();
         loadSongFeedback(currentSong);

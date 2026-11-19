@@ -2809,6 +2809,1368 @@
         line-height: 1.72 !important;
       }
     }
+    /* =====================================================
+       JAYRO CHORDS UI SYSTEM
+       Visual layer only: existing IDs, data hooks, and handlers stay intact.
+    ===================================================== */
+    :root {
+      --jc-page: #091523;
+      --jc-header: #0b1a2b;
+      --jc-surface: #102237;
+      --jc-surface-raised: #142b42;
+      --jc-surface-soft: #1a344f;
+      --jc-sheet: #0b1928;
+      --jc-text: #edf3f9;
+      --jc-muted: #a6b6c8;
+      --jc-subtle: #8094aa;
+      --jc-border: rgba(160, 184, 210, .18);
+      --jc-input: #0b1928;
+      --jc-accent: #3478e5;
+      --jc-accent-hover: #4789f1;
+      --jc-accent-soft: rgba(52, 120, 229, .15);
+      --jc-gold: #e5bc69;
+      --jc-danger: #d76868;
+      --jc-shadow: 0 18px 48px rgba(0, 0, 0, .28);
+      --jc-radius-sm: 9px;
+      --jc-radius-md: 14px;
+      --jc-radius-lg: 20px;
+    }
+
+    body.light-mode {
+      --jc-page: #f3f6fa;
+      --jc-header: #ffffff;
+      --jc-surface: #ffffff;
+      --jc-surface-raised: #f8fafc;
+      --jc-surface-soft: #edf2f7;
+      --jc-sheet: #fffefa;
+      --jc-text: #172334;
+      --jc-muted: #526276;
+      --jc-subtle: #66788d;
+      --jc-border: #d7e0e9;
+      --jc-input: #ffffff;
+      --jc-accent: #245fce;
+      --jc-accent-hover: #174da9;
+      --jc-accent-soft: rgba(36, 95, 206, .09);
+      --jc-gold: #95691e;
+      --jc-danger: #b93e47;
+      --jc-shadow: 0 14px 36px rgba(23, 35, 52, .09);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--jc-page);
+      color: var(--jc-text);
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      line-height: 1.5;
+    }
+    button, input, textarea, select { font: inherit; }
+    button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
+    button:disabled { opacity: .55; cursor: not-allowed; box-shadow: none !important; }
+    :focus-visible { outline: 3px solid rgba(73, 145, 255, .72); outline-offset: 2px; }
+
+    #loginPage, #requestPage, #homePage, #songPage {
+      background: var(--jc-page) !important;
+      color: var(--jc-text) !important;
+    }
+    #loginPage, #requestPage { padding: clamp(16px, 4vw, 40px); }
+    .login-box, .request-box {
+      width: min(100%, 460px);
+      padding: clamp(24px, 4vw, 40px);
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-lg);
+      background: var(--jc-surface);
+      color: var(--jc-text);
+      box-shadow: var(--jc-shadow);
+      text-align: left;
+    }
+    .login-box { text-align: center; }
+    .login-box h1, .request-box h1 { color: var(--jc-text); letter-spacing: -.035em; }
+    .login-subtitle, .request-subtitle { color: var(--jc-muted); }
+    .login-logo { width: 84px; height: 84px; margin-bottom: 20px; }
+    .login-input, .request-input, .request-textarea,
+    .feedback-comment-input, #search, #songSearch,
+    #adminSongsPanel input, #adminSongsPanel textarea, #adminSongsPanel select {
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-sm);
+      background: var(--jc-input);
+      color: var(--jc-text);
+      box-shadow: none;
+    }
+    .login-input:focus, .request-input:focus, .request-textarea:focus,
+    .feedback-comment-input:focus, #search:focus, #songSearch:focus,
+    #adminSongsPanel input:focus, #adminSongsPanel textarea:focus {
+      border-color: var(--jc-accent);
+      box-shadow: 0 0 0 3px var(--jc-accent-soft);
+      outline: none;
+    }
+    .login-input::placeholder, .request-input::placeholder,
+    .request-textarea::placeholder, #search::placeholder, #songSearch::placeholder {
+      color: var(--jc-subtle);
+    }
+    .login-button, .submit-request, .home-search-button, .feedback-submit,
+    .view-chords-button, .setlist-actions button, .setlist-song-actions button,
+    .setlist-player button, #setlistPlaybackControls button {
+      min-height: 42px;
+      border: 1px solid var(--jc-accent);
+      border-radius: 10px;
+      background: var(--jc-accent);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: none;
+      transition: background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+    .login-button:hover, .submit-request:hover, .home-search-button:hover,
+    .feedback-submit:hover, .view-chords-button:hover,
+    .setlist-actions button:hover, .setlist-song-actions button:hover,
+    .setlist-player button:hover, #setlistPlaybackControls button:hover {
+      background: var(--jc-accent-hover);
+      border-color: var(--jc-accent-hover);
+    }
+    .request-button, .logout-button, .song-page-logout,
+    #themeToggleDesktop, #themeToggleSongDesktop, .theme-toggle-mobile,
+    .mobile-nav-toggle, .admin-mobile-nav-toggle, .back,
+    .transpose button, .show-password-button,
+    .setlist-editor-heading button, .setlists-heading button,
+    #adminSongsPanel .logout-button {
+      border: 1px solid var(--jc-border);
+      border-radius: 10px;
+      background: var(--jc-surface-raised);
+      color: var(--jc-text);
+      font-weight: 650;
+      box-shadow: none;
+    }
+    .request-button:hover, .logout-button:hover, .song-page-logout:hover,
+    .back:hover, .transpose button:hover, #adminSongsPanel .logout-button:hover {
+      background: var(--jc-surface-soft);
+      border-color: var(--jc-border);
+      color: var(--jc-text);
+    }
+    .login-divider { color: var(--jc-subtle); }
+    .login-divider::before, .login-divider::after { background: var(--jc-border); }
+    .no-access-yet, .login-message, .request-label { color: var(--jc-muted); }
+    .back-login { color: var(--jc-accent); }
+
+    .home-header, .song-page-header {
+      position: sticky;
+      top: 0;
+      z-index: 120;
+      min-height: 76px;
+      padding: 10px clamp(16px, 4vw, 56px);
+      border-bottom: 1px solid var(--jc-border);
+      background: var(--jc-header) !important;
+      color: var(--jc-text);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .08);
+    }
+    .home-brand, .song-page-brand { gap: 12px; }
+    .home-brand-logo { width: 56px; height: 56px; }
+    .home-brand-name, .song-page-brand-name {
+      color: var(--jc-text) !important;
+      font-size: 21px;
+      letter-spacing: -.035em;
+    }
+    .home-brand-subtitle, .song-page-brand-subtitle { color: var(--jc-gold) !important; }
+    .home-header-actions { display: flex; align-items: center; gap: 8px !important; }
+    #homePrimaryNav { display: flex; align-items: center; gap: 8px; margin: 0 auto 0 clamp(18px, 4vw, 72px); }
+    .home-primary-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 0 13px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: var(--jc-muted);
+      font-size: 14px;
+      font-weight: 650;
+      text-decoration: none;
+      transition: color .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .home-primary-nav a:hover, .home-primary-nav a:focus-visible {
+      border-color: var(--jc-border);
+      background: var(--jc-surface-raised);
+      color: var(--jc-text);
+    }
+    .home-header-actions .logout-button { min-height: 42px; padding: 0 14px; }
+
+    .home-layout {
+      width: min(100%, 1480px);
+      grid-template-columns: minmax(210px, 250px) minmax(0, 1fr);
+      gap: clamp(22px, 3vw, 40px);
+      padding: 32px clamp(18px, 3.5vw, 52px) 56px;
+    }
+    .home-sidebar {
+      position: sticky;
+      top: 100px;
+      padding: 20px;
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-md);
+      background: var(--jc-surface);
+      color: var(--jc-muted);
+      box-shadow: var(--jc-shadow);
+    }
+    .home-sidebar-title, .home-sidebar-symbol-title { color: var(--jc-gold); }
+    .home-sidebar-divider { background: var(--jc-border); }
+    .home-main-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 22px;
+      padding: 0;
+      text-align: left;
+    }
+    .home-main { display: flex; flex-direction: column; }
+    .home-main-heading { order: 0; }
+    .home-search { order: 1; }
+    #homeSongAlphabet { order: 2; }
+    #songs { order: 3; }
+    #message { order: 4; }
+    #setlistsPanel { order: 5; }
+    .home-main-title { min-width: 0; }
+    #homeSongLibrary, #setlistsPanel { scroll-margin-top: 90px; }
+    .home-main-heading h1 {
+      margin: 0;
+      color: var(--jc-text);
+      font-size: clamp(25px, 2.5vw, 32px);
+      letter-spacing: -.04em;
+      line-height: 1.15;
+    }
+    .home-main-subtitle { margin: 7px 0 0; color: var(--jc-muted); font-size: 14px; }
+    .home-main-heading p { color: var(--jc-muted); }
+    .home-welcome {
+      position: static;
+      flex: 0 0 auto;
+      padding: 7px 11px;
+      border: 1px solid var(--jc-border);
+      border-radius: 999px;
+      background: var(--jc-surface);
+      color: var(--jc-muted);
+      font-size: 13px;
+    }
+    .home-search {
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 5px;
+      border: 1px solid var(--jc-border);
+      border-radius: 12px;
+      background: var(--jc-surface);
+      box-shadow: 0 5px 18px rgba(0, 0, 0, .08);
+    }
+    #search { min-height: 48px; padding: 12px 14px; font-size: 15px; }
+    .home-search-button { min-height: 46px; padding: 0 22px; }
+    #songs { display: grid; gap: 8px; margin: 0 0 22px; }
+    .song {
+      min-height: 58px;
+      margin: 0;
+      padding: 10px 12px 10px 16px;
+      border: 1px solid var(--jc-border);
+      border-radius: 11px;
+      background: var(--jc-surface);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .song:hover { border-color: rgba(73, 145, 255, .55); background: var(--jc-surface-raised); transform: translateY(-1px); }
+    .song-name { color: var(--jc-text); font-size: 15px; font-weight: 650; }
+    .view-chords-button { min-height: 40px; padding: 0 14px; font-size: 13px; }
+    .song-alphabet {
+      gap: 3px;
+      margin: 12px 0 16px;
+      padding: 7px;
+      border: 1px solid var(--jc-border);
+      border-radius: 11px;
+      background: var(--jc-surface);
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+    }
+    .song-alphabet button {
+      min-width: 30px;
+      min-height: 36px;
+      padding: 4px 5px;
+      flex: 0 0 auto;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--jc-muted);
+      font-weight: 650;
+    }
+    .song-alphabet button:hover { background: var(--jc-surface-soft); color: var(--jc-text); }
+    .song-alphabet button.active { background: var(--jc-accent); border-color: var(--jc-accent); color: #fff; }
+    #message { margin: 20px 0; padding: 16px; color: var(--jc-muted); }
+
+    #setlistsPanel, #setlistPlaybackControls {
+      width: 100%;
+      padding: 20px;
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-md);
+      background: var(--jc-surface);
+      color: var(--jc-text);
+      box-shadow: var(--jc-shadow);
+    }
+    .setlists-heading { margin-bottom: 16px; }
+    .setlists-heading h2 { color: var(--jc-text); font-size: 20px; letter-spacing: -.025em; }
+    .setlist-create-row { align-items: stretch; gap: 10px; }
+    .setlist-create-row input { min-height: 46px; margin: 0; padding: 11px 14px; }
+    .setlist-create-row button { min-height: 46px; padding: 0 18px; }
+    #setlistList, #setlistSongList { gap: 9px; }
+    .setlist-card, .setlist-song-row {
+      min-height: 56px;
+      padding: 12px 14px;
+      border: 1px solid var(--jc-border);
+      border-radius: 11px;
+      background: var(--jc-surface-raised);
+      color: var(--jc-text);
+    }
+    .setlist-card-name, .setlist-song-name { color: var(--jc-text); font-weight: 650; }
+    .setlist-actions, .setlist-song-actions { gap: 7px; }
+    .setlist-actions button, .setlist-song-actions button, .setlist-player button,
+    #setlistPlaybackControls button { min-height: 40px; padding: 0 12px; }
+    .setlist-actions button:not(:first-child), .setlist-song-actions button {
+      border-color: var(--jc-border);
+      background: var(--jc-surface-soft);
+      color: var(--jc-text);
+    }
+    .setlist-actions button:not(:first-child):hover, .setlist-song-actions button:hover {
+      border-color: var(--jc-border);
+      background: var(--jc-surface-raised);
+      color: var(--jc-text);
+    }
+    #setlistEditor { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--jc-border); }
+    .setlist-editor-heading { margin-bottom: 12px; }
+    .setlist-editor-heading h3 { color: var(--jc-text); }
+    .setlist-song-key-field { color: var(--jc-muted); }
+    .setlist-song-key-input { min-height: 40px; border: 1px solid var(--jc-border); border-radius: 8px; background: var(--jc-input); color: var(--jc-text); }
+    .setlist-player-status, #setlistMessage, #setlistPlaybackStatus { color: var(--jc-muted); }
+    .setlist-song-missing { color: var(--jc-gold); }
+    .setlist-song-picker-trigger { min-height: 44px; border-color: var(--jc-border); border-radius: 10px; background: var(--jc-surface-raised); color: var(--jc-text); }
+    .setlist-song-picker { border-color: var(--jc-border); border-radius: 16px; background: var(--jc-surface); color: var(--jc-text); box-shadow: var(--jc-shadow); }
+    .setlist-song-picker-heading h3 { color: var(--jc-text); }
+    #setlistSongPickerSearch { border-color: var(--jc-border); border-radius: 10px; background: var(--jc-input); color: var(--jc-text); }
+    #setlistSongPickerSearch::placeholder, .setlist-song-picker-empty { color: var(--jc-subtle); }
+    .setlist-song-picker-option { min-height: 48px; border-color: var(--jc-border); border-radius: 10px; background: var(--jc-surface-raised); color: var(--jc-text); }
+
+    #songPage {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0 0 42px;
+      color: var(--jc-text);
+    }
+    .song-page-header { width: 100%; margin: 0 0 28px; border-radius: 0; }
+    .song-page-header-actions { gap: 8px; }
+    .song-page-logout { min-height: 42px; padding: 0 15px; }
+    .song-navigation { grid-template-columns: auto minmax(280px, 420px); gap: 14px; margin-bottom: 22px; }
+    .back { min-height: 44px; padding: 0 15px; text-decoration: none; }
+    #songSearch { min-height: 46px; padding: 10px 14px; }
+    #songSearchResults { border: 1px solid var(--jc-border); border-radius: 11px; background: var(--jc-surface); color: var(--jc-text); }
+    .song-search-result { min-height: 44px; padding: 11px 14px; border-bottom-color: var(--jc-border); color: var(--jc-text); }
+    .song-search-result:hover { background: var(--jc-surface-soft); }
+    #songTitle { margin: 0 0 20px; color: var(--jc-text); font-size: clamp(28px, 4vw, 38px); letter-spacing: -.04em; }
+    #setlistPlaybackControls { min-height: 56px; margin: 0 0 18px; padding: 9px 12px; box-shadow: none; }
+    .transpose { min-height: 58px; margin: 0 0 16px; padding: 10px 14px; border: 1px solid var(--jc-border); border-radius: 11px; background: var(--jc-surface); box-shadow: none; }
+    .transpose span { color: var(--jc-muted); }
+    .transpose button { width: 42px; height: 42px; background: var(--jc-surface-raised); color: var(--jc-text); font-size: 21px; }
+    #chords {
+      min-height: 320px;
+      padding: clamp(18px, 3vw, 32px);
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-md);
+      background: var(--jc-sheet);
+      color: var(--jc-text);
+      box-shadow: var(--jc-shadow);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .song-feedback {
+      margin-top: 22px;
+      padding: 22px;
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-md);
+      background: var(--jc-surface);
+      color: var(--jc-text);
+      box-shadow: var(--jc-shadow);
+    }
+    .feedback-comments-heading { color: var(--jc-text); border-bottom-color: var(--jc-border); }
+    .feedback-comment { border-bottom-color: var(--jc-border); }
+    .feedback-comment-name, .feedback-comment-text { color: var(--jc-text); }
+    .feedback-comment-date, .feedback-empty, .feedback-message { color: var(--jc-muted); }
+    .site-footer { border-top-color: var(--jc-border); color: var(--jc-muted); }
+    .footer-brand { color: var(--jc-text); }
+    #songPage > .song-navigation, #songPage > #setlistPlaybackControls,
+    #songPage > #songTitle, #songPage > .transpose, #songPage > #chords,
+    #songPage > .song-feedback, #songPage > .site-footer {
+      width: min(1080px, calc(100% - 40px));
+      max-width: 1080px;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    #songRequestPanel {
+      border: 1px solid var(--jc-border) !important;
+      border-radius: var(--jc-radius-md) !important;
+      background: var(--jc-surface) !important;
+      color: var(--jc-text) !important;
+      box-shadow: var(--jc-shadow);
+    }
+
+    /* Manage becomes a full dashboard shell; tab IDs and JS navigation are unchanged. */
+    body.manage-open::before { background: rgba(4, 13, 24, .78); }
+    body.manage-open #adminSongsPanel {
+      display: grid !important;
+      position: fixed !important;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1480px, calc(100% - 32px)) !important;
+      max-width: 1480px !important;
+      height: calc(100vh - 32px);
+      max-height: calc(100vh - 32px);
+      margin: 0 !important;
+      padding: 24px;
+      overflow: auto;
+      grid-template-columns: 220px minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      align-content: start;
+      gap: 18px 24px;
+      border: 1px solid var(--jc-border) !important;
+      border-radius: 18px !important;
+      background: var(--jc-surface) !important;
+      color: var(--jc-text) !important;
+      box-shadow: var(--jc-shadow) !important;
+    }
+    #adminSongsPanel > div:first-child {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 !important;
+      padding: 0 0 16px;
+      border-bottom: 1px solid var(--jc-border);
+    }
+    #adminSongsPanel > div:first-child h2 { color: var(--jc-text); font-size: 22px !important; letter-spacing: -.03em; }
+    #adminManageTabs {
+      grid-column: 1;
+      grid-row: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 5px;
+      overflow: visible;
+      margin: 0;
+      padding: 0 14px 0 0;
+      border-right: 1px solid var(--jc-border);
+    }
+    #adminManageTabs button {
+      width: 100% !important;
+      min-height: 44px;
+      flex: 0 0 auto;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--jc-muted);
+      text-align: left;
+      white-space: normal;
+    }
+    #adminManageTabs button:hover { border-color: var(--jc-border); background: var(--jc-surface-raised); color: var(--jc-text); }
+    #adminManageTabs button.submit-request { border-color: var(--jc-accent-soft); background: var(--jc-accent-soft); color: var(--jc-accent); }
+    #adminSongsPanel > [id^="adminManage"][id$="Section"] {
+      grid-column: 2;
+      grid-row: 2;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      color: var(--jc-text);
+    }
+    #adminManageDashboardSection > div:first-child { color: var(--jc-text); }
+    #adminManageDashboardSection > div[style*="display:grid"] {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+      gap: 12px !important;
+    }
+    #adminManageDashboardSection > div[style*="display:grid"] > div {
+      min-height: 100px;
+      border: 1px solid var(--jc-border) !important;
+      border-radius: 12px !important;
+      background: var(--jc-surface-raised) !important;
+      color: var(--jc-text);
+    }
+    #adminManageDashboardSection > div[style*="display:grid"] > div > div:last-child { color: var(--jc-muted) !important; }
+    #adminSongsPanel .request-input, #adminSongsPanel .request-textarea,
+    #adminSongsPanel #adminSongName, #adminSongsPanel #adminSongChords,
+    #adminSongsPanel #adminSiteNote {
+      width: 100%;
+      max-width: 100%;
+      padding: 12px 14px;
+      border-color: var(--jc-border) !important;
+      border-radius: 10px;
+      background: var(--jc-input) !important;
+      color: var(--jc-text) !important;
+    }
+    #adminManageNoteSection > div { color: var(--jc-muted) !important; }
+    #adminSongFullscreenButton { min-height: 42px; width: auto !important; margin: 0 0 12px; }
+    #adminSongsPanel .submit-request, #adminSongsPanel .logout-button { min-height: 42px; padding: 0 14px; }
+    #adminSongList > div, #adminRequestList > div, #adminAccessList > div,
+    #adminFacebookList > div, #adminLoginList > div {
+      margin: 8px 0 !important;
+      padding: 12px !important;
+      border: 1px solid var(--jc-border) !important;
+      border-radius: 10px;
+      background: var(--jc-surface-raised) !important;
+      color: var(--jc-text);
+    }
+    .admin-setlists-table-wrap { border-color: var(--jc-border); border-radius: 12px; background: var(--jc-surface-raised); }
+    .admin-setlists-table th { background: var(--jc-surface-soft); color: var(--jc-text); }
+    .admin-setlists-table td { color: var(--jc-text); }
+    .admin-setlists-table th, .admin-setlists-table td { border-bottom-color: var(--jc-border); }
+
+    .mobile-nav-menu, .admin-mobile-nav-menu {
+      border: 1px solid var(--jc-border);
+      border-radius: 13px;
+      background: var(--jc-surface) !important;
+      box-shadow: var(--jc-shadow);
+    }
+    .mobile-nav-menu button, .admin-mobile-nav-menu button,
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--jc-text);
+      font-size: 14px;
+      font-weight: 650;
+      text-align: left;
+      text-decoration: none;
+    }
+    .mobile-nav-menu button:hover, .admin-mobile-nav-menu button:hover,
+    .mobile-nav-link:hover { background: var(--jc-accent-soft); color: var(--jc-accent); }
+    .mobile-nav-divider { background: var(--jc-border); }
+
+    body.light-mode #loginPage, body.light-mode #requestPage,
+    body.light-mode #homePage, body.light-mode #songPage { background: var(--jc-page) !important; color: var(--jc-text) !important; }
+    body.light-mode .login-box, body.light-mode .request-box,
+    body.light-mode .home-sidebar, body.light-mode #setlistsPanel,
+    body.light-mode #setlistPlaybackControls, body.light-mode .song,
+    body.light-mode .home-search, body.light-mode .song-alphabet,
+    body.light-mode .song-feedback, body.light-mode .transpose,
+    body.light-mode #chords, body.light-mode #songRequestPanel,
+    body.light-mode #adminSongsPanel {
+      border-color: var(--jc-border) !important;
+      background: var(--jc-surface) !important;
+      color: var(--jc-text) !important;
+      box-shadow: var(--jc-shadow) !important;
+    }
+    body.light-mode .home-header, body.light-mode .song-page-header { background: var(--jc-header) !important; border-color: var(--jc-border) !important; }
+    body.light-mode .home-brand-name, body.light-mode .home-main-heading h1,
+    body.light-mode .song-page-brand-name, body.light-mode #songTitle,
+    body.light-mode .setlists-heading h2, body.light-mode .setlist-editor-heading h3,
+    body.light-mode .setlist-card-name, body.light-mode .setlist-song-name,
+    body.light-mode .feedback-comments-heading { color: var(--jc-text) !important; }
+    body.light-mode .home-brand-subtitle, body.light-mode .song-page-brand-subtitle { color: var(--jc-gold) !important; }
+    body.light-mode .home-main-subtitle { color: var(--jc-muted) !important; }
+    body.light-mode .logout-button, body.light-mode .request-button,
+    body.light-mode .song-page-logout, body.light-mode #themeToggleDesktop,
+    body.light-mode #themeToggleSongDesktop, body.light-mode .theme-toggle-mobile,
+    body.light-mode .mobile-nav-toggle, body.light-mode .admin-mobile-nav-toggle,
+    body.light-mode .back, body.light-mode .transpose button,
+    body.light-mode .show-password-button, body.light-mode .setlist-editor-heading button,
+    body.light-mode .setlists-heading button {
+      border-color: var(--jc-border) !important;
+      background: var(--jc-surface-raised) !important;
+      color: var(--jc-text) !important;
+      box-shadow: none !important;
+    }
+    body.light-mode #adminManageTabs button.logout-button {
+      border-color: transparent !important;
+      background: transparent !important;
+      color: var(--jc-muted) !important;
+    }
+    body.light-mode #adminManageTabs button.logout-button:hover {
+      border-color: var(--jc-border) !important;
+      background: var(--jc-surface-raised) !important;
+      color: var(--jc-text) !important;
+    }
+    body.light-mode #adminManageTabs button.submit-request {
+      border-color: var(--jc-accent-soft) !important;
+      background: var(--jc-accent-soft) !important;
+      color: var(--jc-accent) !important;
+    }
+    body.light-mode .login-input, body.light-mode .request-input, body.light-mode .request-textarea,
+    body.light-mode .feedback-comment-input, body.light-mode #search, body.light-mode #songSearch,
+    body.light-mode #adminSongsPanel input, body.light-mode #adminSongsPanel textarea,
+    body.light-mode #adminSongsPanel select, body.light-mode #adminSongName, body.light-mode #adminSongChords,
+    body.light-mode #adminSiteNote, body.light-mode .setlist-song-key-input {
+      border-color: var(--jc-border) !important;
+      background: var(--jc-input) !important;
+      color: var(--jc-text) !important;
+    }
+    body.light-mode .home-welcome, body.light-mode .home-sidebar,
+    body.light-mode .home-main-heading p, body.light-mode .setlist-player-status,
+    body.light-mode #setlistMessage, body.light-mode #setlistPlaybackStatus,
+    body.light-mode .feedback-comment-text, body.light-mode .feedback-comment-name,
+    body.light-mode .feedback-comment-date, body.light-mode .feedback-message { color: var(--jc-muted) !important; }
+    body.light-mode .setlist-card, body.light-mode .setlist-song-row,
+    body.light-mode #adminManageDashboardSection > div[style*="display:grid"] > div,
+    body.light-mode #adminSongList > div, body.light-mode #adminRequestList > div,
+    body.light-mode #adminAccessList > div, body.light-mode #adminFacebookList > div,
+    body.light-mode #adminLoginList > div { border-color: var(--jc-border) !important; background: var(--jc-surface-raised) !important; color: var(--jc-text) !important; }
+    body.light-mode .setlist-actions button:not(:first-child),
+    body.light-mode .setlist-song-actions button { border-color: var(--jc-border) !important; background: var(--jc-surface-soft) !important; color: var(--jc-text) !important; }
+    body.light-mode .setlist-song-picker-trigger, body.light-mode .setlist-song-picker,
+    body.light-mode #setlistSongPickerSearch, body.light-mode .setlist-song-picker-option {
+      border-color: var(--jc-border) !important;
+      background: var(--jc-surface-raised) !important;
+      color: var(--jc-text) !important;
+    }
+    body.light-mode .setlist-song-picker { background: var(--jc-surface) !important; }
+    body.light-mode .mobile-nav-menu, body.light-mode .admin-mobile-nav-menu { background: var(--jc-surface) !important; border-color: var(--jc-border) !important; }
+    body.light-mode .mobile-nav-menu button, body.light-mode .admin-mobile-nav-menu button,
+    body.light-mode .mobile-nav-link { color: var(--jc-text) !important; }
+    body.light-mode .mobile-nav-menu button:hover, body.light-mode .admin-mobile-nav-menu button:hover,
+    body.light-mode .mobile-nav-link:hover { background: var(--jc-accent-soft) !important; color: var(--jc-accent) !important; }
+    body.light-mode .song-alphabet button { background: transparent !important; border-color: transparent !important; color: var(--jc-muted) !important; }
+    body.light-mode .song-alphabet button.active { background: var(--jc-accent) !important; border-color: var(--jc-accent) !important; color: #fff !important; }
+    body.light-mode .transpose span, body.light-mode #message { color: var(--jc-muted) !important; }
+    body.light-mode #chords { color: #172334 !important; }
+    body.light-mode .admin-setlists-table th { background: var(--jc-surface-soft) !important; color: var(--jc-text) !important; }
+    body.light-mode .admin-setlists-table td { color: var(--jc-text) !important; }
+
+    @media (max-width: 1100px) {
+      .home-layout { grid-template-columns: 210px minmax(0, 1fr); gap: 22px; }
+      .home-primary-nav { margin-left: 16px !important; }
+    }
+    @media (max-width: 900px) {
+      .home-header { min-height: 70px; padding: 8px 14px; }
+      .home-header-actions, .home-primary-nav { display: none !important; }
+      .home-brand-logo { width: 48px; height: 48px; }
+      .home-brand-name { font-size: 18px; }
+      .home-brand-subtitle { font-size: 11px; }
+      .home-layout { display: block; padding: 24px 18px 38px; }
+      .home-sidebar { display: none !important; }
+      .home-main-heading { align-items: flex-start; flex-direction: column; gap: 9px; }
+      .home-welcome { align-self: flex-start; }
+      .song-page-header { padding: 8px 14px; }
+      body.manage-open #adminSongsPanel {
+        top: 0 !important;
+        left: 0;
+        transform: none;
+        width: 100% !important;
+        max-width: none !important;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        padding: 16px 14px;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        gap: 12px;
+        border-radius: 0 !important;
+      }
+      #adminSongsPanel > div:first-child { grid-column: 1; position: sticky; top: 0; z-index: 3; padding-bottom: 12px; background: var(--jc-surface); }
+      #adminManageTabs { display: none !important; }
+      .admin-mobile-nav-wrap { display: block !important; position: relative; margin-left: auto; }
+      #adminSongsPanel > [id^="adminManage"][id$="Section"] { grid-column: 1; grid-row: 3; }
+    }
+    @media (max-width: 600px) {
+      #loginPage, #requestPage { padding: 16px; }
+      .login-box, .request-box { padding: 26px 22px; border-radius: 17px; }
+      .login-box h1 { font-size: 26px; }
+      .home-layout { padding: 20px 14px 32px; }
+      .home-main-heading h1 { font-size: 24px; }
+      .home-search { gap: 4px; }
+      #search { min-width: 0; padding: 10px 11px; font-size: 14px; }
+      .home-search-button { min-height: 44px; padding: 0 14px; }
+      .song-alphabet { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; }
+      .song-alphabet button { min-width: 36px; min-height: 38px; flex: 0 0 auto; }
+      .song { flex-wrap: wrap; gap: 8px; padding: 10px 11px; }
+      .song-name { flex: 1 1 150px; }
+      .view-chords-button { display: inline-flex !important; min-height: 40px; padding: 0 11px; }
+      #setlistsPanel { padding: 15px; }
+      .setlists-heading { align-items: flex-start; }
+      .setlist-card, .setlist-song-row { align-items: flex-start; }
+      .setlist-actions, .setlist-song-actions { width: 100%; }
+      .setlist-actions button, .setlist-song-actions button { flex: 1; min-height: 44px; }
+      .setlist-song-key-field { margin-left: 0; }
+      .setlist-create-row { display: grid; grid-template-columns: minmax(0, 1fr); }
+      .setlist-create-row button { width: 100%; }
+      #songPage { width: 100%; padding-bottom: 24px; }
+      .song-page-header { min-height: 66px; margin-bottom: 18px; }
+      .song-page-brand-logo { width: 44px; height: 44px; }
+      .song-page-brand-name { font-size: 17px; }
+      .song-page-brand-subtitle { font-size: 10px; }
+      .song-page-logout { min-height: 40px; padding: 0 10px; font-size: 12px; }
+      #setlistPlaybackControls { flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px; }
+      #setlistPlaybackStatus { order: -1; flex: 1 1 100%; text-align: center; }
+      #setlistPlaybackControls button { min-width: 0; flex: 1 1 calc(50% - 8px); padding: 0 8px; }
+      .song-navigation { grid-template-columns: minmax(0, 1fr); gap: 9px; margin-bottom: 18px; }
+      .back { width: 100%; }
+      #songTitle { font-size: 28px; }
+      .transpose { justify-content: flex-start; }
+      #chords { min-height: 0; padding: 18px 14px; font-size: 15px; line-height: 1.72; overflow-wrap: anywhere; }
+      .song-feedback { padding: 16px; }
+      #adminSongsPanel > div:first-child h2 { font-size: 19px !important; }
+      #adminManageDashboardSection > div[style*="display:grid"] { grid-template-columns: minmax(0, 1fr) !important; }
+      #adminSongsPanel input, #adminSongsPanel textarea { font-size: 16px; }
+      #adminSongsPanel .submit-request, #adminSongsPanel .logout-button { min-height: 44px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+    /* =====================================================
+       STRUCTURAL PRODUCT LAYOUT
+       Library = Explore · Setlists/Manage = Operate · Song Reader = Command/Inspect
+    ===================================================== */
+    #homePage {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 0;
+      background: var(--jc-page);
+    }
+    .home-header {
+      display: grid !important;
+      grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      min-height: 76px;
+      padding: 10px clamp(22px, 4vw, 64px);
+      box-shadow: none;
+    }
+    .home-brand { min-width: 0; }
+    .home-primary-nav, #homePrimaryNav {
+      display: flex !important;
+      justify-self: center;
+      align-items: center;
+      gap: 6px;
+      margin: 0 !important;
+    }
+    #homePrimaryNav a {
+      min-height: 42px;
+      padding: 0 15px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: var(--jc-muted);
+      font-size: 14px;
+      font-weight: 650;
+      text-decoration: none;
+      transition: background .16s ease, color .16s ease;
+    }
+    #homePrimaryNav a:hover { background: var(--jc-surface-raised); color: var(--jc-text); }
+    #homePrimaryNav a[aria-current="page"] { background: var(--jc-accent-soft); color: var(--jc-accent); }
+    .home-header-actions { justify-self: end; }
+    .home-header-actions button, .song-page-header-actions button { min-height: 42px; }
+    .app-view { width: 100%; min-width: 0; flex: 1 0 auto; }
+    #libraryView, #setlistsView {
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 34px clamp(24px, 5vw, 72px) 64px;
+    }
+    #libraryView .home-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      grid-template-areas: "main note";
+      align-items: start;
+      gap: 32px;
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+    #libraryView .home-main { grid-area: main; width: 100%; min-width: 0; }
+    #libraryView .home-sidebar {
+      grid-area: note;
+      display: block;
+      position: sticky;
+      top: 100px;
+      width: 100%;
+      min-height: 0;
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-md);
+      background: var(--jc-surface);
+      color: var(--jc-muted);
+      text-align: left;
+    }
+    #libraryView .home-sidebar:has(#siteNoteDisplay:empty) { display: none; }
+    #libraryView .home-layout:has(#siteNoteDisplay:empty) { grid-template-columns: minmax(0, 1fr); }
+    #libraryView .home-main > .home-search { order: 1; }
+    #libraryView .home-main > #homeSongAlphabet { order: 2; }
+    #libraryView .home-main > .library-result-bar { order: 3; }
+    #libraryView .home-main > #songs { order: 4; }
+    #libraryView .home-main > #message { order: 5; }
+    .home-main-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin: 0 0 24px;
+      padding: 0;
+      text-align: left;
+    }
+    .home-main-heading h1 {
+      color: var(--jc-text);
+      font-size: clamp(30px, 3vw, 42px);
+      font-weight: 740;
+      letter-spacing: -.045em;
+      line-height: 1.08;
+    }
+    .home-main-heading p { max-width: 560px; margin: 9px 0 0; color: var(--jc-muted); font-size: 15px; }
+    .home-welcome { color: var(--jc-muted); font-size: 13px; text-align: right; }
+    .home-search {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      width: 100%;
+      margin: 0 0 16px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    #search { width: 100%; min-height: 52px; padding: 0 16px; font-size: 15px; }
+    #searchButton { min-width: 94px; min-height: 52px; padding: 0 20px; }
+    .song-alphabet {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      width: 100%;
+      margin: 0;
+      padding: 8px 0 12px;
+      border: 0;
+      border-bottom: 1px solid var(--jc-border);
+      border-radius: 0;
+      background: transparent;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .song-alphabet button {
+      flex: 0 0 auto;
+      min-width: 34px;
+      min-height: 38px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--jc-muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .song-alphabet button:hover { background: var(--jc-surface-raised); color: var(--jc-text); }
+    .song-alphabet button.active { background: var(--jc-accent); color: #fff; }
+    .library-result-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      min-height: 46px;
+      color: var(--jc-muted);
+      font-size: 13px;
+    }
+    .clear-search-button {
+      display: none;
+      min-height: 36px;
+      padding: 0 10px;
+      border: 1px solid var(--jc-border);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--jc-muted);
+      cursor: pointer;
+    }
+    .clear-search-button:hover { background: var(--jc-surface-raised); color: var(--jc-text); }
+    #songs {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
+      border-top: 1px solid var(--jc-border);
+    }
+    #songs .song {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      min-height: 60px;
+      margin: 0;
+      padding: 8px 10px 8px 4px;
+      border: 0;
+      border-bottom: 1px solid var(--jc-border);
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      text-align: left;
+      cursor: pointer;
+      counter-increment: catalog-row;
+    }
+    #songs { counter-reset: catalog-row; }
+    #songs .song::before { content: counter(catalog-row, decimal-leading-zero); color: var(--jc-subtle); font-size: 12px; font-variant-numeric: tabular-nums; }
+    #songs .song:hover { background: var(--jc-accent-soft); }
+    #songs .song-name { min-width: 0; color: var(--jc-text); font-size: 15px; font-weight: 610; overflow-wrap: anywhere; }
+    #songs .view-chords-button {
+      min-width: 120px;
+      min-height: 40px;
+      border: 1px solid var(--jc-border);
+      border-radius: 8px;
+      background: var(--jc-surface-raised);
+      color: var(--jc-text);
+      font-size: 13px;
+      font-weight: 650;
+      box-shadow: none;
+    }
+    #songs .view-chords-button:hover { border-color: var(--jc-accent); background: var(--jc-accent); color: #fff; }
+    #message { min-height: 44px; margin: 12px 0 0; padding: 12px 0; color: var(--jc-muted); text-align: left; }
+
+    #setlistsView { max-width: 1160px; padding-top: 46px; }
+    #setlistsPanel {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--jc-text);
+      box-shadow: none;
+    }
+    .view-eyebrow { color: var(--jc-gold); font-size: 11px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; }
+    .setlists-heading {
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin: 0 0 28px;
+      padding: 0 0 22px;
+      border-bottom: 1px solid var(--jc-border);
+    }
+    .setlists-heading h1 { margin: 8px 0 0; color: var(--jc-text); font-size: clamp(32px, 3.5vw, 46px); letter-spacing: -.045em; line-height: 1.08; }
+    .setlists-intro { max-width: 610px; margin: 10px 0 0; color: var(--jc-muted); font-size: 15px; }
+    .setlist-create-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      max-width: 760px;
+      margin: 0 0 18px;
+      padding: 16px;
+      border: 1px solid var(--jc-border);
+      border-radius: var(--jc-radius-md);
+      background: var(--jc-surface);
+    }
+    .setlist-create-row input { min-height: 48px; margin: 0; }
+    .setlist-create-row button { min-height: 48px; padding: 0 20px; }
+    #setlistMessage { min-height: 24px; margin: 8px 0 14px; color: var(--jc-muted); }
+    #setlistList { display: grid; gap: 0; max-width: 900px; border-top: 1px solid var(--jc-border); }
+    .setlist-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      min-height: 74px;
+      padding: 12px 8px;
+      border: 0;
+      border-bottom: 1px solid var(--jc-border);
+      border-radius: 0;
+      background: transparent;
+    }
+    .setlist-card-name { color: var(--jc-text); font-size: 16px; font-weight: 660; }
+    .setlist-actions { justify-content: end; gap: 7px; }
+    .setlist-actions button { min-height: 40px; padding: 0 12px; }
+    .setlist-actions button:not(:first-child) { border-color: var(--jc-border); background: transparent; color: var(--jc-muted); }
+    #setlistEditor {
+      max-width: 1040px;
+      margin-top: 30px;
+      padding: 24px 0 0;
+      border-top: 1px solid var(--jc-border);
+    }
+    .setlist-editor-heading { margin-bottom: 18px; }
+    .setlist-editor-heading h3 { color: var(--jc-text); font-size: 25px; letter-spacing: -.03em; }
+    .setlist-add-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; margin-bottom: 16px; }
+    .setlist-song-picker-trigger { min-height: 48px; border-radius: 9px; }
+    .setlist-song-row { min-height: 58px; border-color: var(--jc-border); border-radius: 9px; background: var(--jc-surface); }
+    .setlist-player { justify-content: flex-start; margin-top: 18px; }
+    #setlistPlaybackControls { max-width: 1040px; border-color: var(--jc-border); border-radius: 10px; background: var(--jc-surface); }
+    #setlistPlaybackStatus { color: var(--jc-muted); }
+
+    #memberBottomNav { display: none; }
+
+    /* Focused chord reader */
+    #songPage {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 0 0 48px;
+      background: var(--jc-page);
+      color: var(--jc-text);
+    }
+    .song-page-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%; margin: 0; padding: 10px clamp(22px, 4vw, 64px); }
+    .song-page-header-actions { display: flex; align-items: center; gap: 8px; }
+    .song-navigation {
+      display: grid;
+      grid-template-columns: auto minmax(220px, 360px);
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      width: min(100% - 48px, 1160px);
+      margin: 22px auto 8px;
+    }
+    #songReturnButton { display: inline-flex; justify-content: center; align-items: center; width: fit-content; min-height: 42px; padding: 0 13px; cursor: pointer; }
+    .song-search-container { width: 100%; }
+    #songSearch { min-height: 44px; padding: 0 13px; }
+    .song-reader-body { display: flex; flex-direction: column; gap: 0; width: min(100%, 1020px); margin: 0 auto; padding: 0 24px; }
+    #songTitle { margin: 22px 0 16px; color: var(--jc-text); font-size: clamp(34px, 4vw, 50px); font-weight: 750; letter-spacing: -.05em; line-height: 1.05; text-align: left; }
+    #setlistPlaybackControls { position: sticky; top: 82px; z-index: 20; justify-content: flex-start; gap: 8px; min-height: 54px; margin: 0 0 18px; padding: 8px; }
+    #setlistPlaybackControls button { min-height: 40px; }
+    #setlistPlaybackStatus { flex: 1 1 auto; text-align: center; }
+    .transpose {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      max-width: 100%;
+      min-height: 58px;
+      margin: 0 0 18px;
+      padding: 8px 12px;
+      border: 1px solid var(--jc-border);
+      border-radius: 10px;
+      background: var(--jc-surface);
+      box-shadow: none;
+    }
+    .transpose span { color: var(--jc-muted); font-size: 13px; font-weight: 700; }
+    .transpose output { min-width: 96px; color: var(--jc-text); font-size: 13px; font-variant-numeric: tabular-nums; text-align: center; }
+    .transpose button { width: auto; min-width: 42px; min-height: 42px; padding: 0 12px; }
+    .transpose button[onclick="resetTranspose()"] { min-width: 68px; }
+    #chords {
+      width: 100%;
+      max-width: 920px;
+      min-height: 0;
+      margin: 0 auto 28px;
+      padding: clamp(20px, 3vw, 38px);
+      border: 1px solid var(--jc-border);
+      border-radius: 12px;
+      background: var(--jc-sheet);
+      color: var(--jc-text);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: clamp(16px, 1.35vw, 19px);
+      line-height: 1.85;
+      overflow-x: auto;
+      overflow-wrap: normal;
+      white-space: pre-wrap;
+      tab-size: 4;
+    }
+    .song-feedback { width: 100%; max-width: 920px; margin: 4px auto 32px; padding: 22px; border: 1px solid var(--jc-border); border-radius: 12px; background: var(--jc-surface); }
+    .site-footer { width: min(100% - 48px, 1160px); margin: 0 auto; }
+
+    /* Dedicated Manage workspace */
+    #manageWorkspace { display: none; width: 100%; min-height: 100vh; min-height: 100dvh; background: var(--jc-page); color: var(--jc-text); }
+    body.manage-open { overflow-x: hidden; }
+    body.manage-open::before { display: none !important; content: none !important; }
+    body.manage-open #adminSongsPanel.is-open {
+      display: grid !important;
+      position: relative !important;
+      inset: auto !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      transform: none !important;
+      grid-template-columns: 236px minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      align-content: start;
+      gap: 0;
+      width: min(100%, 1600px) !important;
+      max-width: none !important;
+      min-height: 100vh;
+      min-height: 100dvh;
+      max-height: none !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: var(--jc-page) !important;
+      color: var(--jc-text) !important;
+      box-shadow: none !important;
+    }
+    #adminSongsPanel > .admin-workspace-header {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 92px;
+      margin: 0 !important;
+      padding: 16px clamp(22px, 4vw, 56px) !important;
+      border-bottom: 1px solid var(--jc-border);
+      background: var(--jc-header);
+    }
+    .admin-workspace-title h2 { margin: 4px 0 0 !important; color: var(--jc-text); font-size: 23px !important; letter-spacing: -.035em; }
+    .admin-workspace-title p { margin: 3px 0 0; color: var(--jc-muted); font-size: 13px; }
+    #adminCloseSongsButton { min-width: 96px; min-height: 42px; }
+    #adminManageTabs {
+      grid-column: 1;
+      grid-row: 2;
+      display: flex !important;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      align-self: stretch;
+      margin: 0;
+      padding: 22px 12px;
+      border-right: 1px solid var(--jc-border);
+      background: var(--jc-surface);
+    }
+    #adminManageTabs button {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100% !important;
+      min-height: 44px;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--jc-muted);
+      font-size: 14px;
+      font-weight: 630;
+      text-align: left;
+      box-shadow: none;
+    }
+    #adminManageTabs button:hover { border-color: var(--jc-border); background: var(--jc-surface-raised); color: var(--jc-text); }
+    #adminManageTabs button[aria-current="page"] { border-color: var(--jc-accent-soft); background: var(--jc-accent-soft); color: var(--jc-accent); }
+    body.manage-open #adminSongsPanel > [id^="adminManage"][id$="Section"] {
+      grid-column: 2;
+      grid-row: 2;
+      min-width: 0;
+      align-self: start;
+      width: 100%;
+      max-width: 1180px;
+      margin: 0;
+      padding: 34px clamp(22px, 4vw, 56px) 64px;
+      border: 0;
+      background: transparent;
+      color: var(--jc-text);
+    }
+    .admin-section-heading { margin: 0 0 22px; }
+    .admin-section-heading h3 { margin: 6px 0 0; color: var(--jc-text); font-size: 28px; letter-spacing: -.04em; }
+    .admin-section-heading p { margin: 6px 0 0; color: var(--jc-muted); font-size: 14px; }
+    #adminDashboardMessage, #adminSongMessage, #adminRequestsMessage, #adminAccessMessage,
+    #adminSetlistsMessage, #adminFacebookMessage, #adminLoginMessage, #adminNoteMessage { color: var(--jc-muted); }
+    .admin-dashboard-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+    #adminManageDashboardSection .admin-dashboard-stat-grid > div {
+      min-height: 104px;
+      padding: 16px !important;
+      border: 1px solid var(--jc-border) !important;
+      border-radius: 10px !important;
+      background: var(--jc-surface) !important;
+      color: var(--jc-text) !important;
+    }
+    #adminManageDashboardSection .admin-dashboard-stat-grid > div > div:first-child { color: var(--jc-text); font-size: 27px !important; font-variant-numeric: tabular-nums; }
+    #adminManageDashboardSection .admin-dashboard-stat-grid > div > div:last-child { color: var(--jc-muted) !important; font-size: 13px; }
+    .admin-dashboard-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 18px; border-top: 1px solid var(--jc-border); }
+    .admin-dashboard-actions button { min-height: 42px; padding: 0 13px; border: 1px solid var(--jc-border); border-radius: 8px; background: var(--jc-surface-raised); color: var(--jc-text); font-weight: 630; cursor: pointer; }
+    .admin-dashboard-actions button:hover { border-color: var(--jc-accent); color: var(--jc-accent); }
+    #adminSongsPanel input, #adminSongsPanel textarea, #adminSongsPanel select { width: 100%; }
+    #adminSongName, #adminSongChords, #adminSiteNote { max-width: 900px; }
+    #adminSongFullscreenButton { width: fit-content !important; min-height: 42px; margin: 0 0 14px; }
+    #adminSongList > div, #adminRequestList > div, #adminAccessList > div,
+    #adminFacebookList > div, #adminLoginList > div {
+      min-height: 54px;
+      padding: 12px 14px !important;
+      border: 1px solid var(--jc-border) !important;
+      border-radius: 8px;
+      background: var(--jc-surface) !important;
+      color: var(--jc-text) !important;
+    }
+    .admin-setlists-table-wrap { overflow-x: auto; border: 1px solid var(--jc-border); border-radius: 9px; background: var(--jc-surface); }
+    .admin-setlists-table { width: 100%; border-collapse: collapse; }
+    .admin-setlists-table th { padding: 12px 14px; background: var(--jc-surface-raised); color: var(--jc-muted); font-size: 12px; text-align: left; }
+    .admin-setlists-table td { padding: 14px; border-top: 1px solid var(--jc-border); color: var(--jc-text); }
+    .admin-mobile-nav-wrap { display: none !important; }
+
+    /* Tablet and compact navigation */
+    @media (max-width: 1100px) and (min-width: 901px) {
+      .home-header { grid-template-columns: minmax(190px, 1fr) auto minmax(150px, 1fr); gap: 12px; padding-inline: 20px; }
+      .home-brand-name { font-size: 18px; }
+      .home-brand-subtitle { font-size: 11px; }
+      .home-header-actions { gap: 6px !important; }
+      .home-header-actions .logout-button { min-height: 40px; padding: 0 9px; font-size: 12px; }
+      #libraryView, #setlistsView { padding-inline: 28px; }
+      #libraryView .home-layout { grid-template-columns: minmax(0, 1fr) 210px; gap: 22px; }
+      body.manage-open #adminSongsPanel.is-open { grid-template-columns: 220px minmax(0, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .home-header { grid-template-columns: minmax(0, 1fr) auto; min-height: 66px; padding: 8px 18px; }
+      #homePrimaryNav, .home-header-actions { display: none !important; }
+      .home-brand-logo { width: 44px; height: 44px; }
+      .home-brand-name { font-size: 17px; }
+      .home-brand-subtitle { font-size: 10px; }
+      .theme-toggle-mobile { display: inline-flex !important; justify-content: center; align-items: center; width: 42px; height: 42px; }
+      #libraryView, #setlistsView { padding: 28px 28px 36px; }
+      #libraryView .home-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "main" "note"; gap: 20px; }
+      #libraryView .home-sidebar { position: static; }
+      .home-main-heading { align-items: flex-start; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+      .home-welcome { text-align: left; }
+      #memberBottomNav {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 500;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        min-height: 68px;
+        padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--jc-border);
+        background: var(--jc-header);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, .08);
+      }
+      #memberBottomNav > a, #memberBottomNav > button {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+        min-width: 0;
+        min-height: 48px;
+        border: 0;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--jc-muted);
+        font-size: 12px;
+        font-weight: 650;
+        text-decoration: none;
+      }
+      #memberBottomNav > a[aria-current="page"] { background: var(--jc-accent-soft); color: var(--jc-accent); }
+      #memberBottomNav > a span:first-child, #memberBottomNav > button span:first-child { font-size: 17px; line-height: 1; }
+      .mobile-nav-toggle { display: flex !important; }
+      #mobileNavMenu {
+        position: fixed;
+        right: 12px;
+        bottom: calc(76px + env(safe-area-inset-bottom));
+        left: auto;
+        z-index: 510;
+        width: min(260px, calc(100vw - 24px));
+        padding: 8px;
+        border: 1px solid var(--jc-border);
+        border-radius: 12px;
+        background: var(--jc-surface);
+        box-shadow: var(--jc-shadow);
+      }
+      #mobileNavMenu.active { display: grid !important; }
+      #mobileNavMenu button { min-height: 46px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: var(--jc-text); text-align: left; }
+      #mobileNavMenu button:hover { background: var(--jc-accent-soft); color: var(--jc-accent); }
+      #homePage { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+      body.manage-open #adminSongsPanel.is-open {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      #adminSongsPanel > .admin-workspace-header { grid-column: 1; grid-row: 1; min-height: 76px; padding: 12px 18px !important; }
+      .admin-workspace-title p { display: none; }
+      .admin-mobile-nav-wrap { display: block !important; position: relative; margin-left: auto; }
+      #adminMobileNavToggle { display: inline-flex; justify-content: center; align-items: center; min-width: 44px; min-height: 44px; }
+      #adminMobileNavMenu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 100;
+        display: none;
+        width: min(280px, calc(100vw - 36px));
+        max-height: min(70vh, 520px);
+        overflow-y: auto;
+        padding: 8px;
+        border: 1px solid var(--jc-border);
+        border-radius: 10px;
+        background: var(--jc-surface);
+        box-shadow: var(--jc-shadow);
+      }
+      #adminMobileNavMenu.active { display: grid; }
+      #adminMobileNavMenu button { min-height: 44px; padding: 0 10px; border: 0; border-radius: 7px; background: transparent; color: var(--jc-text); text-align: left; }
+      #adminManageTabs { display: none !important; }
+      body.manage-open #adminSongsPanel > [id^="adminManage"][id$="Section"] { grid-column: 1; grid-row: 3; padding: 24px 22px 48px; }
+      .admin-dashboard-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .song-page-header { padding: 8px 18px; }
+      .song-navigation { width: calc(100% - 40px); }
+      .song-reader-body { width: 100%; padding-inline: 20px; }
+      #songPage { padding-bottom: 32px; }
+    }
+    @media (max-width: 600px) {
+      #libraryView, #setlistsView { padding: 22px 16px 30px; }
+      .home-main-heading h1, .setlists-heading h1 { font-size: 31px; }
+      .home-main-heading p, .setlists-intro { font-size: 14px; }
+      .home-search { grid-template-columns: minmax(0, 1fr) auto; gap: 6px; }
+      #search { min-height: 48px; padding: 0 12px; font-size: 16px; }
+      #searchButton { min-width: 74px; min-height: 48px; padding: 0 12px; }
+      .song-alphabet { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 8px 0 12px; overflow-x: visible; scrollbar-width: none; }
+      .song-alphabet button { min-width: 0; min-height: 44px; padding-inline: 2px; }
+      #songs .song { grid-template-columns: 28px minmax(0, 1fr) auto; gap: 7px; min-height: 58px; padding-inline: 0; }
+      #songs .song-name { font-size: 14px; }
+      #songs .view-chords-button { min-width: 88px; min-height: 40px; padding-inline: 8px; font-size: 12px; }
+      .setlists-heading { align-items: flex-start; flex-direction: column; gap: 14px; }
+      .setlists-heading > .logout-button { align-self: flex-end; }
+      .setlist-create-row { grid-template-columns: minmax(0, 1fr); padding: 12px; }
+      .setlist-create-row button { width: 100%; }
+      .setlist-card { grid-template-columns: minmax(0, 1fr); gap: 10px; padding-block: 14px; }
+      .setlist-actions { justify-content: flex-start; width: 100%; }
+      .setlist-actions button { flex: 1 1 0; min-width: 0; min-height: 44px; padding-inline: 8px; }
+      .setlist-add-row { grid-template-columns: minmax(0, 1fr); }
+      .setlist-add-row button { width: 100%; min-height: 46px; }
+      #setlistEditor { padding-top: 18px; }
+      .setlist-song-row { align-items: flex-start; }
+      .setlist-song-actions { width: 100%; }
+      .setlist-song-actions button { flex: 1 1 0; min-height: 44px; }
+      .song-page-header { min-height: 62px; padding: 8px 12px; }
+      .song-page-brand-logo { width: 40px; height: 40px; }
+      .song-page-brand-name { font-size: 16px; }
+      .song-page-brand-subtitle { font-size: 9px; }
+      .song-page-logout { min-height: 40px; padding-inline: 9px; font-size: 12px; }
+      .song-navigation { grid-template-columns: minmax(0, 1fr); gap: 8px; width: calc(100% - 28px); margin-top: 12px; }
+      #songReturnButton { width: 100%; min-height: 44px; }
+      .song-search-container { max-width: none; }
+      .song-reader-body { padding-inline: 14px; }
+      #songTitle { margin: 20px 0 14px; font-size: 33px; }
+      #setlistPlaybackControls { top: 62px; flex-wrap: wrap; gap: 6px; padding: 8px; }
+      #setlistPlaybackControls button { flex: 1 1 calc(50% - 6px); min-height: 44px; padding-inline: 6px; font-size: 12px; }
+      #setlistPlaybackStatus { flex: 1 1 100%; order: -1; }
+      .transpose { display: flex; flex-wrap: wrap; gap: 7px; width: 100%; min-height: 56px; }
+      .transpose span { flex: 1 0 100%; }
+      .transpose output { flex: 1; min-width: 90px; }
+      .transpose button { min-width: 44px; min-height: 44px; }
+      #chords { padding: 17px 13px; font-size: 15px; line-height: 1.72; }
+      .song-feedback { padding: 16px; }
+      body.manage-open #adminSongsPanel > [id^="adminManage"][id$="Section"] { padding: 20px 15px 40px; }
+      .admin-section-heading h3 { font-size: 25px; }
+      .admin-dashboard-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      #adminManageDashboardSection .admin-dashboard-stat-grid > div { min-height: 92px; padding: 12px !important; }
+      #adminManageDashboardSection .admin-dashboard-stat-grid > div > div:first-child { font-size: 23px !important; }
+      .admin-dashboard-actions { display: grid; grid-template-columns: 1fr; }
+      .admin-dashboard-actions button { min-height: 46px; text-align: left; }
+      .admin-setlists-table-wrap { overflow: visible; border: 0; background: transparent; }
+      .admin-setlists-table, .admin-setlists-table tbody, .admin-setlists-table tr, .admin-setlists-table td { display: block; width: 100%; }
+      .admin-setlists-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+      .admin-setlists-table tr { margin-bottom: 10px; padding: 6px 12px; border: 1px solid var(--jc-border); border-radius: 8px; background: var(--jc-surface); }
+      .admin-setlists-table td { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 8px; padding: 8px 0; border-top: 0; overflow-wrap: anywhere; }
+      .admin-setlists-table td + td { border-top: 1px solid var(--jc-border); }
+      .admin-setlists-table td::before { color: var(--jc-muted); font-size: 12px; font-weight: 700; }
+      .admin-setlists-table td:first-child::before { content: "Setlist"; }
+      .admin-setlists-table td:nth-child(2)::before { content: "Created by"; }
+      #adminSongsPanel input, #adminSongsPanel textarea { font-size: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #homePrimaryNav a, #songs .song, #songs .view-chords-button { transition: none; }
+    }
 </style>
 
 
@@ -3070,6 +4432,11 @@
         </div>
       </div>
 
+      <nav id="homePrimaryNav" class="home-primary-nav" aria-label="Primary navigation">
+        <a href="#libraryView" data-member-view="library" aria-current="page">Library</a>
+        <a href="#setlistsView" data-member-view="setlists">Setlists</a>
+      </nav>
+
       <div class="home-header-actions" style="display:flex;align-items:center;gap:10px;">
         <button id="themeToggleDesktop" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
         <button
@@ -3098,14 +4465,6 @@
       </div>
 
       <button id="themeToggleMobile" class="theme-toggle-mobile" type="button" aria-label="Switch to light mode" title="Switch to light mode">☀️</button>
-      <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
-
-      <div id="mobileNavMenu" class="mobile-nav-menu" aria-hidden="true">
-        <button id="mobileAdminSongsButton" type="button" style="display:none;">⚙️ Manage</button>
-        <button id="mobileSongRequestButton" type="button" style="display:none;">🎵 Request a Song</button>
-        <div class="mobile-nav-divider"></div>
-        <button id="mobileLogoutButton" type="button">🚪 Logout</button>
-      </div>
     </div>
 
     <div id="songRequestPanel" style="display:none;max-width:560px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
@@ -3128,41 +4487,52 @@
       <div id="songRequestMessage" class="login-message"></div>
     </div>
 
+    <main id="libraryView" class="app-view app-view-library" aria-label="Song Library"></main>
+    <section id="setlistsView" class="app-view app-view-setlists" aria-label="Setlists" style="display:none;"></section>
+
     <div id="adminSongsPanel" style="display:none;max-width:1000px;width:calc(100% - 48px);margin:22px auto 0;padding:20px;border:1px solid #294e79;border-radius:12px;background:#111f35;">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
-        <h2 style="margin:0;font-size:22px;">⚙️ Manage</h2>
+      <div class="admin-workspace-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+        <div class="admin-workspace-title">
+          <div class="view-eyebrow">ADMINISTRATION</div>
+          <h2>Manage</h2>
+          <p>Manage songs, access, requests, and site content.</p>
+        </div>
         <div class="admin-mobile-nav-wrap" style="display:none;">
           <button id="adminMobileNavToggle" class="admin-mobile-nav-toggle" type="button" aria-label="Open manage menu" aria-expanded="false">☰</button>
           <div id="adminMobileNavMenu" class="admin-mobile-nav-menu" aria-hidden="true">
-            <button type="button" data-admin-mobile-tab="adminManageDashboardTab">📊 Dashboard</button>
-            <button type="button" data-admin-mobile-tab="adminManageSongsTab">🎵 Songs</button>
-            <button type="button" data-admin-mobile-tab="adminManageRequestsTab">📝 Song Requests</button>
-            <button type="button" data-admin-mobile-tab="adminManageAccessTab">👤 Access Approval</button>
-            <button type="button" data-admin-mobile-tab="adminManageSetlistsTab">🎼 Setlists</button>
-            <button type="button" data-admin-mobile-tab="adminManageFacebookTab">📘 Facebook</button>
-            <button type="button" data-admin-mobile-tab="adminManageLoginTab">📊 Login Activity</button>
-            <button type="button" data-admin-mobile-tab="adminManageNoteTab">📢 Site Note</button>
+            <button type="button" data-admin-mobile-tab="adminManageDashboardTab">Overview</button>
+            <button type="button" data-admin-mobile-tab="adminManageSongsTab">Songs</button>
+            <button type="button" data-admin-mobile-tab="adminManageRequestsTab">Song Requests</button>
+            <button type="button" data-admin-mobile-tab="adminManageAccessTab">Access Approvals</button>
+            <button type="button" data-admin-mobile-tab="adminManageSetlistsTab">Setlists</button>
+            <button type="button" data-admin-mobile-tab="adminManageFacebookTab">Facebook</button>
+            <button type="button" data-admin-mobile-tab="adminManageLoginTab">Login Activity</button>
+            <button type="button" data-admin-mobile-tab="adminManageNoteTab">Site Note</button>
           </div>
         </div>
         <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
       </div>
 
-      <div id="adminManageTabs">
-        <button id="adminManageDashboardTab" type="button" class="submit-request">📊 Dashboard</button>
-        <button id="adminManageSongsTab" type="button" class="logout-button">🎵 Songs</button>
-        <button id="adminManageRequestsTab" type="button" class="logout-button">📝 Song Requests</button>
-        <button id="adminManageAccessTab" type="button" class="logout-button">👤 Access Approval</button>
-        <button id="adminManageSetlistsTab" type="button" class="logout-button">🎼 Setlists</button>
-        <button id="adminManageFacebookTab" type="button" class="logout-button">📘 Facebook</button>
-        <button id="adminManageLoginTab" type="button" class="logout-button">📊 Login Activity</button>
-        <button id="adminManageNoteTab" type="button" class="logout-button">📢 Site Note</button>
-      </div>
+      <nav id="adminManageTabs" aria-label="Manage sections">
+        <button id="adminManageDashboardTab" type="button" class="submit-request">Overview</button>
+        <button id="adminManageSongsTab" type="button" class="logout-button">Songs</button>
+        <button id="adminManageRequestsTab" type="button" class="logout-button">Song Requests</button>
+        <button id="adminManageAccessTab" type="button" class="logout-button">Access Approvals</button>
+        <button id="adminManageSetlistsTab" type="button" class="logout-button">Setlists</button>
+        <button id="adminManageFacebookTab" type="button" class="logout-button">Facebook</button>
+        <button id="adminManageLoginTab" type="button" class="logout-button">Login Activity</button>
+        <button id="adminManageNoteTab" type="button" class="logout-button">Site Note</button>
+      </nav>
 
       <div id="adminManageDashboardSection">
-        <div style="font-size:20px;font-weight:700;margin-bottom:14px;">📊 Dashboard</div>
+        <header class="admin-section-heading">
+          <div class="view-eyebrow">OVERVIEW</div>
+          <h3>Overview</h3>
+          <p>Current catalog and team activity at a glance.</p>
+        </header>
         <div id="adminDashboardMessage" class="login-message"></div>
 
-        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;">
+        <div class="admin-dashboard-stat-grid">
           <div style="padding:16px;border:1px solid #294e79;border-radius:10px;background:#0f2038;">
             <div style="font-size:28px;font-weight:700;" id="dashboardSongCount">—</div>
             <div style="color:#94a3b8;margin-top:4px;">🎵 Total Songs</div>
@@ -3187,9 +4557,15 @@
             <div style="color:#94a3b8;margin-top:4px;">📝 Pending Song Requests</div>
           </div>
         </div>
+        <div class="admin-dashboard-actions" aria-label="Quick actions">
+          <button type="button" data-admin-section-link="songs">Add or edit a song</button>
+          <button type="button" data-admin-section-link="requests">Review song requests</button>
+          <button type="button" data-admin-section-link="access">Review access approvals</button>
+        </div>
       </div>
 
       <div id="adminManageSongsSection">
+        <header class="admin-section-heading"><div class="view-eyebrow">CATALOG</div><h3>Songs</h3><p>Add chord sheets or maintain the existing library.</p></header>
         <input id="adminSongName" class="request-input" type="text" placeholder="Song name" style="margin-bottom:12px;">
         <textarea id="adminSongChords" class="request-textarea" placeholder="Chord sheet" style="min-height:260px;margin-bottom:12px;font-family:'Courier New',monospace;"></textarea>
         <button id="adminSongFullscreenButton" type="button" class="logout-button">⛶ Full Screen Editor</button>
@@ -3204,18 +4580,21 @@
       </div>
 
       <div id="adminManageRequestsSection" style="display:none;">
+        <header class="admin-section-heading"><div class="view-eyebrow">INBOX</div><h3>Song Requests</h3><p>Review requests submitted by members.</p></header>
         <div id="adminRequestsMessage" class="login-message"></div>
         <input id="adminRequestSearch" class="request-input" type="text" placeholder="Search song, artist, or requester..." style="margin-top:8px;">
         <div id="adminRequestList" style="margin-top:10px;"></div>
       </div>
 
       <div id="adminManageAccessSection" style="display:none;">
+        <header class="admin-section-heading"><div class="view-eyebrow">MEMBERS</div><h3>Access Approvals</h3><p>Review membership and access requests.</p></header>
         <div id="adminAccessMessage" class="login-message"></div>
         <input id="adminAccessSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
         <div id="adminAccessList" style="margin-top:10px;"></div>
       </div>
 
       <div id="adminManageSetlistsSection" style="display:none;">
+        <header class="admin-section-heading"><div class="view-eyebrow">TEAM PLANNING</div><h3>Setlists</h3><p>View the setlists and their creators.</p></header>
         <div id="adminSetlistsMessage" class="login-message" aria-live="polite"></div>
         <div class="admin-setlists-table-wrap" role="region" aria-label="Setlists and creators" tabindex="0">
           <table class="admin-setlists-table">
@@ -3231,17 +4610,20 @@
       </div>
 
       <div id="adminManageFacebookSection" style="display:none;">
+        <header class="admin-section-heading"><div class="view-eyebrow">COMMUNITY</div><h3>Facebook</h3><p>Review connected Facebook followers.</p></header>
         <div id="adminFacebookMessage" class="login-message"></div>
         <input id="adminFacebookSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
         <div id="adminFacebookList" style="margin-top:10px;"></div>
       </div>
       <div id="adminManageLoginSection" style="display:none;">
+        <header class="admin-section-heading"><div class="view-eyebrow">SECURITY</div><h3>Login Activity</h3><p>Review account sign-in activity.</p></header>
         <div id="adminLoginMessage" class="login-message"></div>
         <input id="adminLoginSearch" class="request-input" type="text" placeholder="Search name or email..." style="margin-top:8px;">
         <div id="adminLoginList" style="margin-top:10px;"></div>
       </div>
 
       <div id="adminManageNoteSection" style="display:none;">
+        <header class="admin-section-heading"><div class="view-eyebrow">ANNOUNCEMENTS</div><h3>Site Note</h3><p>Update the note shown to members.</p></header>
         <div id="adminNoteMessage" class="login-message"></div>
         <div style="color:#cbd5e1;margin:8px 0 10px;">
           Write one note here. It will replace the note shown on the website and the mobile popup.
@@ -3264,13 +4646,16 @@
 
       <main class="home-main">
 
-        <div class="home-main-heading">
-          <h1>🎵 Praise and Worship Songs List</h1>
+        <div id="homeSongLibrary" class="home-main-heading">
+          <div class="home-main-title">
+            <h1>Song Library</h1>
+            <p class="home-main-subtitle">Search by title or browse A–Z. Select a song to open its chord sheet.</p>
+          </div>
           <div id="homeWelcomeMessage" class="home-welcome" aria-live="polite"></div>
         </div>
 
         <section id="setlistsPanel" aria-label="Your private setlists">
-          <div class="setlists-heading"><h2>🎼 My Setlists</h2><button id="refreshSetlistsButton" type="button" class="logout-button">Refresh</button></div>
+          <div class="setlists-heading"><div><div class="view-eyebrow">PLAN &amp; PLAY</div><h1>My Setlists</h1><p class="setlists-intro">Organize songs, set the key for your team, and move into rehearsal when you’re ready.</p></div><button id="refreshSetlistsButton" type="button" class="logout-button">Refresh</button></div>
           <div class="setlist-create-row">
             <input id="newSetlistName" class="request-input" type="text" maxlength="100" placeholder="New setlist name" aria-label="New setlist name">
             <button id="createSetlistButton" type="button" class="home-search-button">Create Setlist</button>
@@ -3313,6 +4698,8 @@
 
         <div id="homeSongAlphabet" class="song-alphabet" aria-label="Filter songs by first letter"></div>
 
+        <div class="library-result-bar"><span id="libraryResultCount" aria-live="polite"></span><button id="clearSongSearch" type="button" class="clear-search-button">Clear filters</button></div>
+
         <div id="songs"></div>
 
         <div id="message">
@@ -3342,7 +4729,20 @@
       </div>
     </div>
 
+    <nav id="memberBottomNav" aria-label="Member navigation">
+      <a href="#libraryView" data-member-view="library" aria-current="page"><span aria-hidden="true">♫</span><span>Library</span></a>
+      <a href="#setlistsView" data-member-view="setlists"><span aria-hidden="true">▤</span><span>Setlists</span></a>
+      <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-label="Open more options" aria-expanded="false"><span aria-hidden="true">•••</span><span>More</span></button>
+      <div id="mobileNavMenu" class="mobile-nav-menu" aria-hidden="true">
+        <button id="mobileAdminSongsButton" type="button" style="display:none;">Manage</button>
+        <button id="mobileSongRequestButton" type="button" style="display:none;">Request a Song</button>
+        <button id="mobileLogoutButton" type="button">Logout</button>
+      </div>
+    </nav>
+
   </div>
+
+  <div id="manageWorkspace" class="manage-workspace" style="display:none;" aria-label="Manage workspace"></div>
 
 
   <!-- =====================================================
@@ -3378,12 +4778,14 @@
 
     <div class="song-navigation">
 
-      <div
+      <button
+        id="songReturnButton"
         class="back"
-        onclick="showHome()"
+        type="button"
+        onclick="returnFromSong()"
       >
-        ← Back to Songs
-      </div>
+        ← Back to Library
+      </button>
 
 
       <div class="song-search-container">
@@ -3402,6 +4804,7 @@
     </div>
 
 
+    <main class="song-reader-body">
     <div id="setlistPlaybackControls" aria-label="Setlist playback">
       <button id="setlistPreviousButton" type="button">← Previous</button>
       <span id="setlistPlaybackStatus" aria-live="polite"></span>
@@ -3418,6 +4821,7 @@
       <span>
         Transpose
       </span>
+      <output id="transposeStatus" aria-live="polite">Original key</output>
 
       <button
         type="button"
@@ -3432,6 +4836,8 @@
       >
         +
       </button>
+
+      <button id="transposeResetButton" type="button" onclick="resetTranspose()">Reset</button>
 
     </div>
 
@@ -3462,6 +4868,8 @@
       <h3 id="feedbackCommentsHeading" class="feedback-comments-heading">Comments</h3>
       <div id="feedbackComments"></div>
     </section>
+
+    </main>
 
 
     <footer class="site-footer">
@@ -3519,6 +4927,9 @@
     let songs = [];
 
     let currentSong = null;
+    let activeMemberView = "library";
+    let songOriginView = "library";
+    let adminReturnView = "library";
 
     let setlistRows = [];
     let currentSetlistId = "";
@@ -3531,10 +4942,70 @@
     let songOpenRequestId = 0;
 
     let transposeAmount = 0;
+    let songInitialTransposeAmount = 0;
 
     let loginInProgress = false;
     let selectedFeedbackRating = 0;
     let feedbackRequestId = 0;
+
+    function mountDedicatedViews() {
+      const libraryView = document.getElementById("libraryView");
+      const setlistsView = document.getElementById("setlistsView");
+      const manageWorkspace = document.getElementById("manageWorkspace");
+      const homePage = document.getElementById("homePage");
+      const layout = homePage && homePage.querySelector(".home-layout");
+      const setlistsPanel = document.getElementById("setlistsPanel");
+      const setlistPicker = document.getElementById("setlistSongPickerDialog");
+      const adminPanel = document.getElementById("adminSongsPanel");
+
+      if (setlistsView && setlistsPanel && !setlistsView.contains(setlistsPanel)) {
+        setlistsView.appendChild(setlistsPanel);
+      }
+      if (setlistsView && setlistPicker && !setlistsView.contains(setlistPicker)) {
+        setlistsView.appendChild(setlistPicker);
+      }
+      if (libraryView && layout && !libraryView.contains(layout)) {
+        libraryView.appendChild(layout);
+      }
+      if (manageWorkspace && adminPanel && !manageWorkspace.contains(adminPanel)) {
+        manageWorkspace.appendChild(adminPanel);
+      }
+    }
+
+    mountDedicatedViews();
+
+    function setMemberDestination(view) {
+      const destination = view === "setlists" ? "setlists" : "library";
+      activeMemberView = destination;
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("requestPage").style.display = "none";
+      document.getElementById("songPage").style.display = "none";
+      document.getElementById("manageWorkspace").style.display = "none";
+      document.getElementById("homePage").style.display = "flex";
+      document.getElementById("libraryView").style.display = destination === "library" ? "block" : "none";
+      document.getElementById("setlistsView").style.display = destination === "setlists" ? "block" : "none";
+      document.getElementById("songRequestPanel").style.display = "none";
+      document.body.classList.remove("manage-open");
+
+      document.querySelectorAll("[data-member-view]").forEach(function(link) {
+        if (link.getAttribute("data-member-view") === destination) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+      if (destination === "setlists" && getStoredToken()) loadSetlists();
+      window.scrollTo(0, 0);
+    }
+
+    function showLibrary() { setMemberDestination("library"); }
+    function showSetlists() { setMemberDestination("setlists"); }
+
+    function returnFromSong() {
+      const destination = songOriginView;
+      stopSetlistPlayback();
+      setMemberDestination(destination);
+    }
 
 
     /* =====================================================
@@ -3964,7 +5435,7 @@
       */
 
       const rootRegex =
-        /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|\/|[\s)\]\},;:.]|$))/g;
+        /(^|[\s(\[\{,;:\-])([A-G](?:#|b)?)(?=(?:(?:min|maj|dim|aug|sus|add|m|M|°|\+|-)(?=[0-9\/\s)\]\},;:.]|$))|[0-9]|\/|[\s)\]\},;:.]|$)/g;
 
 
       result =
@@ -3994,7 +5465,7 @@
       */
 
       const bassRegex =
-        /\/([A-G](?:#|b)?)(?=(?:m|min|maj|dim|aug|sus|add|M|°|\+|-|[0-9]|[\s)\]\},;:.]|$))/g;
+        /\/([A-G](?:#|b)?)(?=(?:(?:min|maj|dim|aug|sus|add|m|M|°|\+|-)(?=[0-9\s)\]\},;:.]|$))|[0-9]|[\s)\]\},;:.]|$)/g;
 
 
       result =
@@ -4058,6 +5529,11 @@
         )
         .style.display =
         "none";
+
+      document.getElementById("manageWorkspace").style.display = "none";
+      const managePanel = document.getElementById("adminSongsPanel");
+      if (managePanel) managePanel.classList.remove("is-open");
+      document.body.classList.remove("manage-open");
 
     }
 
@@ -4253,6 +5729,7 @@
 
       loadSiteNote();
       if (getStoredToken()) loadSetlists();
+      setMemberDestination("library");
 
     }
 
@@ -4578,21 +6055,36 @@
     function openAdminSongManager() {
       if (!isAdminUser()) return;
       const panel = document.getElementById("adminSongsPanel");
-      if (!panel) return;
+      const workspace = document.getElementById("manageWorkspace");
+      if (!panel || !workspace) return;
+
+      adminReturnView = activeMemberView;
+      document.getElementById("homePage").style.display = "none";
+      document.getElementById("songPage").style.display = "none";
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("requestPage").style.display = "none";
+      workspace.style.display = "block";
       panel.style.display = "block";
+      panel.classList.add("is-open");
       document.body.classList.add("manage-open");
       selectedAdminSongLetter = "ALL";
       refreshAdminSongAlphabet();
       setAdminManageSection("dashboard");
       loadAdminSongs();
-      panel.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.scrollTo(0, 0);
     }
 
     function closeAdminSongManager() {
       const panel = document.getElementById("adminSongsPanel");
-      if (panel) panel.style.display = "none";
+      const workspace = document.getElementById("manageWorkspace");
+      if (panel) {
+        panel.style.display = "none";
+        panel.classList.remove("is-open");
+      }
+      if (workspace) workspace.style.display = "none";
       document.body.classList.remove("manage-open");
       cancelAdminEdit();
+      setMemberDestination(adminReturnView || "library");
     }
 
     function cancelAdminEdit() {
@@ -5714,6 +7206,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       Object.keys(sections).forEach(function(key) {
         sections[key].style.display = key === section ? "block" : "none";
         tabs[key].className = key === section ? "submit-request" : "logout-button";
+        if (key === section) tabs[key].setAttribute("aria-current", "page");
+        else tabs[key].removeAttribute("aria-current");
       });
 
       if (section === "dashboard") loadAdminDashboard();
@@ -6305,8 +7799,11 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       buildSongAlphabet("homeSongAlphabet", selectedHomeLetter, function(letter) {
         selectedHomeLetter = letter;
         const searchInput = document.getElementById("search");
-        if (searchInput) searchInput.value = "";
-        displaySongs(songs);
+        if (searchInput && searchInput.value.trim()) {
+          searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+        } else {
+          displaySongs(songs);
+        }
       });
     }
 
@@ -6338,6 +7835,15 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       list = filterSongsByLetter(list || [], selectedHomeLetter);
       container.innerHTML =
         "";
+
+      const resultCount = document.getElementById("libraryResultCount");
+      const clearFiltersButton = document.getElementById("clearSongSearch");
+      if (resultCount) resultCount.textContent = list.length + (list.length === 1 ? " song" : " songs");
+      if (clearFiltersButton) {
+        const searchInput = document.getElementById("search");
+        const hasFilters = selectedHomeLetter !== "ALL" || !!(searchInput && searchInput.value.trim());
+        clearFiltersButton.style.display = hasFilters ? "inline-flex" : "none";
+      }
 
       if (
         !list ||
@@ -6500,6 +8006,18 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
           );
         }
       );
+    }
+
+    const clearSongSearchButton = document.getElementById("clearSongSearch");
+    if (clearSongSearchButton) {
+      clearSongSearchButton.addEventListener("click", function() {
+        const searchInput = document.getElementById("search");
+        if (searchInput) searchInput.value = "";
+        selectedHomeLetter = "ALL";
+        refreshHomeAlphabet();
+        displaySongs(songs);
+        if (searchInput) searchInput.focus();
+      });
     }
 
 
@@ -6724,15 +8242,20 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const openRequestId = ++songOpenRequestId;
       if (!options || options.setlistPlayback !== true) stopSetlistPlayback();
 
+      songOriginView = activeMemberView;
       currentSong = {
         name: String(song.name || ""),
         chords: ""
       };
       transposeAmount = 0;
+      songInitialTransposeAmount = 0;
 
       document.getElementById("homePage").style.display = "none";
+      document.getElementById("manageWorkspace").style.display = "none";
       document.getElementById("songPage").style.display = "block";
       document.getElementById("songTitle").textContent = currentSong.name;
+      const returnButton = document.getElementById("songReturnButton");
+      if (returnButton) returnButton.textContent = songOriginView === "setlists" ? "← Back to Setlist" : "← Back to Library";
       songSearch.value = "";
       songSearchResults.innerHTML = "";
       songSearchResults.style.display = "none";
@@ -6757,6 +8280,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         if (options && options.setlistPlayback === true) {
           transposeAmount = getSetlistKeyTransposeAmount(currentSong.chords, options.setlistKey);
         }
+        songInitialTransposeAmount = transposeAmount;
         hideChordAccessLocked();
         updateSong();
         loadSongFeedback(currentSong);
@@ -6845,6 +8369,13 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     }
 
 
+    function resetTranspose() {
+      if (!currentSong) return;
+      transposeAmount = songInitialTransposeAmount;
+      updateSong();
+    }
+
+
     /* =====================================================
        UPDATE SONG
     ===================================================== */
@@ -6890,6 +8421,13 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
         }
       });
 
+      const transposeStatus = document.getElementById("transposeStatus");
+      const relativeOffset = transposeAmount - songInitialTransposeAmount;
+      if (transposeStatus) {
+        transposeStatus.textContent = relativeOffset === 0
+          ? (songInitialTransposeAmount === 0 ? "Original key" : "Setlist key")
+          : (relativeOffset > 0 ? "+" : "") + relativeOffset + " semitones";
+      }
 
     }
 
@@ -7339,6 +8877,15 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       document.body.style.overflow = "";
     }
 
+    document.querySelectorAll("[data-member-view]").forEach(function(link) {
+      link.addEventListener("click", function(event) {
+        event.preventDefault();
+        closeMobileNav();
+        if (link.getAttribute("data-member-view") === "setlists") showSetlists();
+        else showLibrary();
+      });
+    });
+
     const mobileNavToggle = document.getElementById("mobileNavToggle");
     const mobileNavMenu = document.getElementById("mobileNavMenu");
 
@@ -7355,8 +8902,8 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
       const mobileAdmin = document.getElementById("mobileAdminSongsButton");
       const mobileRequest = document.getElementById("mobileSongRequestButton");
 
-      if (desktopAdmin && mobileAdmin) {
-        mobileAdmin.style.display = desktopAdmin.style.display === "none" ? "none" : "block";
+      if (mobileAdmin) {
+        mobileAdmin.style.display = isAdminUser() ? "block" : "none";
       }
       if (desktopRequest && mobileRequest) {
         mobileRequest.style.display = desktopRequest.style.display === "none" ? "none" : "block";
@@ -7459,6 +9006,20 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     document.getElementById("songRequestCloseButton").addEventListener("click", closeSongRequestPanel);
     document.getElementById("submitSongRequestButton").addEventListener("click", submitSongRequest);
     document.getElementById("adminRequestSearch").addEventListener("input", loadAdminSongRequests);
+
+    document.querySelectorAll("[data-admin-section-link]").forEach(function(button) {
+      button.addEventListener("click", function() {
+        const section = button.getAttribute("data-admin-section-link");
+        const tabs = {
+          songs: "adminManageSongsTab",
+          requests: "adminManageRequestsTab",
+          access: "adminManageAccessTab"
+        };
+        const target = document.getElementById(tabs[section]);
+        if (target) target.click();
+        if (section === "songs") document.getElementById("adminSongName").focus();
+      });
+    });
 
     document.getElementById("adminManageDashboardTab").addEventListener("click", function() {
       setAdminManageSection("dashboard");

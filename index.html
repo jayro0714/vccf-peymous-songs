@@ -4498,6 +4498,7 @@
           <h2>Manage</h2>
           <p>Manage songs, access, requests, and site content.</p>
         </div>
+        <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
         <div class="admin-mobile-nav-wrap" style="display:none;">
           <button id="adminMobileNavToggle" class="admin-mobile-nav-toggle" type="button" aria-label="Open manage menu" aria-expanded="false">☰</button>
           <div id="adminMobileNavMenu" class="admin-mobile-nav-menu" aria-hidden="true">
@@ -4511,7 +4512,6 @@
             <button type="button" data-admin-mobile-tab="adminManageNoteTab">Site Note</button>
           </div>
         </div>
-        <button id="adminCloseSongsButton" type="button" class="logout-button">Close</button>
       </div>
 
       <nav id="adminManageTabs" aria-label="Manage sections">
@@ -4557,11 +4557,6 @@
             <div style="font-size:28px;font-weight:700;" id="dashboardSongRequestCount">—</div>
             <div style="color:#94a3b8;margin-top:4px;">📝 Pending Song Requests</div>
           </div>
-        </div>
-        <div class="admin-dashboard-actions" aria-label="Quick actions">
-          <button type="button" data-admin-section-link="songs">Add or edit a song</button>
-          <button type="button" data-admin-section-link="requests">Review song requests</button>
-          <button type="button" data-admin-section-link="access">Review access approvals</button>
         </div>
       </div>
 
@@ -7799,6 +7794,7 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
     function refreshHomeAlphabet() {
       buildSongAlphabet("homeSongAlphabet", selectedHomeLetter, function(letter) {
         selectedHomeLetter = letter;
+        refreshHomeAlphabet();
         const searchInput = document.getElementById("search");
         if (searchInput && searchInput.value.trim()) {
           searchInput.dispatchEvent(new Event("input", { bubbles: true }));
@@ -8899,15 +8895,14 @@ Pafollow nadin sa page "Jayro Chords" for more updates 😊`;
 
     function syncMobileNavOptions() {
       const desktopAdmin = document.getElementById("adminSongsButton");
-      const desktopRequest = document.getElementById("songRequestButton");
       const mobileAdmin = document.getElementById("mobileAdminSongsButton");
       const mobileRequest = document.getElementById("mobileSongRequestButton");
 
       if (mobileAdmin) {
         mobileAdmin.style.display = isAdminUser() ? "block" : "none";
       }
-      if (desktopRequest && mobileRequest) {
-        mobileRequest.style.display = desktopRequest.style.display === "none" ? "none" : "block";
+      if (mobileRequest) {
+        mobileRequest.style.display = getStoredToken() && !isAdminUser() ? "block" : "none";
       }
     }
 
